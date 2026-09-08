@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>하와이 오아후 7박 8일 스마트 여행 가이드북 & 대시보드</title>
+
+  <!-- Pretendard Web Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet.js (오픈소스 인터랙티브 지도 / API 키 불필요) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            oahu: {
+              waikiki: '#8b5cf6',
+              east: '#f97316',
+              north: '#10b981',
+              west: '#0284c7',
+              bg: '#f4f5f8',
+              card: '#ffffff'
+            }
+          },
+          boxShadow: {
+            'soft': '0 8px 30px rgba(0, 0, 0, 0.05)',
+            'card': '0 2px 12px rgba(0, 0, 0, 0.04)',
+            'floating': '0 12px 36px rgba(15, 23, 42, 0.16)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #f4f5f8;
+      color: #1e293b;
+      word-break: keep-all;
+    }
+    .leaflet-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 1.5rem;
+      z-index: 10;
+    }
+    .leaflet-container img {
+      max-width: none !important;
+    }
+    .map-container-720 {
+      height: 720px !important;
+      min-height: 720px !important;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .img-tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+      transition: opacity 0.15s ease;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-purple-100 selection:text-purple-900">
+
+  <!-- ==================== 1. 상단 고정 헤더 & 네비게이션 ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <!-- 시계 및 환율 바 -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+      <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-50 text-purple-700 font-bold rounded-lg border border-purple-200/60">
+          <span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span>
+          KST 한국: <span id="clock-kst" class="font-mono">--:--:--</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 font-bold rounded-lg border border-emerald-200/60">
+          🌴 HST 하와이(-19h): <span id="clock-hst" class="font-mono">--:--:--</span>
+        </span>
+        <span id="trip-status-badge" class="px-2.5 py-1 bg-amber-50 text-amber-800 font-bold rounded-lg border border-amber-200">
+          계산 중...
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="text-slate-500 font-medium hidden sm:inline">실시간 기준 환율:</span>
+        <span class="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">
+          $1 = <span id="header-rate">1,385</span>원
+        </span>
+        <select id="date-simulator" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500" onchange="simulateDate(this.value)">
+          <option value="auto">⏱️ 현재 실제 시간</option>
+          <option value="pre">✈️ 출발 전 (D-Day 카운트)</option>
+          <option value="2026-10-09">🌴 10/9(금) Day 1 호놀룰루 입국 & 호텔 수영</option>
+          <option value="2026-10-10">🌴 10/10(토) Day 2 카일루아 패들보드 & 트레킹</option>
+          <option value="2026-10-11">🌴 10/11(일) Day 3 하나우마베이 & 호텔 풀 휴식</option>
+          <option value="2026-10-12">🌴 10/12(월) Day 4 모닝 헬스 & 쿠알로아 UTV</option>
+          <option value="2026-10-13">🌴 10/13(화) Day 5 노스쇼어 일주 & 샤크스코브</option>
+          <option value="2026-10-14">🌴 10/14(수) Day 6 모닝 헬스 & 와이켈레 쇼핑</option>
+          <option value="2026-10-15">🌴 10/15(목) Day 7 모닝 비치 요가 & 루아우 디너</option>
+          <option value="2026-10-16">✈️ 10/16(금) Day 8 체크아웃 & KE054 귀국</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 메인 네비게이션 탭 (스크롤 포커싱) -->
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-2 overflow-x-auto custom-scrollbar border-t border-slate-100 flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600">
+      <button onclick="scrollToSection('sec-summary')" class="nav-btn active px-3.5 py-1.5 rounded-full bg-slate-900 text-white hover:bg-slate-800 transition shrink-0">📱 요약 & 바우처</button>
+      <button onclick="scrollToSection('sec-map')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">🗺️ 720px 북마크 지도</button>
+      <button onclick="scrollToSection('sec-wishlist')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">✨ 웰니스 & Top 7 (사진 툴팁)</button>
+      <button onclick="scrollToSection('sec-timeline')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">🗓️ 7박 8일 타임라인</button>
+      <button onclick="scrollToSection('sec-table')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">📋 일정·장소 표 (구글맵)</button>
+      <button onclick="scrollToSection('sec-budget')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">💰 2인 예산 플래너</button>
+      <button onclick="scrollToSection('sec-checklist')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">🧳 짐 꾸리기 30선</button>
+      <button onclick="scrollToSection('sec-guide')" class="nav-btn px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition shrink-0">🛡️ 안전·세관·약품 가이드</button>
+    </nav>
+  </header>
+
+  <!-- ==================== 메인 콘텐츠 영역 ==================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-12">
+
+    <!-- [섹션 1] 요약 & 예약 바우처 현황 (📱 요약) -->
+    <section id="sec-summary" class="scroll-mt-24 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-purple-700 via-indigo-600 to-sky-600 text-white p-6 sm:p-8 rounded-3xl shadow-soft">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-semibold mb-3">
+            <span>🌺 ALOHA OAHU</span> • <span>성인 2인 7박 8일 완벽 여정</span>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">오아후 스마트 여행 종합 대시보드</h1>
+          <p class="text-purple-100 mt-2 text-sm sm:text-base max-w-2xl">
+            하얏트 리젠시 와이키키 피트니스·수영장 & 카일루아 패들보드(SUP)와 비치 요가가 결합된 프리미엄 웰니스 로드맵
+          </p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 shrink-0 text-center sm:text-right">
+          <div class="text-xs text-purple-200 font-medium">확정 여정 기간</div>
+          <div class="text-xl sm:text-2xl font-black mt-0.5">10.09(금) ~ 10.16(금)</div>
+          <div class="text-xs text-white/90 mt-1">대한항공 KE053 / KE054 직항</div>
+        </div>
+      </div>
+
+      <!-- 바우처 카드 3종 (항공 / 렌터카 / 호텔) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- 항공 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-card hover:shadow-soft transition">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg">✈️ 대한항공 왕복</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">발권 완료</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-center py-1 border-b border-slate-100">
+              <span class="text-slate-500 text-xs">출국 (KE053)</span>
+              <span class="font-bold text-slate-800">10/9(금) 22:35 ICN ➔ 12:25 HNL</span>
+            </div>
+            <div class="flex justify-between items-center py-1">
+              <span class="text-slate-500 text-xs">귀국 (KE054)</span>
+              <span class="font-bold text-slate-800">10/16(금) 14:35 HNL ➔ 19:10(+1) ICN</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 렌터카 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-card hover:shadow-soft transition">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg">🚗 쉐보레 트렉스 (CUV)</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">예약 완료</span>
+          </div>
+          <div class="space-y-1.5 text-xs text-slate-600">
+            <div class="flex justify-between">
+              <span>인수: 10/9(금) 13:00 공항</span>
+              <span class="font-bold text-slate-800">반납: 10/16(금) 11:30</span>
+            </div>
+            <p class="text-[11px] text-rose-600 font-medium mt-1 bg-rose-50 p-2 rounded-lg">
+              ⚠️ 주의: 트렁크 및 차내 소지품 외부 노출 절대 금지 (차량 털이 Smash & Grab 방지)
+            </p>
+          </div>
+        </div>
+
+        <!-- 숙소 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-card hover:shadow-soft transition">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-50 text-purple-700 rounded-lg">🏨 하얏트 리젠시 와이키키</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">7박 확정</span>
+          </div>
+          <div class="space-y-1 text-xs text-slate-600">
+            <p class="font-semibold text-slate-800 text-sm">StayFit 피트니스 & 3층 야외 오션뷰 풀/자쿠지</p>
+            <p>체크인: 10/9(금) 15:00 • 체크아웃: 10/16(금) 11:00</p>
+            <p class="text-slate-400">해변 10초 횡단 / 발코니 요가 스트레칭 최적</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- [섹션 2] 720px 북마크 인터랙티브 지도 & 권역별 일러스트 팝업 (🗺️ 지도) -->
+    <section id="sec-map" class="scroll-mt-24 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">🗺️ 오아후 40개 북마크 종합 지도</h2>
+            <span class="px-2.5 py-0.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">높이 720px 특대형</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            패들보드(SUP) 대여 숍, 비치 요가 스팟, 호텔 피트니스/풀 및 명소·맛집·드럭스토어를 마커로 표시합니다. (무료 오픈소스 Leaflet 타일)
+          </p>
+        </div>
+
+        <!-- 지도 제어 버튼군 -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="openIllustMapModal()" class="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-sm hover:from-purple-700 hover:to-indigo-700 transition flex items-center gap-1.5">
+            🖼️ 권역별 일러스트 지도 보기
+          </button>
+          <button id="toggle-map-btn" onclick="toggleMapType()" class="px-3.5 py-2 bg-white border border-slate-300 font-semibold text-xs sm:text-sm text-slate-700 rounded-xl hover:bg-slate-50 transition flex items-center gap-1.5 shadow-2xs">
+            🛰️ 구글맵 임베드 전환
+          </button>
+        </div>
+      </div>
+
+      <!-- 지도 카테고리 필터 칩 -->
+      <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs font-semibold">
+        <button onclick="filterMapMarkers('all')" class="map-filter-btn active px-3 py-1.5 bg-slate-900 text-white rounded-lg transition shrink-0">전체보기 (40)</button>
+        <button onclick="filterMapMarkers('웰니스')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-indigo-600 rounded-lg hover:bg-indigo-50 transition shrink-0">🧘 요가·수영·패들보드</button>
+        <button onclick="filterMapMarkers('명소')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition shrink-0">🏞️ 관광·자연</button>
+        <button onclick="filterMapMarkers('미식')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition shrink-0">🍽️ 로컬 맛집·카페</button>
+        <button onclick="filterMapMarkers('액티비티')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition shrink-0">🏄 액티비티·투어</button>
+        <button onclick="filterMapMarkers('쇼핑')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition shrink-0">🛍️ 쇼핑·아울렛</button>
+        <button onclick="filterMapMarkers('의료')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-rose-600 rounded-lg hover:bg-rose-50 transition shrink-0">🏥 드럭스토어 & 병원</button>
+      </div>
+
+      <!-- 지도 본체 컨테이너 (720px) -->
+      <div class="relative w-full bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden map-container-720">
+        <div id="leaflet-map" class="w-full h-full"></div>
+        <div id="gmap-frame-container" class="hidden w-full h-full">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d237937.1956699264!2d-158.1130638069502!3d21.464522912443026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c00663bed931b23%3A0xef77b10222f98642!2z7ZWY7JmA7J20IOyYpO2VmOyasA!5e0!3m2!1sko!2skr!4v1710000000000!5m2!1sko!2skr"
+            class="w-full h-full border-0" 
+            allowfullscreen="" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- [섹션 3] 꼭 해야할 일(익스트림/힐링) & 먹을것 & 살것 7선 (✨ 위시리스트) -->
+    <section id="sec-wishlist" class="scroll-mt-24 space-y-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">✨ 하와이 꼭 할 일 (익스트림 vs 힐링 웰니스) & 미식·쇼핑 Top 7</h2>
+          <span class="px-2.5 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">실제 예시 사진 호버 툴팁 (200px+)</span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          항목에 마우스를 올리면 <strong>200px 이상의 실물 사진과 상세 팁</strong>이 툴팁으로 표시됩니다. 체크박스를 눌러 완료 상태를 브라우저에 저장하세요.
+        </p>
+      </div>
+
+      <!-- 꼭 해야 할 일: [🔥 익스트림 & 액티브] vs [🌿 힐링 & 웰니스/워터스포츠] 전용 2단 배너 그리드 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 1. 꼭 해야할 일: 🔥 익스트림 & 액티브 Top 4 -->
+        <div class="bg-white p-6 rounded-3xl border border-rose-100 shadow-card space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-rose-50 text-rose-600 text-lg">🔥</span>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">꼭 할 일: 익스트림 & 액티브 Top 4</h3>
+                <p class="text-[11px] text-slate-400">오프로드 질주, 분화구 하이킹, 능선 트레킹</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold px-2 py-0.5 bg-rose-50 text-rose-700 rounded-md">Extreme 4선</span>
+          </div>
+          <div class="space-y-3" id="must-do-extreme-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+
+        <!-- 2. 꼭 해야할 일: 🌿 힐링 & 웰니스/워터스포츠 Top 4 -->
+        <div class="bg-white p-6 rounded-3xl border border-indigo-100 shadow-card space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-indigo-50 text-indigo-600 text-lg">🌿</span>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">꼭 할 일: 힐링 & 웰니스 / 워터 Top 4</h3>
+                <p class="text-[11px] text-slate-400">비치 요가, 카일루아 패들보드(SUP), 호텔 풀 & 바다수영</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md">Wellness 4선</span>
+          </div>
+          <div class="space-y-3" id="must-do-wellness-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 미식 Top 7 & 기념품 Top 7 그리드 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 꼭 먹어야 할 음식 Top 7 -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-emerald-50 text-emerald-600 text-lg">🍽️</span>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">꼭 먹어야 할 음식 (Must-Eat Top 7)</h3>
+                <p class="text-[11px] text-slate-400">포케, 갈릭새우, 말라사다, 로코모코, 아사이볼, 무스비, 스테이크</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md">미식 7선</span>
+          </div>
+          <div class="space-y-3" id="must-eat-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+
+        <!-- 꼭 사야 할 기념품 Top 7 -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-purple-50 text-purple-600 text-lg">🛍️</span>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">꼭 사야 할 기념품 (Must-Buy Top 7)</h3>
+                <p class="text-[11px] text-slate-400">탄키티, 모니 스누피, 로컬책, 코아우든, 호놀룰루쿠키, 코나커피, 파탈로하</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold px-2 py-0.5 bg-purple-50 text-purple-700 rounded-md">쇼핑 7선</span>
+          </div>
+          <div class="space-y-3" id="must-buy-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- [섹션 4] 7박 8일 일자별 타임라인 (🗓️ 타임라인) -->
+    <section id="sec-timeline" class="scroll-mt-24 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">🗓️ 7박 8일 일자별 상세 타임라인</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">호텔 피트니스/수영, 비치 요가, 패들보드(SUP)가 자연스럽게 조화된 최적의 동선입니다.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400 font-medium">✨ 현재 날짜 해당 일자 카드 자동 강조</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="timeline-container">
+        <!-- JS Day 1 ~ Day 8 카드 자동 렌더링 -->
+      </div>
+    </section>
+
+    <!-- [섹션 5] 종합 데이터 표 & 구글맵 아이콘 바로가기 (📋 일정 표) -->
+    <section id="sec-table" class="scroll-mt-24 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">📋 전체 일정 & 장소 종합 데이터 표</h2>
+            <span id="table-count-badge" class="px-2.5 py-0.5 bg-slate-900 text-white text-xs font-bold rounded-full">40개 항목</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            필터 및 키워드로 검색할 수 있으며, <strong>맨 오른쪽 구글 지도 핀 버튼</strong>을 누르면 구글 내비게이션으로 즉시 연결됩니다.
+          </p>
+        </div>
+
+        <!-- 실시간 검색 입력창 -->
+        <div class="relative w-full md:w-72">
+          <input 
+            type="text" 
+            id="table-search-input" 
+            oninput="renderMasterTable()" 
+            placeholder="장소명, 요가, 패들보드, 포케 검색..." 
+            class="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
+          />
+          <span class="absolute left-3 top-2.5 text-slate-400 text-sm">🔍</span>
+        </div>
+      </div>
+
+      <!-- 다중 필터 버튼 바 -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-bold text-slate-600">권역:</span>
+          <select id="filter-region" onchange="renderMasterTable()" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700">
+            <option value="all">전체 권역</option>
+            <option value="와이키키">와이키키 & 다운타운</option>
+            <option value="동부">동부 해안 (72번 국도 / 카일루아)</option>
+            <option value="노스쇼어">북부 노스쇼어</option>
+            <option value="진주만">진주만·와이켈레·코올리나</option>
+          </select>
+
+          <span class="font-bold text-slate-600 ml-2">분류:</span>
+          <select id="filter-category" onchange="renderMasterTable()" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700">
+            <option value="all">전체 분류</option>
+            <option value="웰니스">🧘 요가·수영·패들보드</option>
+            <option value="명소">🏞️ 관광·명소</option>
+            <option value="미식">🍽️ 식당·카페</option>
+            <option value="액티비티">🏄 액티비티</option>
+            <option value="쇼핑">🛍️ 쇼핑</option>
+            <option value="의료">🏥 드럭스토어 & 병원</option>
+          </select>
+
+          <span class="font-bold text-slate-600 ml-2">일정:</span>
+          <select id="filter-day" onchange="renderMasterTable()" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700">
+            <option value="all">전체 일자 (Day 1~8)</option>
+            <option value="Day 1">Day 1 (입국 & 호텔/바다수영)</option>
+            <option value="Day 2">Day 2 (카일루아 SUP & 트레킹)</option>
+            <option value="Day 3">Day 3 (하나우마베이 & 풀 휴식)</option>
+            <option value="Day 4">Day 4 (모닝 헬스 & 쿠알로아 UTV)</option>
+            <option value="Day 5">Day 5 (노스쇼어 샤크스코브 수영)</option>
+            <option value="Day 6">Day 6 (모닝 헬스 & 와이켈레 아울렛)</option>
+            <option value="Day 7">Day 7 (비치 요가 & 루아우 디너)</option>
+            <option value="Day 8">Day 8 (발코니 스트레칭 & 귀국)</option>
+          </select>
+        </div>
+
+        <button onclick="resetTableFilters()" class="text-slate-400 hover:text-slate-700 font-semibold underline">
+          필터 초기화
+        </button>
+      </div>
+
+      <!-- 테이블 본체 -->
+      <div class="bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[11px] tracking-wider">
+                <th class="py-3.5 px-4">일정</th>
+                <th class="py-3.5 px-4">장소명 / 상호</th>
+                <th class="py-3.5 px-3">권역</th>
+                <th class="py-3.5 px-3">분류</th>
+                <th class="py-3.5 px-4">핵심 특징 & 방문 팁</th>
+                <th class="py-3.5 px-3">예상 비용</th>
+                <th class="py-3.5 px-4 text-center font-bold text-purple-700">구글맵</th>
+              </tr>
+            </thead>
+            <tbody id="master-table-body" class="divide-y divide-slate-100 font-normal text-slate-700">
+              <!-- JS 동적 렌더링 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- [섹션 6] 성인 2인 예상 경비 & 예산 플래너 (💰 2인 예산) -->
+    <section id="sec-budget" class="scroll-mt-24 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">💰 성인 2인 총 예상 경비 & 예산 플래너</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">확정 고정비와 패들보드 렌탈, 비치 요가, 현지 미식/입장료 실질 예산 총정리</p>
+        </div>
+
+        <!-- 달러 / 원화 표시 전환 토글 -->
+        <div class="inline-flex p-1 bg-slate-100 rounded-xl font-bold text-xs">
+          <button id="curr-usd-btn" onclick="setCurrency('USD')" class="px-3 py-1.5 rounded-lg bg-white shadow-2xs text-purple-700">달러 ($ USD)</button>
+          <button id="curr-krw-btn" onclick="setCurrency('KRW')" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800">원화 (₩ KRW)</button>
+        </div>
+      </div>
+
+      <!-- 상단 요약 카드 3종 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-6 rounded-3xl shadow-soft">
+          <div class="text-xs font-semibold text-purple-200">2인 총 소요 예상 예산</div>
+          <div class="text-3xl font-black mt-2" id="budget-total-val">$8,695</div>
+          <div class="text-xs text-purple-100 mt-1" id="budget-total-krw">약 1,204만 원 (1인당 약 602만 원)</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card">
+          <div class="text-xs font-bold text-slate-400 uppercase">사전 확정 고정비 (78%)</div>
+          <div class="text-2xl font-extrabold text-slate-800 mt-2" id="budget-fixed-val">$6,810</div>
+          <div class="text-xs text-slate-500 mt-1">항공 2인($2,800) + 하얏트 7박($2,940) + 트렉스/주차($940) + 비자/보험($130)</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card">
+          <div class="text-xs font-bold text-slate-400 uppercase">현지 사용 변동비 (22%)</div>
+          <div class="text-2xl font-extrabold text-slate-800 mt-2" id="budget-variable-val">$1,885</div>
+          <div class="text-xs text-slate-500 mt-1">식음료/팁($800) + UTV/패들보드/요가/루아우($450) + 기념품/주유($435) + 비상금($200)</div>
+        </div>
+      </div>
+
+      <!-- 하와이 팁 & 세금 안내[cite: 1, 2] -->
+      <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-5 text-xs sm:text-sm text-amber-900 space-y-2">
+        <div class="font-bold flex items-center gap-2">
+          <span>💡 하와이 실전 팁(Tip) & 주세(Tax) 결제 공식</span>
+        </div>
+        <ul class="list-disc list-inside space-y-1 text-amber-800 text-xs">
+          <li><strong>하와이 주세(GET):</strong> 모든 식당과 상점에서 메뉴 가격에 <strong>4.712%</strong> 소비세가 별도 가산됩니다.</li>
+          <li><strong>서빙 식당 팁:</strong> 점심 15~18%, 저녁 18~20% (영수증 하단 'Tip Included' 표기 시 이중 지불 주의)[cite: 1, 2].</li>
+          <li><strong>테이크아웃/푸드트럭:</strong> 키오스크 팁 선택창에 15%, 20%가 떠도 의무가 아니므로 <strong>'No Tip'</strong> 선택 무방[cite: 1, 2].</li>
+          <li><strong>호텔 팁:</strong> 룸 클리닝(매일 아침 침대당 $2~$3), 벨보이(가방당 $1~$2), 발레파킹 출차 시 $3~$5 소액 지폐 권장[cite: 1, 2].</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- [섹션 7] 짐 꾸리기 30선 체크리스트 (🧳 체크리스트) -->
+    <section id="sec-checklist" class="scroll-mt-24 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">🧳 하와이 짐 꾸리기 30선 체크리스트</h2>
+            <span id="pack-progress-text" class="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">0 / 30 완료</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">요가복, 운동화, 패들보드/수영용 래시가드가 포함되어 있으며 LocalStorage에 저장됩니다.</p>
+        </div>
+        <button onclick="resetPackingChecklist()" class="text-xs text-slate-400 hover:text-rose-600 font-semibold underline">
+          체크리스트 전체 초기화
+        </button>
+      </div>
+
+      <!-- 진행률 바 -->
+      <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+        <div id="pack-progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-0 transition-all duration-300"></div>
+      </div>
+
+      <!-- 체크리스트 4개 그룹 그리드 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="packing-grid">
+        <!-- JS 렌더링 -->
+      </div>
+    </section>
+
+    <!-- [섹션 8] 안전·세관·의약품 종합 가이드 (🛡️ 안전 가이드) -->
+    <section id="sec-guide" class="scroll-mt-24 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">🛡️ 하와이 상황별 안전·세관·의약품 종합 가이드</h2>
+            <span class="px-2.5 py-0.5 bg-rose-100 text-rose-700 text-xs font-bold rounded-full">필수 숙지</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">미국 입국 세관 신고, 반입 금지 품목, 처방약 규정, 렌터카 안전 및 응급 병원 안내[cite: 1, 2]</p>
+        </div>
+
+        <!-- 가이드 검색창 -->
+        <div class="relative w-full md:w-64">
+          <input 
+            type="text" 
+            id="guide-search-input" 
+            oninput="renderGuideHub()" 
+            placeholder="가이드 검색 (예: 멜라토닌, 라면, 응급실)..." 
+            class="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
+          />
+          <span class="absolute left-3 top-2.5 text-slate-400 text-sm">🔍</span>
+        </div>
+      </div>
+
+      <!-- 카테고리 필터 탭 -->
+      <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs font-semibold">
+        <button onclick="filterGuideCategory('all')" class="guide-cat-btn active px-3.5 py-1.5 bg-slate-900 text-white rounded-xl transition shrink-0">전체보기</button>
+        <button onclick="filterGuideCategory('세관/검역')" class="guide-cat-btn px-3.5 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition shrink-0">✈️ 세관·라면·식품 반입</button>
+        <button onclick="filterGuideCategory('의약품/드럭스토어')" class="guide-cat-btn px-3.5 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition shrink-0">💊 의약품·멜라토닌·CBD</button>
+        <button onclick="filterGuideCategory('의료/응급')" class="guide-cat-btn px-3.5 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition shrink-0">🏥 긴급진료소 & 병원</button>
+        <button onclick="filterGuideCategory('교통/치안')" class="guide-cat-btn px-3.5 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition shrink-0">🚗 렌터카 주차·차량털이</button>
+        <button onclick="filterGuideCategory('비상연락')" class="guide-cat-btn px-3.5 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition shrink-0">🚨 긴급 911 & 총영사관</button>
+      </div>
+
+      <!-- 세관 식품 반입 가능/불가 비교 박스[cite: 1, 2] -->
+      <div class="bg-white rounded-3xl border border-slate-200/80 shadow-card p-5 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+            ✈️ 미국 입국 세관(CBP) 식품 반입 가능 vs 불가 완벽 대조표
+          </h3>
+          <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200">
+            ⚠️ 세관 키오스크 식품(Food) 소지 여부 질문엔 가공식품만 있어도 무조건 'YES' 체크 필수![cite: 1, 2]
+          </span>
+        </div>
+        <p class="text-xs text-slate-500">
+          신고 시 단순히 압류·폐기로 끝나지만, 'NO'로 허위 표기 후 적발 시 <strong>최소 $500~$1,000 과태료 및 영구 정밀검색 대상 등록</strong>됩니다[cite: 1, 2].
+        </p>
+
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-xs sm:text-sm text-left border border-slate-200 rounded-xl overflow-hidden">
+            <thead class="bg-slate-100 text-slate-700 font-bold">
+              <tr>
+                <th class="p-3 border-r border-slate-200 w-24">구분</th>
+                <th class="p-3 border-r border-slate-200 text-rose-600 bg-rose-50/70">❌ 반입 불가 (압류·과태료 대상)[cite: 1, 2]</th>
+                <th class="p-3 text-emerald-700 bg-emerald-50/70">⭕ 반입 가능 (신고 후 통과 가능)[cite: 1, 2]</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">라면류</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">쇠고기·돼지고기·닭고기 성분 라면 (신라면, 삼양라면, 진라면 등 육류 베이스 스프 일체)</td>
+                <td class="p-3 text-emerald-800">해물 라면 (새우탕, 오징어짬뽕, 너구리 등 육류 성분 미포함), 순수 채식 라면</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">즉석밥/반찬</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">장조림, 스팸, 햄 캔, 소고기 볶음고추장 등 가공 육류 반찬</td>
+                <td class="p-3 text-emerald-800">흰 쌀밥 햇반, 마른 김, 멸치볶음, 오징어채, 쥐포 등 건어물 반찬류</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">김치/장류</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">고기 육수가 들어간 미밀봉 반찬류</td>
+                <td class="p-3 text-emerald-800">완제품 시판 밀봉 김치(캔/파우치 볶음김치), 고기 성분 없는 시판 된장/고추장/쌈장</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">간식/스낵</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">육포(Beef Jerky), 미니 소시지(천하장사, 맥스봉 등 돈육/어육 혼합)</td>
+                <td class="p-3 text-emerald-800">육류 성분 없는 스낵, 과자, 초콜릿, 사탕류</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 동적 아코디언 가이드 카드 그리드 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="guide-cards-grid">
+        <!-- JS 렌더링 -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 푸터 ==================== -->
+  <footer class="bg-white border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-2">
+      <p class="font-bold text-slate-700 text-sm">🌺 Have a Mindful & Refreshing Vacation in Oahu, Hawaii! Mahalo!</p>
+      <p>본 가이드북은 오아후 7박 8일 일정(10.09~10.16)에 맞춤 최적화된 반응형 웹 애플리케이션입니다.</p>
+    </div>
+  </footer>
+
+  <!-- ==================== 플로팅 버튼 & 모달들 ==================== -->
+
+  <!-- 우측 하단 플로팅 환율/팁 계산기 버튼 -->
+  <button onclick="toggleCalcModal()" class="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-floating hover:scale-105 active:scale-95 transition flex items-center gap-2 group">
+    <span class="text-xl">💵</span>
+    <span class="font-bold text-sm hidden group-hover:inline-block transition-all duration-200">환율·팁 계산기</span>
+  </button>
+
+  <!-- 환율·세금·팁 계산기 모달 -->
+  <div id="calc-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💵</span>
+          <h3 class="font-extrabold text-base">하와이 실시간 환율 & 팁 계산기</h3>
+        </div>
+        <button onclick="toggleCalcModal()" class="p-1 rounded-lg hover:bg-white/20 text-white transition text-lg">✕</button>
+      </div>
+
+      <div class="p-6 space-y-5 text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">메뉴/결제 달러 금액 ($ USD)</label>
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 font-bold text-slate-400 text-base">$</span>
+            <input type="number" id="calc-usd-input" value="50" oninput="runCalculator()" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-mono text-lg font-bold text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+          </div>
+          <div class="flex gap-1.5 mt-2">
+            <button onclick="quickAddUsd(10)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700">+$10</button>
+            <button onclick="quickAddUsd(20)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700">+$20</button>
+            <button onclick="quickAddUsd(50)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700">+$50</button>
+            <button onclick="quickAddUsd(100)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700">+$100</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">팁 비율 선택 (레스토랑 서빙 기준)[cite: 1, 2]</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button onclick="selectTipRate(0)" class="tip-rate-btn py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">0%<br><span class="text-[10px] text-slate-400">테이크아웃</span></button>
+            <button onclick="selectTipRate(15)" class="tip-rate-btn py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">15%<br><span class="text-[10px] text-slate-400">점심 기본</span></button>
+            <button onclick="selectTipRate(18)" class="tip-rate-btn active py-2 border-2 border-purple-600 bg-purple-50 rounded-xl text-xs font-bold text-purple-700">18%<br><span class="text-[10px] text-purple-500">저녁 추천</span></button>
+            <button onclick="selectTipRate(20)" class="tip-rate-btn py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">20%<br><span class="text-[10px] text-slate-400">우수 서비스</span></button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="calc-tax-check" checked onchange="runCalculator()" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500">
+          <label for="calc-tax-check" class="text-xs text-slate-600">하와이 소비세(GET 4.712%) 자동 가산</label>
+        </div>
+
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 font-mono text-xs">
+          <div class="flex justify-between text-slate-500">
+            <span>음식 원금:</span>
+            <span id="calc-res-base">$50.00</span>
+          </div>
+          <div class="flex justify-between text-slate-500">
+            <span>하와이 주세 (4.712%):</span>
+            <span id="calc-res-tax">+$2.36</span>
+          </div>
+          <div class="flex justify-between text-purple-600 font-semibold">
+            <span>팁 (18%):</span>
+            <span id="calc-res-tip">+$9.00</span>
+          </div>
+          <div class="border-t border-slate-200 pt-2 flex justify-between items-center text-sm font-bold text-slate-900">
+            <span>최종 지불 총액:</span>
+            <span id="calc-res-total" class="text-lg text-purple-700 font-black">$61.36</span>
+          </div>
+          <div class="text-right text-xs text-slate-500 font-sans">
+            ≈ 원화 약 <strong id="calc-res-krw" class="text-slate-800">84,980</strong>원 (환율 1,385원 기준)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 권역별 일러스트 손그림 지도 모달 -->
+  <div id="illust-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🖼️</span>
+          <div>
+            <h3 class="font-extrabold text-base">오아후 지도 - 권역별 보기 (일러스트)</h3>
+            <p class="text-[11px] text-slate-400">4대 권역: 와이키키 & 다운타운 / 동부 해안 / 노스쇼어 / 진주만 & 와이켈레</p>
+          </div>
+        </div>
+        <button onclick="closeIllustMapModal()" class="p-1 rounded-lg hover:bg-white/20 text-white transition text-lg">✕</button>
+      </div>
+
+      <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex items-center justify-center bg-slate-100">
+        <div class="w-full max-w-2xl bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+          <svg viewBox="0 0 800 550" class="w-full h-auto drop-shadow-xs" xmlns="http://www.w3.org/2000/svg">
+            <rect width="800" height="550" fill="#e0f2fe" rx="16" />
+            <path d="M50 480 Q 200 450 350 490 T 750 460" stroke="#bae6fd" stroke-width="2" fill="none" stroke-dasharray="6,6"/>
+            <path d="M 220 380 C 160 360 120 270 140 210 C 160 150 250 90 380 90 C 450 90 510 140 550 210 C 580 260 680 340 670 410 C 650 450 590 440 540 400 C 490 380 430 430 360 420 C 290 410 250 400 220 380 Z" fill="#bbf7d0" stroke="#15803d" stroke-width="4" />
+            <path d="M 510 200 C 560 250 670 330 660 410 C 640 440 580 430 540 390 C 500 370 490 300 510 200 Z" fill="#fed7aa" stroke="#c2410c" stroke-width="3" opacity="0.9" />
+            <path d="M 440 380 C 490 370 540 390 550 430 C 520 460 450 445 420 420 C 425 395 435 385 440 380 Z" fill="#ddd6fe" stroke="#6d28d9" stroke-width="3" opacity="0.9" />
+            <path d="M 220 370 C 170 350 140 280 160 230 C 220 250 290 320 340 370 C 290 385 240 380 220 370 Z" fill="#bae6fd" stroke="#0369a1" stroke-width="3" opacity="0.9" />
+
+            <text x="400" y="55" text-anchor="middle" font-size="24" font-weight="900" fill="#0f172a">오아후 지도 - 권역별 핵심 보기</text>
+            <text x="400" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#64748b">O'ahu Map - Regional Guide</text>
+
+            <g transform="translate(480, 425)">
+              <rect x="-10" y="-18" width="95" height="34" rx="8" fill="#6d28d9" />
+              <text x="37" y="3" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">와이키키</text>
+            </g>
+            <g transform="translate(560, 310)">
+              <rect x="-10" y="-18" width="90" height="34" rx="8" fill="#ea580c" />
+              <text x="35" y="3" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">카일루아</text>
+            </g>
+            <g transform="translate(380, 140)">
+              <rect x="-10" y="-18" width="95" height="34" rx="8" fill="#059669" />
+              <text x="37" y="3" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">노스쇼어</text>
+            </g>
+            <g transform="translate(210, 310)">
+              <rect x="-10" y="-18" width="90" height="34" rx="8" fill="#0284c7" />
+              <text x="35" y="3" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">와이켈레</text>
+            </g>
+
+            <g transform="translate(60, 470)">
+              <rect width="680" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" />
+              <circle cx="50" cy="25" r="8" fill="#ddd6fe" stroke="#6d28d9" stroke-width="2"/>
+              <text x="70" y="29" font-size="12" font-weight="bold" fill="#334155">와이키키·다운타운</text>
+              <circle cx="210" cy="25" r="8" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+              <text x="230" y="29" font-size="12" font-weight="bold" fill="#334155">동부 72번 국도</text>
+              <circle cx="370" cy="25" r="8" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+              <text x="390" y="29" font-size="12" font-weight="bold" fill="#334155">북부 노스쇼어</text>
+              <circle cx="520" cy="25" r="8" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>
+              <text x="540" y="29" font-size="12" font-weight="bold" fill="#334155">진주만·와이켈레</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 공통 실물 사진 호버 툴팁 (최소 200px 규격 완벽 만족: 260px x 160px) -->
+  <div id="hover-tooltip" class="img-tooltip bg-white p-2.5 rounded-2xl shadow-2xl border border-slate-200/90 w-64">
+    <div class="relative w-full h-40 bg-slate-100 rounded-xl overflow-hidden mb-2">
+      <img id="tooltip-img" src="" alt="preview" class="w-full h-full object-cover" />
+      <span id="tooltip-badge" class="absolute bottom-2 left-2 px-2 py-0.5 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-bold rounded-md"></span>
+    </div>
+    <div id="tooltip-title" class="font-extrabold text-slate-900 text-xs truncate"></div>
+    <div id="tooltip-desc" class="text-[11px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed"></div>
+  </div>
+
+  <!-- ==================== 자바스크립트 비즈니스 로직 ==================== -->
+  <script>
+    const EXCHANGE_RATE = 1385;
+    let currentCurrency = 'USD';
+
+    // 40개 마스터 장소 데이터 (요가, 헬스, 수영, 패들보드 완벽 반영)
+    const placesData = [
+      // 🧘 웰니스 & 워터스포츠 스팟
+      { name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", desc: "호텔 3층 쾌적한 오션뷰 러닝머신 & 프리웨이트 공간", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Beach+Resort" },
+      { name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", desc: "와이키키 해변을 굽어보며 선베드 태닝 & 온수 자쿠지", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
+      { name: "와이키키 퀸즈 비치 (바다수영 & 모닝 요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", desc: "파도가 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 비치 요가", price: "무료 (매트 지참)", gmap: "Queens+Surf+Beach+Honolulu" },
+      { name: "카일루아 비치 어드벤처스 (SUP 패들보드)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", desc: "에메랄드빛 카일루아 만을 가르는 스탠드업 패들보드 대여", price: "$65~$85 (2시간)", gmap: "Kailua+Beach+Adventures" },
+
+      // 와이키키 & 다운타운
+      { name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", desc: "해변 바로 앞 7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki+Beach+Resort" },
+      { name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", desc: "따끈한 스팸 무스비 & 주먹밥 명소", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
+      { name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", desc: "생참치 커스텀 포케볼 가성비 1등", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
+      { name: "치즈케이크 팩토리 와이키키", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", desc: "푸짐한 파스타와 치즈케이크 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
+      { name: "ABC 스토어 #83 & #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", desc: "탄키티 인형, 생수, 리프세이프 선크림", price: "품목별", gmap: "ABC+Stores+Honolulu" },
+      { name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", desc: "CVS 대형 드럭스토어, OTC 상비약, 마카다미아", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
+      { name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
+      { name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
+      { name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이 한정 태닝 스누피 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
+      { name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이 한정판 Pataloha 티셔츠 & 텀블러", price: "$45~$65", gmap: "Patagonia+Honolulu" },
+      { name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "프리미엄 로컬 식료품점 & 델리 포케 도시락", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
+      { name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", desc: "세계 최대 야외 쇼핑몰, 타깃, 롱스드럭스", price: "무료주차", gmap: "Ala+Moana+Center" },
+      { name: "알라모아나 비치 매직아일랜드", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", desc: "호놀룰루 도심과 어우러진 최고의 석양 뷰", price: "무료", gmap: "Magic+Island+Ala+Moana" },
+      { name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", desc: "시그니처 코코퍼프 & 그레이비 로코모코", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
+      { name: "돈키호테 호놀룰루 (24시간)", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트, 스낵/약국 코너 완비", price: "품목별", gmap: "Don+Quijote+Honolulu" },
+      { name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "두툼한 프라임 립 & 티본스테이크 디너", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
+      { name: "Da Shop (로컬 북스토어)", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책, 사진집, 로컬 서적 전문 서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
+
+      // 동부 해안 (72번 국도 & 카일루아)
+      { name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", desc: "겉바속촉 갓 튀긴 오리지널 & 하우피아 말라사다", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
+      { name: "다이아몬드 헤드 (Diamond Head)", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", desc: "와이키키 전경을 360도 굽어보는 분화구 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
+      { name: "아일랜드 브루 커피하우스", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", desc: "하와이카이 마리나 요트 선착장 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
+      { name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", desc: "산호초와 바다거북을 눈앞에서 만나는 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
+      { name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", desc: "파도가 칠 때 바위틈으로 솟구치는 천연 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
+      { name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", desc: "끝없이 펼쳐진 에메랄드빛 백사장 드라이브 코스", price: "무료", gmap: "Waimanalo+Beach+Park" },
+      { name: "라니카이 비치 (바다수영)", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", desc: "모쿨루아 섬을 마주하는 천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
+      { name: "라니카이 필박스 트레일", lat: 21.3895, lng: -157.7125, region: "동부", cat: "액티비티", day: "Day 2", desc: "군사 관측소에 올라 에메랄드 바다를 조망하는 하이킹", price: "무료", gmap: "Lanikai+Pillbox+Trail" },
+      { name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", desc: "넓은 주차장과 샤워실 완비 (패들보드 거점)", price: "무료주차", gmap: "Kailua+Beach+Park" },
+      { name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", desc: "쥐라기 공원 영화 배경 계곡 오프로드 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
+      { name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", desc: "바다 위 '중국인 모자섬'을 배경으로 사진 찍는 공원", price: "무료", gmap: "Kualoa+Regional+Park" },
+
+      // 노스쇼어 (북부)
+      { name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "파인애플 아이스크림(돌휩) & 기차 투어", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
+      { name: "할레이바 타운 (Haleiwa)", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "빈티지 목조 서퍼 마을 산책 & 갤러리 쇼핑", price: "무료", gmap: "Haleiwa+Town+Oahu" },
+      { name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "오아후 원조 갈릭 스캠피 버터 새우 플레이트", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
+      { name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "무지개빛 시럽과 떡을 얹은 70년 전통 빙수 노포", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
+      { name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "신선한 열대과일과 수제 그래놀라 유기농 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
+      { name: "샤크스 코브 (바다수영·스노클)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", desc: "천연 바위 웅덩이 암초 속 수족관 스노클링 & 힐링 수영", price: "무료", gmap: "Shark's+Cove+Oahu" },
+      { name: "선셋 비치 파크 (Sunset Beach)", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "태평양 수평선 너머로 저무는 환상적인 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
+
+      // 진주만 & 서부
+      { name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장 (가방 반입 금지)", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
+      { name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "폴로, 코치, 타미힐피거 등 미국 브랜드 대폭 할인", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
+      { name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변에서 즐기는 전통 훌라 댄스 & 디너 뷔페", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
+    ];
+
+    // [꼭 해야할 일: 🔥 익스트림 & 액티브 Top 4]
+    const mustDoExtremeItems = [
+      {
+        id: "do-ex-1",
+        title: "쿠알로아 랜치 UTV 랩터 질주",
+        sub: "동북부 쥐라기 계곡",
+        desc: "사륜 오프로드 랩터를 직접 운전해 쥐라기 공원 영화 촬영지와 거친 산악 계곡을 질주하는 최고의 어드벤처",
+        img: "https://images.unsplash.com/photo-1509233725247-49e657c54213?w=500&q=80",
+        tag: "오프로드"
+      },
+      {
+        id: "do-ex-2",
+        title: "다이아몬드 헤드 분화구 트레킹",
+        sub: "와이키키 남동부 분화구",
+        desc: "사화산 분화구 터널과 나선형 계단을 올라 정상에서 와이키키 도심과 파란 바다를 360도로 내려다보는 하이킹",
+        img: "https://images.unsplash.com/photo-1542259009-559971a0d02a?w=500&q=80",
+        tag: "분화구등반"
+      },
+      {
+        id: "do-ex-3",
+        title: "라니카이 필박스 능선 트레일",
+        sub: "카일루아 능선 군사관측소",
+        desc: "에메랄드빛 천국의 바다와 모쿨루아 쌍둥이 섬을 굽어보며 깎아지른 절벽 능선을 걷는 숨 막히는 뷰 포인트",
+        img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&q=80",
+        tag: "능선하이킹"
+      },
+      {
+        id: "do-ex-4",
+        title: "노스쇼어 거대 파도 & 선셋 비치",
+        sub: "북부 할레이바~선셋 비치",
+        desc: "세계 서퍼들의 성지에서 태평양 거센 파도의 웅장함을 체감하고 수평선으로 떨어지는 붉은 노을 감상",
+        img: "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=500&q=80",
+        tag: "노스쇼어"
+      }
+    ];
+
+    // [꼭 해야할 일: 🌿 힐링 & 웰니스/워터 Top 4]
+    const mustDoWellnessItems = [
+      {
+        id: "do-well-1",
+        title: "카일루아 에메랄드 바다 패들보드(SUP)",
+        sub: "카일루아 비치 어드벤처스",
+        desc: "거친 서핑 대신 잔잔한 에메랄드빛 카일루아 만 위에서 패들링하며 바다거북과 평화로운 힐링 시간을 만끽",
+        img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&q=80",
+        tag: "패들보드(SUP)"
+      },
+      {
+        id: "do-well-2",
+        title: "와이키키 모닝 선라이즈 비치 요가",
+        sub: "퀸즈 비치 잔디/백사장 (06:30)",
+        desc: "아침 바닷바람과 파도 소리를 들으며 다이아몬드 헤드 너머로 떠오르는 태양을 마주하는 웰니스 매트 요가 세션",
+        img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&q=80",
+        tag: "비치요가"
+      },
+      {
+        id: "do-well-3",
+        title: "하얏트 StayFit 모닝 피트니스 & 러닝",
+        sub: "하얏트 리젠시 3층 피트니스",
+        desc: "호텔 최신 러닝머신에서 와이키키 뷰를 보며 땀 흘리고 쾌적하게 하루 컨디션을 깨우는 모닝 웰니스 루틴",
+        img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&q=80",
+        tag: "호텔헬스"
+      },
+      {
+        id: "do-well-4",
+        title: "하얏트 오션뷰 풀 태닝 & 와이키키 바다수영",
+        sub: "3층 야외 수영장 & 와이키키 비치",
+        desc: "파도가 잔잔한 방파제 안쪽에서 바다수영을 즐기고, 호텔 테라스 선베드에 누워 온수 자쿠지와 칵테일 휴식",
+        img: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=500&q=80",
+        tag: "호텔풀&바다"
+      }
+    ];
+
+    // 꼭 먹어야 할 음식 Top 7
+    const mustEatItems = [
+      {
+        id: "eat-1",
+        title: "마구로 스팟 (Maguro Spot) 생참치 포케",
+        sub: "와이키키 도보 3분",
+        desc: "당일 잡은 신선한 생참치 아히에 스파이시 마요 & 쇼유 소스 덮밥",
+        img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
+        tag: "포케볼"
+      },
+      {
+        id: "eat-2",
+        title: "지오반니 새우 트럭 갈릭 스캠피",
+        sub: "노스쇼어 할레이바",
+        desc: "마늘과 버터 소스에 바삭하게 볶아 밥 위에 얹은 원조 갈릭 새우 플레이트",
+        img: "https://images.unsplash.com/photo-1559742811-822873691df8?w=500&q=80",
+        tag: "갈릭쉬림프"
+      },
+      {
+        id: "eat-3",
+        title: "레오나즈 베이커리 갓 튀긴 말라사다",
+        sub: "카파훌루 본점",
+        desc: "겉은 설탕으로 바삭하고 속은 쫄깃한 하와이언 도넛 (오리지널 & 하우피아)",
+        img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80",
+        tag: "도넛"
+      },
+      {
+        id: "eat-4",
+        title: "릴리하 베이커리 로코모코 & 코코퍼프",
+        sub: "쿠아키니 본점",
+        desc: "진한 육즙 패티에 그레이비소스를 얹은 식사와 달콤한 초코 슈크림 디저트",
+        img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
+        tag: "소울푸드"
+      },
+      {
+        id: "eat-5",
+        title: "헤일레바 볼스 유기농 아사이볼",
+        sub: "노스쇼어 서퍼 타운",
+        desc: "신선한 베리와 유기농 그래놀라, 하와이 꿀을 듬뿍 올린 수제 아사이볼",
+        img: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&q=80",
+        tag: "아사이볼"
+      },
+      {
+        id: "eat-6",
+        title: "이야스메 무스비 스팸 & 아보카도",
+        sub: "와이키키 본점",
+        desc: "따뜻한 쌀밥에 짭조름한 구운 스팸과 계란, 아보카도를 두른 국민 간식",
+        img: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=500&q=80",
+        tag: "무스비"
+      },
+      {
+        id: "eat-7",
+        title: "리틀 조스 프라임 립 & 티본 스테이크",
+        sub: "다운타운 근교",
+        desc: "물놀이 후 원기 회복을 위한 두툼하고 풍부한 육즙의 정통 아메리칸 스테이크",
+        img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80",
+        tag: "스테이크"
+      }
+    ];
+
+    // 꼭 사야 할 기념품 Top 7
+    const mustBuyItems = [
+      {
+        id: "buy-1",
+        title: "태닝 키티 (탄키티) & 산리오 인형",
+        sub: "ABC Stores / 돌 플랜테이션 한정",
+        desc: "햇빛에 까맣게 탄 피부에 훌라 스커트를 입은 하와이 한정판 헬로키티 키링",
+        img: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500&q=80",
+        tag: "캐릭터"
+      },
+      {
+        id: "buy-2",
+        title: "모니(Moni) 태닝 스누피 굿즈",
+        sub: "와이키키 모니 매장 독점",
+        desc: "서핑보드를 든 태닝 스누피가 프린팅된 코튼 에코백, 티셔츠, 파우치",
+        img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&q=80",
+        tag: "한정판"
+      },
+      {
+        id: "buy-3",
+        title: "하와이 로컬 서적 & 일러스트 북",
+        sub: "Da Shop / Nā Mea Hawaiʻi 독립서점",
+        desc: "《ABC's of Hawai‘i》 그림책, 하와이 자연 사진집 및 감성 컬러링북",
+        img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&q=80",
+        tag: "로컬문화"
+      },
+      {
+        id: "buy-4",
+        title: "코아 우든 북마크 & 대시보드 훌라걸",
+        sub: "로컬 기프트 샵 / 기념품점",
+        desc: "하와이산 코아 원목 거북이 각인 책갈피 & 차 안에서 흔들리는 훌라 댄서 피규어",
+        img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&q=80",
+        tag: "인테리어"
+      },
+      {
+        id: "buy-5",
+        title: "호놀룰루 쿠키 파인애플 틴 쇼트브레드",
+        sub: "호놀룰루 쿠키 매장 전역",
+        desc: "시그니처 파인애플 모양 쇼트브레드와 초콜릿 딥 쿠키 선물 세트",
+        img: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+        tag: "디저트"
+      },
+      {
+        id: "buy-6",
+        title: "100% 코나 커피 최고급 원두",
+        sub: "아일랜드 빈티지 / 로컬 마켓",
+        desc: "세계 3대 커피의 깊은 꽃향기와 부드러운 산미를 지닌 Extra Fancy 원두",
+        img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80",
+        tag: "원두커피"
+      },
+      {
+        id: "buy-7",
+        title: "파타고니아 파탈로하(Pataloha) 셔츠",
+        sub: "파타고니아 호놀룰루 독점",
+        desc: "하와이 매장에서만 판매되는 유니크한 Pataloha 로고 프린팅 티셔츠",
+        img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&q=80",
+        tag: "패션의류"
+      }
+    ];
+
+    // 짐 꾸리기 30선
+    const packingData = [
+      {
+        cat: "필수 서류 & 금융",
+        items: [
+          "여권 (유효기간 6개월 이상)",
+          "미국 전자비자 (ESTA 승인본)",
+          "항공권 E-티켓 / 모바일 탑승권",
+          "호텔 및 렌터카 예약 바우처",
+          "국제운전면허증 + 국내면허증 동시 지참",
+          "해외결제 신용카드 (트래블로그/비자/마스터)",
+          "비상용 달러 현금 ($1, $5 소액권 위주)",
+          "해외여행자보험 영문 증명서"
+        ]
+      },
+      {
+        cat: "물놀이 & 웰니스 용품",
+        items: [
+          "래시가드 / 수영복 (2~3벌 넉넉히)",
+          "아쿠아슈즈 (산호초 및 바위 보호용)",
+          "스탠드업 패들보드(SUP)용 스트랩 모자",
+          "비치 요가 매트 / 스포츠 비치타월",
+          "호텔 피트니스용 가벼운 런닝화/요가복",
+          "스노클링 마스크 & 방수팩",
+          "리프 세이프(Reef-Safe) 무기자차 선크림"
+        ]
+      },
+      {
+        cat: "전자기기 & 렌터카 준비",
+        items: [
+          "110V 11자 돼지코 어댑터 (3~4개)",
+          "스마트폰 차량용 송풍구 거치대",
+          "차량용 C타입 고속 충전 시거잭/케이블",
+          "대용량 보조배터리 (기내 휴대)",
+          "미국 eSIM 또는 유심 장착 완료"
+        ]
+      },
+      {
+        cat: "상비약 & 퍼스널케어",
+        items: [
+          "개인 처방약 (원래 약병 + 영문처방전)[cite: 1, 2]",
+          "한국산 종합감기약 / 해열진통제",
+          "소화제 / 지사제 / 방수밴드",
+          "보트 투어용 멀미약",
+          "쿨링 알로에 젤 (일광화상 진정용)",
+          "자외선 차단 선글라스 & 챙 넓은 모자",
+          "비행기 기내용 안대 & 목베개",
+          "지퍼백 & 세탁물 수거용 비닐백",
+          "가벼운 겉옷 (실내 에어컨 대비)",
+          "편안한 트레킹 운동화"
+        ]
+      }
+    ];
+
+    // 안전 가이드[cite: 1, 2]
+    const guideItems = [
+      {
+        cat: "세관/검역",
+        title: "미국 입국 세관 신고 원칙 (무조건 'Yes')",
+        badge: "과태료 예방",
+        summary: "가공식품(과자, 김, 햇반 등)만 있어도 세관 키오스크 식품 질문엔 반드시 'Yes' 체크해야 합니다[cite: 1, 2].",
+        detail: "• 신고했을 경우: 반입 불가 품목이 있더라도 단순히 현장 압류·폐기 처분으로 끝납니다[cite: 1, 2].<br>• 미신고 적발 시: 허위 신고로 간주되어 품목 압류 + 최소 $500~$1,000 이상의 즉결 과태료가 부과되며 향후 미국 입국 시 영구 정밀 검색 대상자로 등록됩니다[cite: 1, 2]."
+      },
+      {
+        cat: "세관/검역",
+        title: "라면 & 육류 가공식품 반입 금지 규정",
+        badge: "반입 불가 주의",
+        summary: "소고기, 돼지고기, 닭고기 성분이 들어간 라면 스프 및 육포, 햄, 스팸은 전량 반입 금지입니다[cite: 1, 2].",
+        detail: "• 금지 품목: 신라면 등 육류 베이스 라면, 비프 저키(육포), 스팸, 장조림, 천하장사 소시지[cite: 1, 2].<br>• 통과 가능 품목: 해물 라면(새우탕, 오징어짬뽕, 너구리 등 육류 미포함), 순수 채식 라면, 즉석밥(햇반), 조미김, 마른 멸치, 쥐포, 시판 밀봉 김치 및 고추장[cite: 1, 2]."
+      },
+      {
+        cat: "의약품/드럭스토어",
+        title: "🚨 대마/CBD 제품 및 멜라토닌 한국 반입 절대 금지",
+        badge: "형사처벌·통관불가",
+        summary: "미국에서 합법이라도 한국 귀국 시 세관에서 적발 처벌 및 전량 폐기됩니다[cite: 2].",
+        detail: "• <strong>CBD/대마 오일·젤리:</strong> 미국 ABC스토어 등에서 흔히 팔리지만 한국인은 속인주의가 적용되어 마약류 위반으로 형사 입건 및 처벌 대상입니다[cite: 2].<br>• <strong>멜라토닌 수면 보조제:</strong> 한국 식약처 기준 전문의약품으로 분류되어 의사 처방전이 없으면 100% 압류·폐기 및 폐기 수수료(5,500원)가 부과됩니다[cite: 2].<br>• <strong>6병 제한:</strong> 영양제 및 비타민은 브랜드 불문 1인당 최대 6병까지만 면세 통관됩니다[cite: 2]."
+      },
+      {
+        cat: "의약품/드럭스토어",
+        title: "미국 현지 추천 일반의약품 (OTC 상비약)",
+        badge: "드럭스토어 쇼핑",
+        summary: "롱스 드럭스나 ABC 스토어에서 처방전 없이 안심하고 살 수 있는 추천 상비약입니다[cite: 1, 2].",
+        detail: "• 해열진통소염: Advil(애드빌 액상 캡슐), Aleve(알리브 관절·근육통), Tylenol 500mg[cite: 2].<br>• 위장/소화제: Tums(텀스 씹어먹는 천연 제산제), Pepto-Bismol(소화불량/설사 완화), Imodium(급성 지사제)[cite: 2].<br>• 상처/화상: Neosporin(미국 국민 항생제 연고), Sun Bum 알로에 쿨링젤[cite: 2]."
+      },
+      {
+        cat: "의료/응급",
+        title: "응급실(ER) 대신 긴급진료소(Urgent Care) 이용",
+        badge: "의료비 절약",
+        summary: "가벼운 감기, 복통, 상처로 응급실을 가면 수 시간 대기와 수천 달러 비용이 청구됩니다[cite: 1, 2].",
+        detail: "• <strong>Doctors on Call (쉐라톤 와이키키 2층):</strong> 관광객 진료 경험이 풍부하고 원격 한국어 통역 서비스를 지원하여 경증 질환 발생 시 가장 먼저 방문하기 좋습니다[cite: 1, 2].<br>• 중증 응급: Straub Medical Center (24시간 응급실) 또는 The Queen's Medical Center (최대 외상센터)[cite: 1, 2].<br>• 필수: 진료 후 영문 진단서(Medical Report)와 항목별 진료비 영수증(Itemized Bill)을 수령해야 한국 보험 청구가 가능합니다[cite: 1, 2]."
+      },
+      {
+        cat: "교통/치안",
+        title: "렌터카 차량 털이(Smash & Grab) 절대 예방",
+        badge: "도난 방지",
+        summary: "유리창을 깨고 털어가는 범죄가 잦으므로 차내에 어떠한 물품도 남겨두지 마세요[cite: 1, 2].",
+        detail: "• 쉐보레 트렉스는 CUV라 트렁크가 노출될 수 있으므로 충전선, 겉옷, 쇼핑백, 동전조차 보이지 않게 감추세요[cite: 1, 2].<br>• 짐을 트렁크에 넣는 행위는 도착지 주차장이 아닌 <strong>출발지 호텔에서 미리</strong> 완료해야 표적이 되지 않습니다[cite: 1, 2].<br>• 여권과 지갑은 절대로 차에 두지 마시고 항상 몸에 소지하세요[cite: 1, 2]."
+      },
+      {
+        cat: "교통/치안",
+        title: "하와이 도로 운전 & 주차 연석 색상 규칙",
+        badge: "교통 법규",
+        summary: "비보호 우회전 및 스쿨버스 정지선, 연석 색상별 주차 규정을 엄격히 지켜야 합니다[cite: 1, 2].",
+        detail: "• 우회전: 'NO TURN ON RED' 표지판이 없으면 빨간불이라도 일시정지 후 우회전 가능[cite: 1, 2].<br>• 스쿨버스: 노란 버스가 STOP 표지판을 펼치면 반대편 차선까지 전 차로 완전 정지[cite: 1, 2].<br>• 연석 색상: <strong>빨간색</strong>(주정차 절대 금지·즉시 견인), <strong>노란색</strong>(상하차 전용), <strong>흰색</strong>(일시 승하차만), <strong>녹색</strong>(10~15분 단시간 주차)[cite: 1, 2]."
+      },
+      {
+        cat: "비상연락",
+        title: "긴급 비상 전화 & 대한민국 총영사관 연락처",
+        badge: "24시간 핫라인",
+        summary: "사고 발생 시 즉시 911을 누르고 'Korean, please'를 요청하세요[cite: 1, 2].",
+        detail: "• <strong>통합 긴급전화 (경찰/구급/소방):</strong> 911 (한국어 3자 통역 무료 제공)[cite: 1, 2]<br>• <strong>주호놀룰루 대한민국 총영사관:</strong> +1-808-595-6109 (평일 주간) / 사건·사고 당직: +1-808-265-9349 (야간/휴일)[cite: 1, 2]<br>• <strong>외교부 영사콜센터:</strong> +82-2-3210-0404 (24시간 한국어 연중무휴)[cite: 1, 2]"
+      }
+    ];
+
+    /* ==========================================================================
+       실시간 시계 & D-Day 로직
+       ========================================================================== */
+    let simulatedDate = null;
+
+    function updateClocks() {
+      const now = new Date();
+      
+      const kstTime = new Intl.DateTimeFormat('ko-KR', {
+        timeZone: 'Asia/Seoul',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      }).format(now);
+      const kstEl = document.getElementById('clock-kst');
+      if (kstEl) kstEl.innerText = kstTime;
+
+      const hstTime = new Intl.DateTimeFormat('ko-KR', {
+        timeZone: 'Pacific/Honolulu',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      }).format(now);
+      const hstEl = document.getElementById('clock-hst');
+      if (hstEl) hstEl.innerText = hstTime;
+
+      updateTripStatus(now);
+    }
+
+    function updateTripStatus(currentRealDate) {
+      const badge = document.getElementById('trip-status-badge');
+      if (!badge) return;
+
+      let checkDateStr;
+      if (simulatedDate && simulatedDate !== 'auto') {
+        if (simulatedDate === 'pre') {
+          badge.className = "px-2.5 py-1 bg-purple-100 text-purple-800 font-bold rounded-lg border border-purple-200";
+          badge.innerText = "✈️ D-3 출국 준비 중 (KST 한국 기준)";
+          highlightActiveTimelineDay(0);
+          return;
+        }
+        checkDateStr = simulatedDate;
+      } else {
+        const hstFormatter = new Intl.DateTimeFormat('en-CA', { timeZone: 'Pacific/Honolulu' });
+        checkDateStr = hstFormatter.format(currentRealDate);
+      }
+
+      const tripStart = new Date("2026-10-09T00:00:00-10:00");
+      const targetDate = new Date(checkDateStr + "T12:00:00-10:00");
+
+      const diffTime = targetDate - tripStart;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+      if (diffDays < 1) {
+        const dMinus = Math.abs(diffDays - 1);
+        badge.className = "px-2.5 py-1 bg-purple-50 text-purple-800 font-bold rounded-lg border border-purple-200";
+        badge.innerText = `✈️ 출국 D-${dMinus} (한국 시간 기준 준비 중)`;
+        highlightActiveTimelineDay(0);
+      } else if (diffDays >= 1 && diffDays <= 8) {
+        badge.className = "px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold rounded-lg border border-emerald-200 animate-pulse";
+        badge.innerText = `🌴 여행 중! DAY ${diffDays} 진행 중 (HST 하와이 시간)`;
+        highlightActiveTimelineDay(diffDays);
+      } else {
+        badge.className = "px-2.5 py-1 bg-slate-100 text-slate-700 font-bold rounded-lg border border-slate-300";
+        badge.innerText = "🇰🇷 한국 귀국 완료 (KST 시간 기준)";
+        highlightActiveTimelineDay(0);
+      }
+    }
+
+    function simulateDate(val) {
+      simulatedDate = val;
+      updateClocks();
+    }
+
+    /* ==========================================================================
+       일자별 타임라인 (웰니스 & 수영/패들보드 완벽 통합)
+       ========================================================================== */
+    const timelineSchedules = [
+      { 
+        day: 1, 
+        date: "10/9(금)", 
+        theme: "호놀룰루 입국 & 호텔 풀 / 바다수영", 
+        desc: "12:25 HNL 도착 ➔ 렌터카 수령 ➔ 하얏트 체크인 ➔ 따뜻한 이야스메 무스비 ➔ 하얏트 3층 야외 수영장 & 와이키키 퀸즈비치 바다수영 ➔ 마구로 스팟 포케 저녁" 
+      },
+      { 
+        day: 2, 
+        date: "10/10(토)", 
+        theme: "카일루아 에메랄드 패들보드(SUP) & 트레킹", 
+        desc: "레오나즈 말라사다 ➔ 다이아몬드 헤드 하이킹 ➔ 72번 국도 드라이브 ➔ 카일루아 비치 스탠드업 패들보드(SUP) & 바다수영 ➔ 라니카이 필박스 능선 트레일" 
+      },
+      { 
+        day: 3, 
+        date: "10/11(일)", 
+        theme: "하나우마베이 스노클 & 호텔 풀 태닝 힐링", 
+        desc: "오전 하나우마베이 산호초·거북이 스노클링 ➔ 와이키키 마켓 로컬 런치 ➔ 하얏트 오션뷰 수영장 태닝 & 온수 자쿠지 휴식 ➔ 리틀 조스 스테이크 디너" 
+      },
+      { 
+        day: 4, 
+        date: "10/12(월)", 
+        theme: "모닝 헬스 & 쿠알로아 랩터 UTV 어드벤처", 
+        desc: "하얏트 StayFit 모닝 헬스 ➔ 코올라우 터널 ➔ 쿠알로아 랜치 UTV 랩터 쥐라기 계곡 질주 ➔ 릴리하 베이커리 로코모코 ➔ 매직아일랜드 황홀한 선셋 피크닉" 
+      },
+      { 
+        day: 5, 
+        date: "10/13(화)", 
+        theme: "노스쇼어 샤크스코브 수영 & 선셋 비치", 
+        desc: "돌 플랜테이션 ➔ 지오반니 갈릭새우 점심 ➔ 할레이바 서퍼마을 산책 ➔ 샤크스코브 천연 풀 수영 & 스노클링 ➔ 선셋 비치 붉은 노을 감상" 
+      },
+      { 
+        day: 6, 
+        date: "10/14(수)", 
+        theme: "모닝 헬스 런 & 와이켈레 프리미엄 쇼핑", 
+        desc: "하얏트 StayFit 모닝 스트레칭 & 유산소 런 ➔ 진주만 국립 기념관 ➔ 와이켈레 프리미엄 아울렛 본격 쇼핑 ➔ 테디스 비거 버거 & 와이키키 밤거리 산책" 
+      },
+      { 
+        day: 7, 
+        date: "10/15(목)", 
+        theme: "모닝 비치 요가 & 파라다이스 코브 루아우", 
+        desc: "06:30 와이키키 선라이즈 비치 요가 & 모닝 수영 ➔ 모니 스누피, 파탈로하, 호놀룰루 쿠키 쇼핑 ➔ 코올리나 파라다이스 코브 전통 루아우 디너 & 훌라쇼" 
+      },
+      { 
+        day: 8, 
+        date: "10/16(금)", 
+        theme: "발코니 모닝 스트레칭 & 귀국길", 
+        desc: "하얏트 발코니에서 와이키키 바다 보며 모닝 스트레칭 ➔ 11:00 체크아웃 ➔ 렌터카 주유 및 반납 ➔ 14:35 KE054 탑승 인천 귀국길" 
+      }
+    ];
+
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      if (!container) return;
+
+      container.innerHTML = timelineSchedules.map(s => `
+        <div id="day-card-${s.day}" class="day-card bg-white p-5 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-soft transition-all duration-200 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 bg-purple-100 text-purple-800 text-xs font-black rounded-lg">DAY ${s.day}</span>
+              <span class="text-xs font-bold text-slate-400 font-mono">${s.date}</span>
+            </div>
+            <h4 class="text-base font-extrabold text-slate-900 mt-2">${s.theme}</h4>
+            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${s.desc}</p>
+          </div>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+            <span>렌터카 & 웰니스</span>
+            <button onclick="filterTableByDay('Day ${s.day}')" class="text-purple-600 font-bold hover:underline">상세 일정 보기 ➔</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function highlightActiveTimelineDay(dayNum) {
+      document.querySelectorAll('.day-card').forEach(c => {
+        c.classList.remove('ring-2', 'ring-purple-600', 'bg-purple-50/50');
+      });
+      if (dayNum >= 1 && dayNum <= 8) {
+        const activeCard = document.getElementById(`day-card-${dayNum}`);
+        if (activeCard) {
+          activeCard.classList.add('ring-2', 'ring-purple-600', 'bg-purple-50/50');
+        }
+      }
+    }
+
+    /* ==========================================================================
+       Leaflet 지도 & 40개 핀
+       ========================================================================== */
+    let leafletMap = null;
+    let markersLayer = null;
+
+    function initLeafletMap() {
+      const mapDiv = document.getElementById('leaflet-map');
+      if (!mapDiv) return;
+
+      leafletMap = L.map('leaflet-map', {
+        center: [21.465, -157.98],
+        zoom: 10,
+        scrollWheelZoom: false
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; CartoDB OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(leafletMap);
+
+      markersLayer = L.layerGroup().addTo(leafletMap);
+      renderMapPins('all');
+
+      window.addEventListener('resize', () => {
+        if (leafletMap) leafletMap.invalidateSize();
+      });
+    }
+
+    function getPinColor(cat) {
+      switch(cat) {
+        case '웰니스': return '#6366f1';
+        case '명소': return '#0284c7';
+        case '미식': return '#10b981';
+        case '액티비티': return '#f97316';
+        case '쇼핑': return '#8b5cf6';
+        case '의료': return '#e11d48';
+        default: return '#64748b';
+      }
+    }
+
+    function renderMapPins(filterCat) {
+      if (!markersLayer) return;
+      markersLayer.clearLayers();
+
+      placesData.forEach(p => {
+        if (filterCat !== 'all' && p.cat !== filterCat) return;
+
+        const color = getPinColor(p.cat);
+        const customIcon = L.divIcon({
+          className: 'custom-pin',
+          html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 9999px; border: 2.5px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold;">•</div>`,
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        });
+
+        const marker = L.marker([p.lat, p.lng], { icon: customIcon });
+        marker.bindPopup(`
+          <div style="font-family: sans-serif; min-width: 180px; padding: 4px;">
+            <div style="font-size: 10px; font-weight: bold; color: ${color}; text-transform: uppercase;">${p.region} • ${p.cat}</div>
+            <div style="font-size: 13px; font-weight: 800; color: #0f172a; margin: 2px 0;">${p.name}</div>
+            <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">${p.desc}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 4px;">
+              <span style="font-size: 10px; color: #94a3b8;">${p.day}</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap}" target="_blank" style="font-size: 11px; font-weight: bold; color: #7c3aed; text-decoration: underline;">길찾기 ➔</a>
+            </div>
+          </div>
+        `);
+        markersLayer.addLayer(marker);
+      });
+    }
+
+    function filterMapMarkers(cat) {
+      document.querySelectorAll('.map-filter-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-slate-900', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-600');
+      });
+      event.currentTarget.classList.add('active', 'bg-slate-900', 'text-white');
+      event.currentTarget.classList.remove('bg-white', 'text-slate-600');
+      renderMapPins(cat);
+    }
+
+    function toggleMapType() {
+      const leafletDiv = document.getElementById('leaflet-map');
+      const gmapDiv = document.getElementById('gmap-frame-container');
+      const btn = document.getElementById('toggle-map-btn');
+
+      if (gmapDiv.classList.contains('hidden')) {
+        gmapDiv.classList.remove('hidden');
+        leafletDiv.classList.add('hidden');
+        btn.innerText = "🗺️ Leaflet 인터랙티브 지도로 전환";
+      } else {
+        gmapDiv.classList.add('hidden');
+        leafletDiv.classList.remove('hidden');
+        btn.innerText = "🛰️ 구글맵 임베드 전환";
+        if (leafletMap) leafletMap.invalidateSize();
+      }
+    }
+
+    function openIllustMapModal() {
+      document.getElementById('illust-modal').classList.remove('hidden');
+    }
+    function closeIllustMapModal() {
+      document.getElementById('illust-modal').classList.add('hidden');
+    }
+
+    /* ==========================================================================
+       위시리스트 & 실물 사진 호버 툴팁 (익스트림/힐링 & 7선)
+       ========================================================================== */
+    function renderWishlists() {
+      renderWishGroup('must-do-extreme-list', mustDoExtremeItems);
+      renderWishGroup('must-do-wellness-list', mustDoWellnessItems);
+      renderWishGroup('must-eat-list', mustEatItems);
+      renderWishGroup('must-buy-list', mustBuyItems);
+    }
+
+    function renderWishGroup(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = items.map(item => {
+        const isChecked = localStorage.getItem(`wish_${item.id}`) === 'true';
+        return `
+          <div 
+            class="flex items-start gap-3 p-3 rounded-2xl border border-slate-100 hover:border-purple-200 hover:bg-slate-50 transition cursor-pointer group"
+            onmouseenter="showImageTooltip(event, '${item.title}', '${item.desc}', '${item.img}', '${item.tag}')"
+            onmousemove="moveImageTooltip(event)"
+            onmouseleave="hideImageTooltip()"
+          >
+            <input 
+              type="checkbox" 
+              id="${item.id}" 
+              ${isChecked ? 'checked' : ''} 
+              onchange="toggleWishItem('${item.id}')"
+              class="w-4 h-4 mt-0.5 rounded text-purple-600 focus:ring-purple-500 cursor-pointer"
+            />
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-purple-700 transition truncate">${item.title}</h4>
+                <span class="text-[10px] font-semibold text-slate-400 shrink-0 ml-1">${item.tag}</span>
+              </div>
+              <p class="text-[11px] text-slate-500 truncate mt-0.5">${item.sub}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleWishItem(id) {
+      const checkbox = document.getElementById(id);
+      if (checkbox) {
+        localStorage.setItem(`wish_${id}`, checkbox.checked);
+      }
+    }
+
+    const tooltip = document.getElementById('hover-tooltip');
+    const tooltipImg = document.getElementById('tooltip-img');
+    const tooltipTitle = document.getElementById('tooltip-title');
+    const tooltipDesc = document.getElementById('tooltip-desc');
+    const tooltipBadge = document.getElementById('tooltip-badge');
+
+    function showImageTooltip(e, title, desc, imgUrl, tag) {
+      tooltipImg.src = imgUrl;
+      tooltipTitle.innerText = title;
+      tooltipDesc.innerText = desc;
+      tooltipBadge.innerText = tag;
+      tooltip.style.display = 'block';
+      moveImageTooltip(e);
+    }
+
+    function moveImageTooltip(e) {
+      const offset = 18;
+      let x = e.clientX + offset;
+      let y = e.clientY + offset;
+
+      if (x + 270 > window.innerWidth) x = e.clientX - 280;
+      if (y + 240 > window.innerHeight) y = e.clientY - 250;
+
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
+    }
+
+    function hideImageTooltip() {
+      tooltip.style.display = 'none';
+    }
+
+    /* ==========================================================================
+       종합 데이터 표 & 구글맵 아이콘 바로가기
+       ========================================================================== */
+    function renderMasterTable() {
+      const tbody = document.getElementById('master-table-body');
+      const search = document.getElementById('table-search-input').value.toLowerCase();
+      const regionFilter = document.getElementById('filter-region').value;
+      const catFilter = document.getElementById('filter-category').value;
+      const dayFilter = document.getElementById('filter-day').value;
+      const countBadge = document.getElementById('table-count-badge');
+
+      let filtered = placesData.filter(p => {
+        const matchSearch = p.name.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search);
+        const matchRegion = (regionFilter === 'all') || (p.region === regionFilter);
+        const matchCat = (catFilter === 'all') || (p.cat === catFilter);
+        const matchDay = (dayFilter === 'all') || (p.day.includes(dayFilter));
+        return matchSearch && matchRegion && matchCat && matchDay;
+      });
+
+      if (countBadge) countBadge.innerText = `${filtered.length}개 항목`;
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr class="hover:bg-purple-50/40 transition-colors">
+          <td class="py-3 px-4 font-mono font-bold text-slate-600 text-xs">${p.day}</td>
+          <td class="py-3 px-4 font-extrabold text-slate-900">${p.name}</td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 text-[11px] font-bold rounded-md ${getRegionBadgeClass(p.region)}">${p.region}</span>
+          </td>
+          <td class="py-3 px-3 text-xs font-semibold ${p.cat === '웰니스' ? 'text-indigo-600' : 'text-slate-500'}">${p.cat}</td>
+          <td class="py-3 px-4 text-xs text-slate-600">${p.desc}</td>
+          <td class="py-3 px-3 font-mono font-bold text-slate-700 text-xs">${p.price}</td>
+          <td class="py-3 px-4 text-center">
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=${p.gmap}" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              title="${p.name} 구글 내비게이션 길찾기"
+              class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-purple-50 hover:bg-purple-600 text-purple-600 hover:text-white transition shadow-2xs group"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:scale-110 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function getRegionBadgeClass(r) {
+      switch(r) {
+        case '와이키키': return 'bg-purple-50 text-purple-700';
+        case '동부': return 'bg-orange-50 text-orange-700';
+        case '노스쇼어': return 'bg-emerald-50 text-emerald-700';
+        case '진주만': return 'bg-sky-50 text-sky-700';
+        default: return 'bg-slate-100 text-slate-600';
+      }
+    }
+
+    function resetTableFilters() {
+      document.getElementById('table-search-input').value = '';
+      document.getElementById('filter-region').value = 'all';
+      document.getElementById('filter-category').value = 'all';
+      document.getElementById('filter-day').value = 'all';
+      renderMasterTable();
+    }
+
+    function filterTableByDay(dayStr) {
+      document.getElementById('filter-day').value = dayStr;
+      renderMasterTable();
+      scrollToSection('sec-table');
+    }
+
+    /* ==========================================================================
+       통화(USD/KRW) 전환 & 환율 계산기
+       ========================================================================== */
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      const usdBtn = document.getElementById('curr-usd-btn');
+      const krwBtn = document.getElementById('curr-krw-btn');
+
+      if (curr === 'USD') {
+        usdBtn.className = "px-3 py-1.5 rounded-lg bg-white shadow-2xs text-purple-700 font-bold";
+        krwBtn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 font-semibold";
+        document.getElementById('budget-total-val').innerText = "$8,695";
+        document.getElementById('budget-fixed-val').innerText = "$6,810";
+        document.getElementById('budget-variable-val').innerText = "$1,885";
+      } else {
+        krwBtn.className = "px-3 py-1.5 rounded-lg bg-white shadow-2xs text-purple-700 font-bold";
+        usdBtn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 font-semibold";
+        document.getElementById('budget-total-val').innerText = "₩12,042,575";
+        document.getElementById('budget-fixed-val').innerText = "₩9,431,850";
+        document.getElementById('budget-variable-val').innerText = "₩2,610,725";
+      }
+    }
+
+    let activeTipRate = 18;
+    function selectTipRate(rate) {
+      activeTipRate = rate;
+      document.querySelectorAll('.tip-rate-btn').forEach(b => {
+        b.classList.remove('active', 'border-2', 'border-purple-600', 'bg-purple-50', 'text-purple-700');
+        b.classList.add('border', 'border-slate-200', 'text-slate-600');
+      });
+      event.currentTarget.classList.add('active', 'border-2', 'border-purple-600', 'bg-purple-50', 'text-purple-700');
+      runCalculator();
+    }
+
+    function quickAddUsd(amount) {
+      const input = document.getElementById('calc-usd-input');
+      input.value = (parseFloat(input.value || 0) + amount).toFixed(0);
+      runCalculator();
+    }
+
+    function runCalculator() {
+      const baseUsd = parseFloat(document.getElementById('calc-usd-input').value) || 0;
+      const isTax = document.getElementById('calc-tax-check').checked;
+
+      const taxUsd = isTax ? (baseUsd * 0.04712) : 0;
+      const tipUsd = baseUsd * (activeTipRate / 100);
+      const totalUsd = baseUsd + taxUsd + tipUsd;
+      const totalKrw = Math.round(totalUsd * EXCHANGE_RATE);
+
+      document.getElementById('calc-res-base').innerText = `$${baseUsd.toFixed(2)}`;
+      document.getElementById('calc-res-tax').innerText = isTax ? `+$${taxUsd.toFixed(2)}` : '$0.00';
+      document.getElementById('calc-res-tip').innerText = `+$${tipUsd.toFixed(2)}`;
+      document.getElementById('calc-res-total').innerText = `$${totalUsd.toFixed(2)}`;
+      document.getElementById('calc-res-krw').innerText = totalKrw.toLocaleString();
+    }
+
+    function toggleCalcModal() {
+      const modal = document.getElementById('calc-modal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        runCalculator();
+      }
+    }
+
+    /* ==========================================================================
+       짐 꾸리기 30선 체크리스트
+       ========================================================================== */
+    function renderPackingList() {
+      const grid = document.getElementById('packing-grid');
+      if (!grid) return;
+
+      let totalItems = 0;
+      let checkedItems = 0;
+
+      grid.innerHTML = packingData.map((grp, gIdx) => `
+        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-card space-y-3">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center justify-between">
+            <span>${grp.cat}</span>
+            <span class="text-[10px] text-slate-400">${grp.items.length}개</span>
+          </h4>
+          <div class="space-y-2">
+            ${grp.items.map((item, iIdx) => {
+              totalItems++;
+              const key = `pack_${gIdx}_${iIdx}`;
+              const isChecked = localStorage.getItem(key) === 'true';
+              if (isChecked) checkedItems++;
+              return `
+                <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer hover:text-purple-700 transition">
+                  <input 
+                    type="checkbox" 
+                    id="${key}" 
+                    ${isChecked ? 'checked' : ''} 
+                    onchange="togglePackingItem('${key}')"
+                    class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 cursor-pointer mt-0.5"
+                  />
+                  <span class="${isChecked ? 'line-through text-slate-400' : ''}">${item}</span>
+                </label>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      updatePackingProgress(checkedItems, totalItems);
+    }
+
+    function togglePackingItem(key) {
+      const el = document.getElementById(key);
+      if (el) {
+        localStorage.setItem(key, el.checked);
+        renderPackingList();
+      }
+    }
+
+    function updatePackingProgress(checked, total) {
+      const pct = Math.round((checked / total) * 100);
+      const bar = document.getElementById('pack-progress-bar');
+      const text = document.getElementById('pack-progress-text');
+      if (bar) bar.style.width = `${pct}%`;
+      if (text) text.innerText = `${checked} / ${total} 완료 (${pct}%)`;
+    }
+
+    function resetPackingChecklist() {
+      if (confirm('짐 꾸리기 체크 상태를 모두 초기화하시겠습니까?')) {
+        for (let key in localStorage) {
+          if (key.startsWith('pack_')) localStorage.removeItem(key);
+        }
+        renderPackingList();
+      }
+    }
+
+    /* ==========================================================================
+       안전 가이드 허브 (검색 & 아코디언)
+       ========================================================================== */
+    let currentGuideCat = 'all';
+
+    function renderGuideHub() {
+      const grid = document.getElementById('guide-cards-grid');
+      const search = document.getElementById('guide-search-input').value.toLowerCase();
+      if (!grid) return;
+
+      const filtered = guideItems.filter(g => {
+        const matchCat = (currentGuideCat === 'all') || (g.cat === currentGuideCat);
+        const matchSearch = g.title.toLowerCase().includes(search) || g.summary.toLowerCase().includes(search) || g.detail.toLowerCase().includes(search);
+        return matchCat && matchSearch;
+      });
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-card p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 bg-purple-50 text-purple-700 text-[11px] font-bold rounded-md">${item.cat}</span>
+            <span class="px-2 py-0.5 bg-rose-50 text-rose-700 text-[10px] font-bold rounded-md">${item.badge}</span>
+          </div>
+          <h4 class="text-sm font-extrabold text-slate-900">${item.title}</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">${item.summary}</p>
+          <div class="pt-2 border-t border-slate-100 text-xs text-slate-500 leading-relaxed bg-slate-50 p-3 rounded-xl">
+            ${item.detail}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterGuideCategory(cat) {
+      currentGuideCat = cat;
+      document.querySelectorAll('.guide-cat-btn').forEach(b => {
+        b.classList.remove('active', 'bg-slate-900', 'text-white');
+        b.classList.add('bg-white', 'text-slate-600');
+      });
+      event.currentTarget.classList.add('active', 'bg-slate-900', 'text-white');
+      event.currentTarget.classList.remove('bg-white', 'text-slate-600');
+      renderGuideHub();
+    }
+
+    function scrollToSection(secId) {
+      const el = document.getElementById(secId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    /* ==========================================================================
+       초기화 구동
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      updateClocks();
+      setInterval(updateClocks, 1000);
+      renderTimeline();
+      initLeafletMap();
+      renderWishlists();
+      renderMasterTable();
+      renderPackingList();
+      renderGuideHub();
+    });
+  </script>
+</body>
+</html>
