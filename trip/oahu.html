@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>하와이 오아후 7박 8일 스마트 여행 가이드북 & 대시보드</title>
+  <title>하와이 오아후 스마트 여행 가이드북 & 대시보드</title>
 
   <!-- Pretendard Web Font -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -83,6 +83,42 @@
 </head>
 <body class="antialiased selection:bg-purple-100 selection:text-purple-900">
 
+  <!-- ==================== 0. 보안 비밀번호 잠금 화면 (Overlay) ==================== -->
+  <div id="auth-lock-screen" class="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 text-center space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+        🔒
+      </div>
+      <div>
+        <h2 class="text-xl font-extrabold text-slate-900">보안 가이드북 잠금 해제</h2>
+        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
+          개인 일정 및 예약 정보 보호를 위해 보안 비밀번호(PIN)를 입력해 주세요.
+        </p>
+      </div>
+
+      <form onsubmit="handleUnlock(event)" class="space-y-3">
+        <div class="relative">
+          <input 
+            type="password" 
+            id="auth-pin-input" 
+            maxlength="10" 
+            placeholder="비밀번호 입력 (기본: 1009)" 
+            autocomplete="off"
+            class="w-full text-center py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl text-lg font-mono font-bold tracking-widest text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition"
+          />
+        </div>
+        <p id="auth-error-msg" class="text-xs text-rose-600 font-bold hidden">비밀번호가 올바르지 않습니다.</p>
+        <button 
+          type="submit" 
+          class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition active:scale-98"
+        >
+          대시보드 열기
+        </button>
+      </form>
+      <p class="text-[11px] text-slate-400">초기 설정 PIN 번호: <span class="font-mono font-bold text-purple-600">1009</span></p>
+    </div>
+  </div>
+
   <!-- ==================== 1. 상단 고정 헤더 & 네비게이션 ==================== -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
     <!-- 시계 및 환율 바 -->
@@ -100,7 +136,7 @@
         </span>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
         <span class="text-slate-500 font-medium hidden sm:inline">실시간 기준 환율:</span>
         <span class="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">
           $1 = <span id="header-rate">1,385</span>원
@@ -115,8 +151,12 @@
           <option value="2026-10-13">🌴 10/13(화) Day 5 노스쇼어 일주 & 샤크스코브</option>
           <option value="2026-10-14">🌴 10/14(수) Day 6 모닝 헬스 & 와이켈레 쇼핑</option>
           <option value="2026-10-15">🌴 10/15(목) Day 7 모닝 비치 요가 & 루아우 디너</option>
-          <option value="2026-10-16">✈️ 10/16(금) Day 8 체크아웃 & KE054 귀국</option>
+          <option value="2026-10-16">✈️ 10/16(금) Day 8 체크아웃 & 귀국</option>
         </select>
+        <!-- 보안 수동 잠금 버튼 -->
+        <button onclick="lockScreen()" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg font-bold text-xs flex items-center gap-1 transition" title="가이드북 즉시 잠금">
+          🔒 잠금
+        </button>
       </div>
     </div>
 
@@ -136,42 +176,45 @@
   <!-- ==================== 메인 콘텐츠 영역 ==================== -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-12">
 
-    <!-- [섹션 1] 요약 & 예약 바우처 현황 (📱 요약) -->
+    <!-- [섹션 1] 요약 & 예약 바우처 현황 (민감 편명 마스킹 처리) -->
     <section id="sec-summary" class="scroll-mt-24 space-y-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-purple-700 via-indigo-600 to-sky-600 text-white p-6 sm:p-8 rounded-3xl shadow-soft">
         <div>
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-semibold mb-3">
-            <span>🌺 ALOHA OAHU</span> • <span>성인 2인 7박 8일 완벽 여정</span>
+            <span>🌺 ALOHA OAHU</span> • <span>성인 2인 7박 8일 보안 대시보드</span>
           </div>
           <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">오아후 스마트 여행 종합 대시보드</h1>
           <p class="text-purple-100 mt-2 text-sm sm:text-base max-w-2xl">
-            하얏트 리젠시 와이키키 피트니스·수영장 & 카일루아 패들보드(SUP)와 비치 요가가 결합된 프리미엄 웰니스 로드맵
+            하얏트 리젠시 와이키키 StayFit 피트니스·수영장 & 카일루아 패들보드(SUP)와 비치 요가가 결합된 프라이빗 웰니스 로드맵
           </p>
         </div>
         <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 shrink-0 text-center sm:text-right">
           <div class="text-xs text-purple-200 font-medium">확정 여정 기간</div>
           <div class="text-xl sm:text-2xl font-black mt-0.5">10.09(금) ~ 10.16(금)</div>
-          <div class="text-xs text-white/90 mt-1">대한항공 KE053 / KE054 직항</div>
+          <div class="text-xs text-white/90 mt-1">왕복 국제선 직항 (보안 암호화)</div>
         </div>
       </div>
 
-      <!-- 바우처 카드 3종 (항공 / 렌터카 / 호텔) -->
+      <!-- 바우처 카드 3종 (비행기 편명 마스킹, 날짜와 시간만 보존) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- 항공 -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-card hover:shadow-soft transition">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg">✈️ 대한항공 왕복</span>
-            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">발권 완료</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg">✈️ 국제선 왕복 직항</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">예약 완료</span>
           </div>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between items-center py-1 border-b border-slate-100">
-              <span class="text-slate-500 text-xs">출국 (KE053)</span>
-              <span class="font-bold text-slate-800">10/9(금) 22:35 ICN ➔ 12:25 HNL</span>
+              <span class="text-slate-500 text-xs">출발편</span>
+              <span class="font-bold text-slate-800">10/9(금) 22:35 출발 ➔ 12:25 도착</span>
             </div>
             <div class="flex justify-between items-center py-1">
-              <span class="text-slate-500 text-xs">귀국 (KE054)</span>
-              <span class="font-bold text-slate-800">10/16(금) 14:35 HNL ➔ 19:10(+1) ICN</span>
+              <span class="text-slate-500 text-xs">귀국편</span>
+              <span class="font-bold text-slate-800">10/16(금) 14:35 출발 ➔ 19:10(+1) 도착</span>
             </div>
+          </div>
+          <div class="mt-2.5 pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+            * 해킹 및 개인정보 유출 방지를 위해 항공편명 비노출 처리됨
           </div>
         </div>
 
@@ -187,7 +230,7 @@
               <span class="font-bold text-slate-800">반납: 10/16(금) 11:30</span>
             </div>
             <p class="text-[11px] text-rose-600 font-medium mt-1 bg-rose-50 p-2 rounded-lg">
-              ⚠️ 주의: 트렁크 및 차내 소지품 외부 노출 절대 금지 (차량 털이 Smash & Grab 방지)
+              ⚠️ 주의: 트렁크 및 차내 소지품 외부 노출 절대 금지 (차량 털이 Smash & Grab 방지)[cite: 1, 2]
             </p>
           </div>
         </div>
@@ -220,7 +263,6 @@
           </p>
         </div>
 
-        <!-- 지도 제어 버튼군 -->
         <div class="flex items-center gap-2 flex-wrap">
           <button onclick="openIllustMapModal()" class="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-sm hover:from-purple-700 hover:to-indigo-700 transition flex items-center gap-1.5">
             🖼️ 권역별 일러스트 지도 보기
@@ -231,7 +273,6 @@
         </div>
       </div>
 
-      <!-- 지도 카테고리 필터 칩 -->
       <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs font-semibold">
         <button onclick="filterMapMarkers('all')" class="map-filter-btn active px-3 py-1.5 bg-slate-900 text-white rounded-lg transition shrink-0">전체보기 (40)</button>
         <button onclick="filterMapMarkers('웰니스')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-indigo-600 rounded-lg hover:bg-indigo-50 transition shrink-0">🧘 요가·수영·패들보드</button>
@@ -242,7 +283,6 @@
         <button onclick="filterMapMarkers('의료')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-rose-600 rounded-lg hover:bg-rose-50 transition shrink-0">🏥 드럭스토어 & 병원</button>
       </div>
 
-      <!-- 지도 본체 컨테이너 (720px) -->
       <div class="relative w-full bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden map-container-720">
         <div id="leaflet-map" class="w-full h-full"></div>
         <div id="gmap-frame-container" class="hidden w-full h-full">
@@ -268,9 +308,8 @@
         </p>
       </div>
 
-      <!-- 꼭 해야 할 일: [🔥 익스트림 & 액티브] vs [🌿 힐링 & 웰니스/워터스포츠] 전용 2단 배너 그리드 -->
+      <!-- 꼭 해야 할 일: [🔥 익스트림 & 액티브] vs [🌿 힐링 & 웰니스/워터] -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- 1. 꼭 해야할 일: 🔥 익스트림 & 액티브 Top 4 -->
         <div class="bg-white p-6 rounded-3xl border border-rose-100 shadow-card space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2">
@@ -282,12 +321,9 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 bg-rose-50 text-rose-700 rounded-md">Extreme 4선</span>
           </div>
-          <div class="space-y-3" id="must-do-extreme-list">
-            <!-- JS 렌더링 -->
-          </div>
+          <div class="space-y-3" id="must-do-extreme-list"></div>
         </div>
 
-        <!-- 2. 꼭 해야할 일: 🌿 힐링 & 웰니스/워터스포츠 Top 4 -->
         <div class="bg-white p-6 rounded-3xl border border-indigo-100 shadow-card space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2">
@@ -299,15 +335,12 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md">Wellness 4선</span>
           </div>
-          <div class="space-y-3" id="must-do-wellness-list">
-            <!-- JS 렌더링 -->
-          </div>
+          <div class="space-y-3" id="must-do-wellness-list"></div>
         </div>
       </div>
 
       <!-- 미식 Top 7 & 기념품 Top 7 그리드 -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- 꼭 먹어야 할 음식 Top 7 -->
         <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2">
@@ -319,12 +352,9 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md">미식 7선</span>
           </div>
-          <div class="space-y-3" id="must-eat-list">
-            <!-- JS 렌더링 -->
-          </div>
+          <div class="space-y-3" id="must-eat-list"></div>
         </div>
 
-        <!-- 꼭 사야 할 기념품 Top 7 -->
         <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2">
@@ -336,28 +366,24 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 bg-purple-50 text-purple-700 rounded-md">쇼핑 7선</span>
           </div>
-          <div class="space-y-3" id="must-buy-list">
-            <!-- JS 렌더링 -->
-          </div>
+          <div class="space-y-3" id="must-buy-list"></div>
         </div>
       </div>
     </section>
 
-    <!-- [섹션 4] 7박 8일 일자별 타임라인 (🗓️ 타임라인) -->
+    <!-- [섹션 4] 7박 8일 일자별 타임라인 (편명 비노출, 시간만 표시) -->
     <section id="sec-timeline" class="scroll-mt-24 space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">🗓️ 7박 8일 일자별 상세 타임라인</h2>
-          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">호텔 피트니스/수영, 비치 요가, 패들보드(SUP)가 자연스럽게 조화된 최적의 동선입니다.</p>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">비행 일정은 날짜와 시간만 보존하여 보안을 유지하고, 웰니스 루틴이 완벽히 조화된 동선입니다.</p>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-medium">✨ 현재 날짜 해당 일자 카드 자동 강조</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="timeline-container">
-        <!-- JS Day 1 ~ Day 8 카드 자동 렌더링 -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="timeline-container"></div>
     </section>
 
     <!-- [섹션 5] 종합 데이터 표 & 구글맵 아이콘 바로가기 (📋 일정 표) -->
@@ -373,7 +399,6 @@
           </p>
         </div>
 
-        <!-- 실시간 검색 입력창 -->
         <div class="relative w-full md:w-72">
           <input 
             type="text" 
@@ -386,7 +411,6 @@
         </div>
       </div>
 
-      <!-- 다중 필터 버튼 바 -->
       <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex items-center gap-2 flex-wrap">
           <span class="font-bold text-slate-600">권역:</span>
@@ -428,7 +452,6 @@
         </button>
       </div>
 
-      <!-- 테이블 본체 -->
       <div class="bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden">
         <div class="overflow-x-auto custom-scrollbar">
           <table class="w-full text-left border-collapse text-xs sm:text-sm">
@@ -443,9 +466,7 @@
                 <th class="py-3.5 px-4 text-center font-bold text-purple-700">구글맵</th>
               </tr>
             </thead>
-            <tbody id="master-table-body" class="divide-y divide-slate-100 font-normal text-slate-700">
-              <!-- JS 동적 렌더링 -->
-            </tbody>
+            <tbody id="master-table-body" class="divide-y divide-slate-100 font-normal text-slate-700"></tbody>
           </table>
         </div>
       </div>
@@ -459,14 +480,12 @@
           <p class="text-xs sm:text-sm text-slate-500 mt-1">확정 고정비와 패들보드 렌탈, 비치 요가, 현지 미식/입장료 실질 예산 총정리</p>
         </div>
 
-        <!-- 달러 / 원화 표시 전환 토글 -->
         <div class="inline-flex p-1 bg-slate-100 rounded-xl font-bold text-xs">
           <button id="curr-usd-btn" onclick="setCurrency('USD')" class="px-3 py-1.5 rounded-lg bg-white shadow-2xs text-purple-700">달러 ($ USD)</button>
           <button id="curr-krw-btn" onclick="setCurrency('KRW')" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800">원화 (₩ KRW)</button>
         </div>
       </div>
 
-      <!-- 상단 요약 카드 3종 -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-6 rounded-3xl shadow-soft">
           <div class="text-xs font-semibold text-purple-200">2인 총 소요 예상 예산</div>
@@ -516,15 +535,11 @@
         </button>
       </div>
 
-      <!-- 진행률 바 -->
       <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
         <div id="pack-progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-0 transition-all duration-300"></div>
       </div>
 
-      <!-- 체크리스트 4개 그룹 그리드 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="packing-grid">
-        <!-- JS 렌더링 -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="packing-grid"></div>
     </section>
 
     <!-- [섹션 8] 안전·세관·의약품 종합 가이드 (🛡️ 안전 가이드) -->
@@ -538,7 +553,6 @@
           <p class="text-xs sm:text-sm text-slate-500 mt-1">미국 입국 세관 신고, 반입 금지 품목, 처방약 규정, 렌터카 안전 및 응급 병원 안내[cite: 1, 2]</p>
         </div>
 
-        <!-- 가이드 검색창 -->
         <div class="relative w-full md:w-64">
           <input 
             type="text" 
@@ -551,7 +565,6 @@
         </div>
       </div>
 
-      <!-- 카테고리 필터 탭 -->
       <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs font-semibold">
         <button onclick="filterGuideCategory('all')" class="guide-cat-btn active px-3.5 py-1.5 bg-slate-900 text-white rounded-xl transition shrink-0">전체보기</button>
         <button onclick="filterGuideCategory('세관/검역')" class="guide-cat-btn px-3.5 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition shrink-0">✈️ 세관·라면·식품 반입</button>
@@ -587,7 +600,7 @@
             <tbody class="divide-y divide-slate-200">
               <tr>
                 <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">라면류</td>
-                <td class="p-3 text-rose-700 border-r border-slate-200">쇠고기·돼지고기·닭고기 성분 라면 (신라면, 삼양라면, 진라면 등 육류 베이스 스프 일체)</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">쇠고기·돼지고기·닭고기 성분 라면 (육류 베이스 스프 일체)</td>
                 <td class="p-3 text-emerald-800">해물 라면 (새우탕, 오징어짬뽕, 너구리 등 육류 성분 미포함), 순수 채식 라면</td>
               </tr>
               <tr>
@@ -602,7 +615,7 @@
               </tr>
               <tr>
                 <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">간식/스낵</td>
-                <td class="p-3 text-rose-700 border-r border-slate-200">육포(Beef Jerky), 미니 소시지(천하장사, 맥스봉 등 돈육/어육 혼합)</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">육포(Beef Jerky), 미니 소시지(천하장사 등 돈육/어육 혼합)</td>
                 <td class="p-3 text-emerald-800">육류 성분 없는 스낵, 과자, 초콜릿, 사탕류</td>
               </tr>
             </tbody>
@@ -610,10 +623,7 @@
         </div>
       </div>
 
-      <!-- 동적 아코디언 가이드 카드 그리드 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="guide-cards-grid">
-        <!-- JS 렌더링 -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="guide-cards-grid"></div>
     </section>
 
   </main>
@@ -621,15 +631,15 @@
   <!-- ==================== 푸터 ==================== -->
   <footer class="bg-white border-t border-slate-200 mt-16 py-8 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 space-y-2">
-      <p class="font-bold text-slate-700 text-sm">🌺 Have a Mindful & Refreshing Vacation in Oahu, Hawaii! Mahalo!</p>
-      <p>본 가이드북은 오아후 7박 8일 일정(10.09~10.16)에 맞춤 최적화된 반응형 웹 애플리케이션입니다.</p>
+      <p class="font-bold text-slate-700 text-sm">🌺 Have a Mindful & Secure Vacation in Oahu, Hawaii! Mahalo!</p>
+      <p>본 가이드북은 오아후 7박 8일 일정(10.09~10.16)에 맞춤 최적화된 보안 웹 애플리케이션입니다.</p>
     </div>
   </footer>
 
   <!-- ==================== 플로팅 버튼 & 모달들 ==================== -->
 
-  <!-- 우측 하단 플로팅 환율/팁 계산기 버튼 -->
-  <button onclick="toggleCalcModal()" class="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-floating hover:scale-105 active:scale-95 transition flex items-center gap-2 group">
+  <!-- 환율/팁 플로팅 버튼 -->
+  <button onclick="toggleCalcModal()" class="fixed bottom-6 right-6 z-30 p-4 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-floating hover:scale-105 active:scale-95 transition flex items-center gap-2 group">
     <span class="text-xl">💵</span>
     <span class="font-bold text-sm hidden group-hover:inline-block transition-all duration-200">환율·팁 계산기</span>
   </button>
@@ -700,7 +710,7 @@
     </div>
   </div>
 
-  <!-- 권역별 일러스트 손그림 지도 모달 -->
+  <!-- 권역별 일러스트 지도 모달 -->
   <div id="illust-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
       <div class="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between shrink-0">
@@ -761,7 +771,7 @@
     </div>
   </div>
 
-  <!-- 공통 실물 사진 호버 툴팁 (최소 200px 규격 완벽 만족: 260px x 160px) -->
+  <!-- 공통 실물 사진 호버 툴팁 (260px x 160px) -->
   <div id="hover-tooltip" class="img-tooltip bg-white p-2.5 rounded-2xl shadow-2xl border border-slate-200/90 w-64">
     <div class="relative w-full h-40 bg-slate-100 rounded-xl overflow-hidden mb-2">
       <img id="tooltip-img" src="" alt="preview" class="w-full h-full object-cover" />
@@ -773,18 +783,62 @@
 
   <!-- ==================== 자바스크립트 비즈니스 로직 ==================== -->
   <script>
+    /* ==========================================================================
+       보안 잠금 해제 (Password / PIN Check)
+       ========================================================================== */
+    const APP_PIN = "1009"; // 기본 보안 PIN (여행 시작일 10월 9일)
+
+    function checkAuth() {
+      const isUnlocked = sessionStorage.getItem("oahu_app_unlocked");
+      const overlay = document.getElementById("auth-lock-screen");
+      if (isUnlocked === "true") {
+        overlay.classList.add("hidden");
+        if (leafletMap) leafletMap.invalidateSize();
+      } else {
+        overlay.classList.remove("hidden");
+      }
+    }
+
+    function handleUnlock(e) {
+      e.preventDefault();
+      const input = document.getElementById("auth-pin-input");
+      const errorMsg = document.getElementById("auth-error-msg");
+
+      if (input.value === APP_PIN) {
+        sessionStorage.setItem("oahu_app_unlocked", "true");
+        document.getElementById("auth-lock-screen").classList.add("hidden");
+        errorMsg.classList.add("hidden");
+        input.value = "";
+        setTimeout(() => {
+          if (leafletMap) leafletMap.invalidateSize();
+        }, 150);
+      } else {
+        errorMsg.classList.remove("hidden");
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    function lockScreen() {
+      sessionStorage.removeItem("oahu_app_unlocked");
+      document.getElementById("auth-pin-input").value = "";
+      document.getElementById("auth-error-msg").classList.add("hidden");
+      document.getElementById("auth-lock-screen").classList.remove("hidden");
+    }
+
+    /* ==========================================================================
+       마스터 데이터
+       ========================================================================== */
     const EXCHANGE_RATE = 1385;
     let currentCurrency = 'USD';
 
-    // 40개 마스터 장소 데이터 (요가, 헬스, 수영, 패들보드 완벽 반영)
+    // 40개 마스터 장소 데이터
     const placesData = [
-      // 🧘 웰니스 & 워터스포츠 스팟
       { name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", desc: "호텔 3층 쾌적한 오션뷰 러닝머신 & 프리웨이트 공간", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Beach+Resort" },
       { name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", desc: "와이키키 해변을 굽어보며 선베드 태닝 & 온수 자쿠지", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
       { name: "와이키키 퀸즈 비치 (바다수영 & 모닝 요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", desc: "파도가 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 비치 요가", price: "무료 (매트 지참)", gmap: "Queens+Surf+Beach+Honolulu" },
       { name: "카일루아 비치 어드벤처스 (SUP 패들보드)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", desc: "에메랄드빛 카일루아 만을 가르는 스탠드업 패들보드 대여", price: "$65~$85 (2시간)", gmap: "Kailua+Beach+Adventures" },
 
-      // 와이키키 & 다운타운
       { name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", desc: "해변 바로 앞 7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki+Beach+Resort" },
       { name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", desc: "따끈한 스팸 무스비 & 주먹밥 명소", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
       { name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", desc: "생참치 커스텀 포케볼 가성비 1등", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
@@ -803,7 +857,6 @@
       { name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "두툼한 프라임 립 & 티본스테이크 디너", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
       { name: "Da Shop (로컬 북스토어)", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책, 사진집, 로컬 서적 전문 서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
 
-      // 동부 해안 (72번 국도 & 카일루아)
       { name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", desc: "겉바속촉 갓 튀긴 오리지널 & 하우피아 말라사다", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
       { name: "다이아몬드 헤드 (Diamond Head)", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", desc: "와이키키 전경을 360도 굽어보는 분화구 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
       { name: "아일랜드 브루 커피하우스", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", desc: "하와이카이 마리나 요트 선착장 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
@@ -816,7 +869,6 @@
       { name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", desc: "쥐라기 공원 영화 배경 계곡 오프로드 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
       { name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", desc: "바다 위 '중국인 모자섬'을 배경으로 사진 찍는 공원", price: "무료", gmap: "Kualoa+Regional+Park" },
 
-      // 노스쇼어 (북부)
       { name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "파인애플 아이스크림(돌휩) & 기차 투어", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
       { name: "할레이바 타운 (Haleiwa)", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "빈티지 목조 서퍼 마을 산책 & 갤러리 쇼핑", price: "무료", gmap: "Haleiwa+Town+Oahu" },
       { name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "오아후 원조 갈릭 스캠피 버터 새우 플레이트", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
@@ -825,7 +877,6 @@
       { name: "샤크스 코브 (바다수영·스노클)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", desc: "천연 바위 웅덩이 암초 속 수족관 스노클링 & 힐링 수영", price: "무료", gmap: "Shark's+Cove+Oahu" },
       { name: "선셋 비치 파크 (Sunset Beach)", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "태평양 수평선 너머로 저무는 환상적인 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
 
-      // 진주만 & 서부
       { name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장 (가방 반입 금지)", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
       { name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "폴로, 코치, 타미힐피거 등 미국 브랜드 대폭 할인", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
       { name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변에서 즐기는 전통 훌라 댄스 & 디너 뷔페", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
@@ -1208,14 +1259,14 @@
     }
 
     /* ==========================================================================
-       일자별 타임라인 (웰니스 & 수영/패들보드 완벽 통합)
+       일자별 타임라인 (편명 비노출, 시간만 표시)
        ========================================================================== */
     const timelineSchedules = [
       { 
         day: 1, 
         date: "10/9(금)", 
         theme: "호놀룰루 입국 & 호텔 풀 / 바다수영", 
-        desc: "12:25 HNL 도착 ➔ 렌터카 수령 ➔ 하얏트 체크인 ➔ 따뜻한 이야스메 무스비 ➔ 하얏트 3층 야외 수영장 & 와이키키 퀸즈비치 바다수영 ➔ 마구로 스팟 포케 저녁" 
+        desc: "12:25 현지 도착 ➔ 렌터카 수령 ➔ 하얏트 체크인 ➔ 따뜻한 이야스메 무스비 ➔ 하얏트 3층 야외 수영장 & 와이키키 퀸즈비치 바다수영 ➔ 마구로 스팟 포케 저녁" 
       },
       { 
         day: 2, 
@@ -1257,7 +1308,7 @@
         day: 8, 
         date: "10/16(금)", 
         theme: "발코니 모닝 스트레칭 & 귀국길", 
-        desc: "하얏트 발코니에서 와이키키 바다 보며 모닝 스트레칭 ➔ 11:00 체크아웃 ➔ 렌터카 주유 및 반납 ➔ 14:35 KE054 탑승 인천 귀국길" 
+        desc: "하얏트 발코니에서 와이키키 바다 보며 모닝 스트레칭 ➔ 11:00 체크아웃 ➔ 렌터카 주유 및 반납 ➔ 14:35 탑승 및 인천행 출발" 
       }
     ];
 
@@ -1402,7 +1453,7 @@
     }
 
     /* ==========================================================================
-       위시리스트 & 실물 사진 호버 툴팁 (익스트림/힐링 & 7선)
+       위시리스트 & 실물 사진 호버 툴팁
        ========================================================================== */
     function renderWishlists() {
       renderWishGroup('must-do-extreme-list', mustDoExtremeItems);
@@ -1686,7 +1737,7 @@
     }
 
     /* ==========================================================================
-       안전 가이드 허브 (검색 & 아코디언)
+       안전 가이드 허브[cite: 1, 2]
        ========================================================================== */
     let currentGuideCat = 'all';
 
@@ -1738,6 +1789,7 @@
        초기화 구동
        ========================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
       updateClocks();
       setInterval(updateClocks, 1000);
       renderTimeline();
