@@ -1,112 +1,67 @@
-{
-  "updatedAt": "2026-10-09T00:00:00.000Z",
-  "meta": {
-    "tripName": "하와이 오아후 7박 8일 스마트 가이드북",
-    "period": "2026.10.09(금) ~ 2026.10.16(금)",
-    "partySize": 2,
-    "exchangeRate": 1385
-  },
-  "customCosts": {
-    "hotel": 2940,
-    "flight": 2800,
-    "car": 940,
-    "etc": 130
-  },
-  "fuelRecords": [],
-  "variableBudgets": [
-    { "id": "b_food", "title": "🍽️ 2인 7박 8일 식음료 & 카페", "usd": 800, "checked": true },
-    { "id": "b_kualoa", "title": "🏎️ 쿠알로아 랜치 UTV 랩터 2인", "usd": 290, "checked": true },
-    { "id": "b_sup", "title": "🛶 카일루아 비치 SUP 패들보드 2인", "usd": 130, "checked": true },
-    { "id": "b_hanauma", "title": "🤿 하나우마 베이 입장료 2인", "usd": 50, "checked": true },
-    { "id": "b_yoga", "title": "🧘 와이키키 비치 요가 세션", "usd": 40, "checked": true },
-    { "id": "b_luau", "title": "🌺 코올리나 파라다이스 루아우 2인", "usd": 320, "checked": true },
-    { "id": "b_souvenir", "title": "🛍️ 기념품 & 호놀룰루 쿠키 기본", "usd": 350, "checked": true },
-    { "id": "b_emergency", "title": "🚨 비상 예비금 / 팁 여유분", "usd": 200, "checked": true }
-  ],
-  "reminders": [
-    {
-      "cat": "📅 사전 필수 예약",
-      "items": [
-        { "id": "rem_kualoa", "text": "쿠알로아 랜치 UTV 랩터 2인 예약", "sub": "D-90~60 공식홈페이지 결제" },
-        { "id": "rem_diamond", "text": "다이아몬드 헤드 입장&주차 슬롯", "sub": "D-30 정각(한국시간 09:00 오픈)" },
-        { "id": "rem_hanauma", "text": "하나우마 베이 온라인 티켓팅", "sub": "방문 2일 전 07:00 HST 오픈 알람" },
-        { "id": "rem_luau", "text": "파라다이스 코브 루아우 디너 확정", "sub": "좌석 등급 및 바우처 출력" }
-      ]
+async function pushStateToGitHub() {
+  const token = document.getElementById('gh-token-input').value.trim();
+  const owner = document.getElementById('gh-owner-input').value.trim();
+  const repo = document.getElementById('gh-repo-input').value.trim();
+  const statusEl = document.getElementById('sync-status');
+  
+  if (!token) { alert('GitHub Token을 입력해주세요.'); return; }
+  localStorage.setItem('gh_sync_token', token);
+  statusEl.className = "text-center text-xs font-bold text-slate-400";
+  statusEl.innerText = "깃허브로 동기화 중...";
+
+  const stateData = {
+    updatedAt: new Date().toISOString(),
+    fuelRecords: window.fuelRecords || [],
+    customCosts: {
+      hotel: document.getElementById('cost-hotel') ? document.getElementById('cost-hotel').value : 2940,
+      flight: document.getElementById('cost-flight') ? document.getElementById('cost-flight').value : 2800,
+      car: document.getElementById('cost-car') ? document.getElementById('cost-car').value : 940,
+      etc: document.getElementById('cost-etc') ? document.getElementById('cost-etc').value : 130
     },
-    {
-      "cat": "📄 서류 & 증명 발급",
-      "items": [
-        { "id": "rem_esta", "text": "미국 ESTA 전자비자 승인 확인", "sub": "출국 72시간 전 출력 및 캡처" },
-        { "id": "rem_license", "text": "국제운전면허증 + 국내 실물면허", "sub": "유효기간 6개월 이상 필수 소지" },
-        { "id": "rem_insur", "text": "해외여행자보험 영문 증명서", "sub": "치료보장 3천만~5천만 원 이상" },
-        { "id": "rem_passport", "text": "여권 유효기간 6개월 이상 점검", "sub": "사본 및 스마트폰 사진 백업" }
-      ]
-    },
-    {
-      "cat": "💳 예치금 & 결제 확인",
-      "items": [
-        { "id": "rem_car_deposit", "text": "렌터카 디포짓 신용카드 한도", "sub": "보증금 $200~$300 승인용 카드" },
-        { "id": "rem_hotel_deposit", "text": "하얏트 7박 리조트피 & 디포짓", "sub": "해외 원화결제차단(DCC) 해제" },
-        { "id": "rem_cash", "text": "비상용 달러 현금 팁 소액권", "sub": "$1, $5 소액 지폐 40~50장 환전" },
-        { "id": "rem_card_limit", "text": "트래블로그/외화카드 충전 확인", "sub": "현지 모바일 즉시 충전 세팅" }
-      ]
-    },
-    {
-      "cat": "📱 사전 체크 & 기기",
-      "items": [
-        { "id": "rem_esim", "text": "미국 무제한 eSIM/유심 설치", "sub": "QR코드 저장 및 공항 전환 준비" },
-        { "id": "rem_checkin", "text": "출국 24시간 전 모바일 체크인", "sub": "사전 모바일 탑승권 발급" },
-        { "id": "rem_offline_map", "text": "구글 오프라인 지도 오아후 다운로드", "sub": "통신 음영지역 대비 내비 세팅" },
-        { "id": "rem_utv_gear", "text": "UTV용 버릴 옷/신발 & 버프 챙기기", "sub": "적토마 붉은 흙먼지 차단용" }
-      ]
+    storage: { ...localStorage }
+  };
+
+  const path = 'trip/data/state.json';
+  const url = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path;
+  
+  try {
+    let sha = null;
+    const getRes = await fetch(url, { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } });
+    if (getRes.ok) { 
+      const fileInfo = await getRes.json(); 
+      sha = fileInfo.sha; 
     }
-  ],
-  "packingList": [
-    {
-      "cat": "필수 서류 & 금융",
-      "items": ["여권 (유효 6개월 이상)", "ESTA 승인본", "항공권 E-티켓", "호텔/렌터카 바우처", "국제/국내운전면허증", "해외결제 신용카드", "달러 현금 소액권", "여행자보험 영문증명서"]
-    },
-    {
-      "cat": "물놀이 & 웰니스",
-      "items": ["래시가드/수영복 (2~3벌)", "아쿠아슈즈 (산호초 보호)", "SUP 패들보드 모자", "비치 요가 매트/비치타월", "피트니스용 런닝화/요가복", "스노클링 마스크 & 방수팩", "Reef-Safe 무기자차 선크림"]
-    },
-    {
-      "cat": "전자기기 & 렌터카",
-      "items": ["110V 11자 돼지코 어댑터", "스마트폰 차량용 거치대", "차량 C타입 고속 시거잭", "보조배터리 (기내 휴대)", "미국 eSIM 또는 유심 장착"]
-    },
-    {
-      "cat": "상비약 & 퍼스널케어",
-      "items": ["개인 처방약 (원병+영문처방전)", "한국산 감기약 / 진통제", "소화제 / 지사제 / 방수밴드", "멀미약 (보트투어용)", "알로에 젤 (일광화상용)", "자외선 차단 선글라스", "기내용 안대 & 목베개", "지퍼백 & 세탁물 비닐백", "가벼운 겉옷 (에어컨 대비)", "트레킹 운동화"]
+
+    const jsonString = JSON.stringify(stateData, null, 2);
+    // 한글 깨짐 방지를 위한 UTF-8 Base64 인코딩
+    const contentB64 = btoa(unescape(encodeURIComponent(jsonString)));
+
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: { 
+        Authorization: 'Bearer ' + token, 
+        'Content-Type': 'application/json',
+        Accept: 'application/vnd.github+json'
+      },
+      body: JSON.stringify({ 
+        message: 'Update trip state via dashboard sync', 
+        content: contentB64, 
+        sha: sha || undefined 
+      })
+    });
+
+    if (putRes.ok) {
+      statusEl.className = "text-center text-xs font-bold text-emerald-600";
+      statusEl.innerText = "✓ 깃허브 동기화 성공! (/trip/data/state.json)";
+    } else {
+      const errJson = await putRes.json();
+      console.error(errJson);
+      statusEl.className = "text-center text-xs font-bold text-rose-600";
+      statusEl.innerText = "✗ 실패: Contents 권한(Read and write)을 확인하세요.";
     }
-  ],
-  "safetyGuides": [
-    {
-      "cat": "세관/검역",
-      "title": "미국 입국 세관 신고 원칙 (무조건 'Yes')",
-      "badge": "과태료 예방",
-      "summary": "가공식품(과자, 김, 햇반 등)만 있어도 세관 키오스크 질문엔 반드시 'Yes' 체크",
-      "detail": "• 신고 시 반입 불가 품목은 단순 현장 폐기<br>• 미신고 적발 시 $500~$1,000 과태료 및 정밀검색 등록"
-    },
-    {
-      "cat": "의약품",
-      "title": "CBD/대마 제품 & 멜라토닌 반입 금지",
-      "badge": "형사처벌 주의",
-      "summary": "미국에서 합법이라도 한국 귀국 시 형사 처벌 또는 전량 폐기됩니다.",
-      "detail": "• CBD 오일/젤리: 한국법상 마약류 처벌 대상<br>• 멜라토닌: 처방전 없으면 100% 압류 및 폐기수수료 부과<br>• 영양제 합산 1인 최대 6병 면세"
-    },
-    {
-      "cat": "의료/응급",
-      "title": "응급실 대신 긴급진료소(Urgent Care) 이용",
-      "badge": "의료비 절약",
-      "summary": "경증 질환은 응급실 대신 와이키키 긴급진료소 방문 권장",
-      "detail": "• Doctors on Call (쉐라톤 2층): 한국어 원격 통역 지원<br>• 진료 후 영문 진단서와 진료비 영수증 수령 필수"
-    },
-    {
-      "cat": "교통/치안",
-      "title": "렌터카 차량 털이(Smash & Grab) 방지",
-      "badge": "도난 방지",
-      "summary": "차내에 어떤 물건도 남겨두지 마세요. 창문을 깨고 탈취합니다.",
-      "detail": "• 트렁크가 보일 수 있으니 쇼핑백, 옷, 동전조차 노출 금지<br>• 짐은 호텔 출발 시 미리 트렁크에 넣어둘 것"
-    }
-  ]
+  } catch (err) {
+    console.error(err);
+    statusEl.className = "text-center text-xs font-bold text-rose-600";
+    statusEl.innerText = "✗ 네트워크 오류 발생";
+  }
 }
