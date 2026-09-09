@@ -15,10 +15,10 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN (종합 통계 시각화)[cite: 3] -->
+  <!-- Chart.js CDN (종합 통계 시각화) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Leaflet Map CSS & JS CDN (오아후 40개 북마크 인터랙티브 지도)[cite: 3] -->
+  <!-- Leaflet Map CSS & JS CDN (오아후 40개 북마크 인터랙티브 지도) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -93,15 +93,15 @@
       transition: opacity 0.15s ease;
     }
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 4px;
+      height: 4px;
     }
     ::-webkit-scrollbar-thumb {
       background: #cbd5e1;
       border-radius: 999px;
     }
     ::-webkit-scrollbar-track {
-      background: #f4f5f8;
+      background: transparent;
     }
 
     @media print {
@@ -165,72 +165,66 @@
     </div>
   </div>
 
-  <!-- ==================== 1. 스마트 압축 헤더 ==================== -->
+  <!-- ==================== 1. 모바일 최적화 스마트 헤더 ==================== -->
   <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-soft transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-2.5 space-y-2">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 space-y-2">
       
-      <!-- Top Row: 브랜드 + 시계(날짜+시간) + 환율 + PDF버튼 + 잠금 -->
+      <!-- 1행: 브랜드 / 환율 / PDF / 잠금 -->
       <div class="flex items-center justify-between gap-2 text-xs">
         <div class="flex items-center gap-2 shrink-0">
-          <div class="w-8 h-8 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-sm shadow-xs">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-sm shadow-xs">
             🌺
           </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="bg-brand-50 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-brand-100">OAHU 7N8D</span>
-              <span class="text-xs font-bold text-slate-900 hidden sm:inline">오아후 스마트 여행 가이드북</span>
-            </div>
+          <div class="flex items-center gap-1.5">
+            <span class="bg-brand-50 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-brand-100">OAHU 7N8D</span>
+            <span class="text-xs font-bold text-slate-900 hidden md:inline">오아후 스마트 여행 가이드북</span>
           </div>
         </div>
 
-        <!-- 국가별 시계: 월.일(요일) 시:분:초 동시 표기 -->
-        <div id="header-clocks-wrapper" class="hidden sm:flex items-center gap-2 transition-all">
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-muted text-slate-700 font-semibold rounded-lg border border-slate-200/70 text-[11px]">
-            <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
-            KST 한국: <span id="clock-kst" class="font-bold">--.--(--) --:--:--</span>
-          </span>
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-pastel-emerald text-pastel-emeraldText font-bold rounded-lg text-[11px]">
-            🌴 HST 하와이(-19h): <span id="clock-hst" class="font-bold">--.--(--) --:--:--</span>
-          </span>
-          <span id="trip-status-badge" class="px-2.5 py-1 bg-pastel-amber text-pastel-amberText font-bold rounded-lg text-[11px]">
-            계산 중...
-          </span>
-        </div>
-
-        <!-- 환율 + PDF 저장 + 모바일토글 + 잠금 -->
-        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg border border-emerald-200/60 text-[11px] font-medium">
-            <span class="font-bold">$1 = <span id="header-rate">1,385</span>원</span>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg border border-emerald-200/60 text-[11px] font-bold">
+            $1 = <span id="header-rate">1,385</span>원
           </div>
-
-          <button onclick="saveAsPdf()" class="px-2.5 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200/80 text-[11px] font-bold rounded-lg transition flex items-center gap-1 shadow-xs" title="가이드북을 PDF로 다운로드 및 인쇄">
-            <span>📄</span> <span class="hidden md:inline">PDF 저장</span>
+          <button onclick="saveAsPdf()" class="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200/80 text-[11px] font-bold rounded-lg transition flex items-center gap-1 shadow-xs" title="PDF 저장">
+            <span>📄</span> <span class="hidden sm:inline">PDF</span>
           </button>
-
-          <button onclick="toggleMobileHeader()" class="sm:hidden px-2 py-1 bg-surface-muted text-slate-600 text-[11px] font-bold rounded-lg border border-slate-200">
-            <span id="mobile-menu-indicator">메뉴 ▼</span>
-          </button>
-          
-          <button onclick="lockScreen()" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-bold rounded-lg transition" title="가이드북 즉시 잠금">
+          <button onclick="lockScreen()" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-bold rounded-lg transition" title="가이드북 잠금">
             🔒
           </button>
         </div>
       </div>
 
-      <!-- Bottom Row: 네비게이션 버튼 (마지막 탭: 📊 종합 통계) -->
-      <nav id="header-nav-bar" class="hidden sm:flex items-center gap-1 overflow-x-auto text-xs font-semibold pb-0.5 border-t border-slate-100 pt-1.5 custom-scrollbar">
-        <button onclick="scrollToSection('sec-summary')" class="nav-btn px-3 py-1.5 rounded-full bg-brand-500 text-white font-bold transition whitespace-nowrap shadow-xs">📱 요약</button>
-        <button onclick="scrollToSection('sec-reminders')" class="nav-btn px-3 py-1.5 rounded-full bg-amber-500 text-white font-bold transition whitespace-nowrap shadow-xs">🔔 챙김 리마인드</button>
-        <button onclick="scrollToSection('sec-field-tips')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">💡 현장 디테일 4선</button>
-        <button onclick="scrollToSection('sec-customs')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🛃 면세 & 관세 대응</button>
-        <button onclick="scrollToSection('sec-map')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🗺️ 720px 지도</button>
-        <button onclick="scrollToSection('sec-wishlist')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">✨ 웰니스 & Top 7</button>
-        <button onclick="scrollToSection('sec-timeline')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🗓️ 7박 8일 일정</button>
-        <button onclick="scrollToSection('sec-table')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">📋 종합 표 (구글맵)</button>
-        <button onclick="scrollToSection('sec-budget')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">💰 2인 예산</button>
-        <button onclick="scrollToSection('sec-checklist')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🧳 짐 꾸리기 30선</button>
-        <button onclick="scrollToSection('sec-guide')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🛡️ 안전·세관·약품</button>
-        <button onclick="scrollToSection('sec-analytics')" class="nav-btn px-3 py-1.5 rounded-full bg-indigo-600 text-white font-bold transition whitespace-nowrap shadow-xs">📊 종합 통계</button>
+      <!-- 2행: KST/HST 시계 & D-Day 배너 (모바일 가로 2열 + 배너 균형 정렬) -->
+      <div class="grid grid-cols-2 sm:flex sm:items-center sm:justify-start gap-1.5 text-[11px]">
+        <div class="flex items-center justify-center gap-1 py-1 px-2 bg-surface-muted rounded-lg border border-slate-200/70 text-slate-700 truncate">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse shrink-0"></span>
+          <span class="font-bold text-slate-500 shrink-0">KST</span>
+          <span id="clock-kst" class="font-bold truncate text-[10px] sm:text-[11px]">--.--(--) --:--:--</span>
+        </div>
+        <div class="flex items-center justify-center gap-1 py-1 px-2 bg-pastel-emerald rounded-lg border border-emerald-200/60 text-pastel-emeraldText truncate">
+          <span class="shrink-0">🌴</span>
+          <span class="font-bold shrink-0">HST(-19h)</span>
+          <span id="clock-hst" class="font-bold truncate text-[10px] sm:text-[11px]">--.--(--) --:--:--</span>
+        </div>
+        <div class="col-span-2 sm:col-auto flex items-center justify-center py-1 px-2.5 bg-pastel-amber text-pastel-amberText font-bold rounded-lg text-[10px] sm:text-[11px] border border-amber-200/60 truncate">
+          <span id="trip-status-badge">✈️ 10/9(금) D-Day 자동 스케줄링</span>
+        </div>
+      </div>
+
+      <!-- 3행: 네비게이션 버튼 (모바일 1줄 가로 스크롤 유지) -->
+      <nav class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-1 border-t border-slate-100 text-xs font-semibold">
+        <button onclick="scrollToSection('sec-summary')" class="nav-btn px-3 py-1 rounded-full bg-brand-500 text-white font-bold transition shrink-0 shadow-xs">📱 요약</button>
+        <button onclick="scrollToSection('sec-reminders')" class="nav-btn px-3 py-1 rounded-full bg-amber-500 text-white font-bold transition shrink-0 shadow-xs">🔔 챙김 리마인드</button>
+        <button onclick="scrollToSection('sec-field-tips')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">💡 현장 디테일 4선</button>
+        <button onclick="scrollToSection('sec-customs')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">🛃 면세 & 관세 대응</button>
+        <button onclick="scrollToSection('sec-map')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">🗺️ 720px 지도</button>
+        <button onclick="scrollToSection('sec-wishlist')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">✨ 웰니스 & Top 7</button>
+        <button onclick="scrollToSection('sec-timeline')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">🗓️ 7박 8일 일정</button>
+        <button onclick="scrollToSection('sec-table')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">📋 종합 표 (구글맵)</button>
+        <button onclick="scrollToSection('sec-budget')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">💰 2인 예산</button>
+        <button onclick="scrollToSection('sec-checklist')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">🧳 짐 꾸리기 30선</button>
+        <button onclick="scrollToSection('sec-guide')" class="nav-btn px-3 py-1 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition shrink-0">🛡️ 안전·세관·약품</button>
+        <button onclick="scrollToSection('sec-analytics')" class="nav-btn px-3 py-1 rounded-full bg-indigo-600 text-white font-bold transition shrink-0 shadow-xs">📊 종합 통계</button>
       </nav>
 
     </div>
@@ -239,7 +233,7 @@
   <!-- ==================== 메인 콘텐츠 ==================== -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 space-y-8">
 
-    <!-- [섹션 1] 요약 & 예약 바우처 현황 -->
+    <!-- [섹션 1] 요약 & 예약 바우처 현황 (코드 비노출 및 마스킹) -->
     <section id="sec-summary" class="scroll-mt-24 space-y-5">
       <div class="bg-gradient-to-r from-brand-600 via-indigo-600 to-sky-600 text-white p-6 sm:p-7 rounded-3xl shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="space-y-1.5">
@@ -254,17 +248,17 @@
         <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 text-center md:text-right shrink-0">
           <div class="text-[11px] text-indigo-200 font-medium">확정 여정 기간</div>
           <div class="text-lg sm:text-xl font-black mt-0.5">10.09(금) ~ 10.16(금)</div>
-          <div class="text-[11px] text-white/90 font-mono mt-0.5">보안 마스킹 적용 완료</div>
+          <div class="text-[11px] text-white/90 font-mono mt-0.5">보안 예약 확정</div>
         </div>
       </div>
 
-      <!-- 바우처 카드 3종 -->
+      <!-- 바우처 카드 3종 (코드 비노출) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- 항공 -->
         <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold px-2.5 py-0.5 bg-pastel-blue text-pastel-blueText rounded-full">✈️ 국제선 왕복 직항</span>
-            <span class="text-[11px] font-mono text-slate-400">#TK-9842-881A</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">발권 완료</span>
           </div>
           <div class="space-y-1.5 text-xs">
             <div class="flex justify-between py-1 border-b border-slate-100">
@@ -277,7 +271,7 @@
             </div>
           </div>
           <div class="text-[10px] text-slate-400 bg-surface-muted p-2 rounded-xl border border-slate-100">
-            🔒 편명 및 코드는 해킹 방지를 위해 난수 토큰으로 보호 중입니다.
+            🔒 개인정보 보호를 위해 상세 편명 및 식별 코드는 안전하게 비노출 처리되었습니다.
           </div>
         </div>
 
@@ -285,7 +279,7 @@
         <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold px-2.5 py-0.5 bg-pastel-amber text-pastel-amberText rounded-full">🚗 쉐보레 트렉스 (CUV)</span>
-            <span class="text-[11px] font-mono text-slate-400">#CR-TRX-4410</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">예약 완료</span>
           </div>
           <div class="space-y-1 text-xs text-slate-600">
             <div class="flex justify-between">
@@ -293,7 +287,7 @@
               <span class="font-bold text-slate-800">반납: 10/16(금) 11:30</span>
             </div>
             <p class="text-[11px] text-rose-600 font-medium bg-pastel-rose/50 p-2 rounded-xl border border-rose-200/60 mt-2">
-              ⚠️ 주의: 트렁크 차내 소지품 노출 금지 (차량 털이 Smash & Grab 방지)[cite: 1, 2]
+              ⚠️ 주의: 트렁크 차내 소지품 노출 금지 (차량 털이 Smash & Grab 방지)
             </p>
           </div>
         </div>
@@ -302,7 +296,7 @@
         <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold px-2.5 py-0.5 bg-pastel-purple text-pastel-purpleText rounded-full">🏨 하얏트 리젠시 와이키키</span>
-            <span class="text-[11px] font-mono text-slate-400">#HY-7819-CONF</span>
+            <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">7박 확정</span>
           </div>
           <div class="space-y-1 text-xs text-slate-600">
             <p class="font-bold text-slate-900">StayFit 피트니스 & 3층 오션뷰 풀 7박</p>
@@ -313,7 +307,7 @@
       </div>
     </section>
 
-    <!-- [상단 배치 섹션] 🔔 사전 필수 리마인드 & 마일스톤 -->
+    <!-- [상단 배치] 🔔 사전 필수 리마인드 & 마일스톤 -->
     <section id="sec-reminders" class="scroll-mt-24 space-y-5">
       <div class="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-soft space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
@@ -326,12 +320,12 @@
               <span>🔔</span> 그때그때 미리 챙겨야 하는 일정 리마인드
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">
-              사전 티켓팅, 보증금/예치금 한도 점검, 필수 서류 발급 상태를 미리 체크하고 준비하세요[cite: 3].
+              사전 티켓팅, 보증금/예치금 한도 점검, 필수 서류 발급 상태를 미리 체크하고 준비하세요.
             </p>
           </div>
           <div class="flex items-center gap-2 shrink-0">
             <span id="remind-progress-badge" class="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-xl border border-amber-200">
-              0 / 12 완료
+              0 / 16 완료
             </span>
           </div>
         </div>
@@ -396,7 +390,7 @@
             </div>
             <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside">
               <li><strong>기념품 쇼핑 시기:</strong> 코나 커피 원두와 호놀룰루 쿠키는 트렁크에 싣고 다닐 경우 하와이의 뜨거운 차량 열기로 인해 산패되거나 초콜릿 딥이 녹아버립니다. Day 7 오후 와이키키 도보 쇼핑 시 몰아서 구매하고 즉시 호텔 룸으로 보관하세요.</li>
-              <li><strong>영수증 확인 철저:</strong> 와이키키 레스토랑 중 이미 영수증에 18% Tip이 포함된 상태(Gratuity Included)로 나오는 곳이 많으니 이중 지불에 유의하세요[cite: 1, 2].</li>
+              <li><strong>영수증 확인 철저:</strong> 와이키키 레스토랑 중 이미 영수증에 18% Tip이 포함된 상태(Gratuity Included)로 나오는 곳이 많으니 이중 지불에 유의하세요.</li>
             </ul>
           </div>
         </div>
@@ -455,7 +449,6 @@
           </div>
         </div>
 
-        <!-- 실전 세관 대응 팁 박스 -->
         <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200/70 text-xs text-amber-900 space-y-1.5">
           <p class="font-bold flex items-center gap-1.5">
             <span>💡</span> 세관 통관 실전 팁 (모바일 세관신고 앱 활용)
@@ -463,13 +456,13 @@
           <ul class="list-disc list-inside space-y-1 text-amber-800">
             <li><strong>영수증(Receipt) 일체 보관:</strong> 와이켈레 아울렛이나 시내에서 구매한 영수증을 버리지 마세요. 실구매가 영수증이 없으면 세관 정가 기준으로 더 높게 과세될 수 있습니다.</li>
             <li><strong>'여행자 세관신고' 모바일 앱:</strong> 귀국 비행기 탑승 전 앱에서 모바일로 신고서를 작성하면 공항 입국장 QR 전용 게이트를 통해 기다림 없이 1분 만에 신속 통과할 수 있습니다.</li>
-            <li><strong>육류 성분 절대 반입 금지:</strong> 육포, 소시지, 쇠고기 스프 라면 등은 면세 한도와 무관하게 100% 검역 압류 대상입니다[cite: 1, 2].</li>
+            <li><strong>육류 성분 절대 반입 금지:</strong> 육포, 소시지, 쇠고기 스프 라면 등은 면세 한도와 무관하게 100% 검역 압류 대상입니다.[cite: 1]</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- [섹션 2] 720px 지도 & 권역별 일러스트 팝업[cite: 3] -->
+    <!-- [섹션 2] 720px 지도 & 권역별 일러스트 팝업 -->
     <section id="sec-map" class="scroll-mt-24 space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -500,7 +493,6 @@
         <button onclick="filterMapMarkers('의료')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-rose-600 rounded-xl hover:bg-rose-50 transition shrink-0">🏥 드럭스토어·병원</button>
       </div>
 
-      <!-- 지도 본체 (720px)[cite: 3] -->
       <div class="relative w-full bg-white rounded-3xl border border-slate-200/80 shadow-soft overflow-hidden map-container-720">
         <div id="leaflet-map" class="w-full h-full"></div>
         <div id="gmap-frame-container" class="hidden w-full h-full">
@@ -731,7 +723,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
             <span class="px-3 py-0.5 bg-pastel-rose text-pastel-roseText text-xs font-bold rounded-full">SAFETY & CUSTOMS</span>
-            <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1">🛡️ 하와이 상황별 안전·세관·의약품 종합 가이드[cite: 1, 2]</h2>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1">🛡️ 하와이 상황별 안전·세관·의약품 종합 가이드</h2>
           </div>
           <div class="relative w-full sm:w-60">
             <input type="text" id="guide-search-input" oninput="renderGuideHub()" placeholder="가이드 검색 (라면, 멜라토닌)..." class="w-full text-xs p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
@@ -743,20 +735,20 @@
             <thead class="bg-surface-muted text-slate-700 font-bold">
               <tr>
                 <th class="p-3 border-r border-slate-200 w-24">구분</th>
-                <th class="p-3 border-r border-slate-200 text-rose-600 bg-pastel-rose/30">❌ 반입 불가 (압류·과태료 대상)[cite: 1, 2]</th>
-                <th class="p-3 text-emerald-800 bg-pastel-emerald/30">⭕ 반입 가능 (신고 후 통과)[cite: 1, 2]</th>
+                <th class="p-3 border-r border-slate-200 text-rose-600 bg-pastel-rose/30">❌ 반입 불가 (압류·과태료 대상)</th>
+                <th class="p-3 text-emerald-800 bg-pastel-emerald/30">⭕ 반입 가능 (신고 후 통과)</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
               <tr>
                 <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">라면류</td>
-                <td class="p-3 text-rose-700 border-r border-slate-200">소·돼지·닭고기 성분 스프 라면 일체[cite: 1, 2]</td>
-                <td class="p-3 text-emerald-800">해물 라면(새우탕, 오징어짬뽕, 너구리 등), 순수 채식 라면[cite: 1, 2]</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">소·돼지·닭고기 성분 스프 라면 일체</td>
+                <td class="p-3 text-emerald-800">해물 라면(새우탕, 오징어짬뽕, 너구리 등), 순수 채식 라면</td>
               </tr>
               <tr>
                 <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">즉석밥/반찬</td>
-                <td class="p-3 text-rose-700 border-r border-slate-200">장조림, 스팸, 햄 캔, 소고기 볶음고추장[cite: 1, 2]</td>
-                <td class="p-3 text-emerald-800">흰 쌀밥 햇반, 마른 김, 멸치볶음, 오징어채, 쥐포[cite: 1, 2]</td>
+                <td class="p-3 text-rose-700 border-r border-slate-200">장조림, 스팸, 햄 캔, 소고기 볶음고추장</td>
+                <td class="p-3 text-emerald-800">흰 쌀밥 햇반, 마른 김, 멸치볶음, 오징어채, 쥐포</td>
               </tr>
               <tr>
                 <td class="p-3 font-bold bg-slate-50 border-r border-slate-200">의약품 주의</td>
@@ -781,10 +773,10 @@
               <span class="text-xs font-bold text-slate-400">오아후 7박 8일 완벽 분석</span>
             </div>
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2">
-              <span>📊</span> 여행 일정 전반 종합 통계 & 분석[cite: 3]
+              <span>📊</span> 여행 일정 전반 종합 통계 & 분석
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">
-              전체 일정 권역 비중, 활동 테마 분포, 주행 거리 및 준비 달성률을 한눈에 파악하세요[cite: 3].
+              전체 일정 권역 비중, 활동 테마 분포, 주행 거리 및 준비 달성률을 한눈에 파악하세요.
             </p>
           </div>
         </div>
@@ -799,7 +791,7 @@
           <div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-center space-y-1">
             <span class="text-xs text-slate-400 font-bold">🚗 예상 주행거리</span>
             <div class="text-2xl font-black text-slate-900">약 385<span class="text-xs font-normal text-slate-500">km</span></div>
-            <p class="text-[11px] text-emerald-600">72번국도 & H-3 드라이브[cite: 3]</p>
+            <p class="text-[11px] text-emerald-600">72번국도 & H-3 드라이브</p>
           </div>
 
           <div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-center space-y-1">
@@ -816,10 +808,10 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
-          <!-- 도넛 차트[cite: 3] -->
+          <!-- 도넛 차트 -->
           <div class="bg-surface-muted p-5 rounded-2xl border border-slate-200/70 space-y-2">
             <div class="flex items-center justify-between">
-              <h3 class="font-bold text-xs text-slate-700">📍 권역별 일정 및 체류 비중[cite: 3]</h3>
+              <h3 class="font-bold text-xs text-slate-700">📍 권역별 일정 및 체류 비중</h3>
               <span class="text-[10px] text-slate-400">4대 권역 분포</span>
             </div>
             <div class="relative h-64 w-full flex items-center justify-center">
@@ -854,13 +846,13 @@
               </thead>
               <tbody class="divide-y divide-slate-100 text-slate-700">
                 <tr><td class="py-2 px-3 font-bold">Day 1 (10/9)</td><td class="py-2 px-3">와이키키</td><td>입국 ➔ 호텔 풀 & 퀸즈 비치 바다수영</td><td class="py-2 px-3 font-mono">18 km</td><td>5개소</td></tr>
-                <tr><td class="py-2 px-3 font-bold">Day 2 (10/10)</td><td class="py-2 px-3">동부 해안</td><td>다이아몬드 헤드 ➔ 72번 국도 ➔ 카일루아 SUP[cite: 3]</td><td class="py-2 px-3 font-mono">68 km</td><td>7개소</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Day 2 (10/10)</td><td class="py-2 px-3">동부 해안</td><td>다이아몬드 헤드 ➔ 72번 국도 ➔ 카일루아 SUP</td><td class="py-2 px-3 font-mono">68 km</td><td>7개소</td></tr>
                 <tr><td class="py-2 px-3 font-bold">Day 3 (10/11)</td><td class="py-2 px-3">동부/와이키키</td><td>하나우마 베이 스노클링 ➔ 호텔 수영장 태닝</td><td class="py-2 px-3 font-mono">34 km</td><td>5개소</td></tr>
-                <tr><td class="py-2 px-3 font-bold">Day 4 (10/12)</td><td class="py-2 px-3">동북부</td><td>StayFit 헬스 ➔ 쿠알로아 랜치 UTV ➔ 선셋 피크닉[cite: 3]</td><td class="py-2 px-3 font-mono">75 km</td><td>6개소</td></tr>
-                <tr><td class="py-2 px-3 font-bold">Day 5 (10/13)</td><td class="py-2 px-3">노스쇼어</td><td>돌 플랜테이션 ➔ 지오반니 새우 ➔ 샤크스코브 수영[cite: 3]</td><td class="py-2 px-3 font-mono">96 km</td><td>6개소</td></tr>
-                <tr><td class="py-2 px-3 font-bold">Day 6 (10/14)</td><td class="py-2 px-3">진주만/서부</td><td>StayFit 러닝 ➔ 진주만 역사 ➔ 와이켈레 쇼핑[cite: 3]</td><td class="py-2 px-3 font-mono">54 km</td><td>4개소</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Day 4 (10/12)</td><td class="py-2 px-3">동북부</td><td>StayFit 헬스 ➔ 쿠알로아 랜치 UTV ➔ 선셋 피크닉</td><td class="py-2 px-3 font-mono">75 km</td><td>6개소</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Day 5 (10/13)</td><td class="py-2 px-3">노스쇼어</td><td>돌 플랜테이션 ➔ 지오반니 새우 ➔ 샤크스코브 수영</td><td class="py-2 px-3 font-mono">96 km</td><td>6개소</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Day 6 (10/14)</td><td class="py-2 px-3">진주만/서부</td><td>StayFit 러닝 ➔ 진주만 역사 ➔ 와이켈레 쇼핑</td><td class="py-2 px-3 font-mono">54 km</td><td>4개소</td></tr>
                 <tr><td class="py-2 px-3 font-bold">Day 7 (10/15)</td><td class="py-2 px-3">와이키키/서부</td><td>선라이즈 비치 요가 ➔ 기념품 쇼핑 ➔ 루아우 디너</td><td class="py-2 px-3 font-mono">58 km</td><td>5개소</td></tr>
-                <tr><td class="py-2 px-3 font-bold">Day 8 (10/16)</td><td class="py-2 px-3">공항</td><td>발코니 스트레칭 ➔ 체크아웃 ➔ 렌터카 반납 출국[cite: 3]</td><td class="py-2 px-3 font-mono">15 km</td><td>2개소</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Day 8 (10/16)</td><td class="py-2 px-3">공항</td><td>발코니 스트레칭 ➔ 체크아웃 ➔ 렌터카 반납 출국</td><td class="py-2 px-3 font-mono">15 km</td><td>2개소</td></tr>
               </tbody>
             </table>
           </div>
@@ -876,7 +868,7 @@
     <span class="font-bold text-xs hidden sm:inline">환율·팁 계산기</span>
   </button>
 
-  <!-- 환율/팁 모달 -->
+  <!-- 환율/팁 모달 (인용 텍스트 비노출) -->
   <div id="calc-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
       <div class="p-5 bg-brand-600 text-white flex items-center justify-between">
@@ -894,12 +886,12 @@
           </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-400 mb-1">팁 비율 (서빙 레스토랑 기준)[cite: 1, 2]</label>
+          <label class="block text-xs font-bold text-slate-400 mb-1">팁 비율 (서빙 레스토랑 기준)</label>
           <div class="grid grid-cols-4 gap-2 text-xs font-bold">
-            <button onclick="selectTipRate(0)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">0%<br><span class="text-[10px] text-slate-400">포장[cite: 1, 2]</span></button>
-            <button onclick="selectTipRate(15)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">15%<br><span class="text-[10px] text-slate-400">점심[cite: 1, 2]</span></button>
-            <button onclick="selectTipRate(18)" class="tip-rate-btn active py-2 border-2 border-brand-600 bg-brand-50 text-brand-700 rounded-xl">18%<br><span class="text-[10px]">저녁[cite: 1, 2]</span></button>
-            <button onclick="selectTipRate(20)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">20%<br><span class="text-[10px] text-slate-400">우수[cite: 1, 2]</span></button>
+            <button onclick="selectTipRate(0)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">0%<br><span class="text-[10px] text-slate-400">포장</span></button>
+            <button onclick="selectTipRate(15)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">15%<br><span class="text-[10px] text-slate-400">점심</span></button>
+            <button onclick="selectTipRate(18)" class="tip-rate-btn active py-2 border-2 border-brand-600 bg-brand-50 text-brand-700 rounded-xl">18%<br><span class="text-[10px]">저녁</span></button>
+            <button onclick="selectTipRate(20)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">20%<br><span class="text-[10px] text-slate-400">우수</span></button>
           </div>
         </div>
         <div class="p-3.5 bg-surface-muted rounded-2xl border border-slate-200 space-y-1.5 text-xs">
@@ -998,49 +990,7 @@
       window.print();
     }
 
-    /* 3. 모바일 스크롤 감지 헤더 토글 */
-    let isHeaderExpanded = false;
-    let scrollTimeout = null;
-
-    function toggleMobileHeader() {
-      const clocks = document.getElementById("header-clocks-wrapper");
-      const nav = document.getElementById("header-nav-bar");
-      const ind = document.getElementById("mobile-menu-indicator");
-      isHeaderExpanded = !isHeaderExpanded;
-
-      if (isHeaderExpanded) {
-        clocks.classList.remove("hidden");
-        nav.classList.remove("hidden");
-        ind.innerText = "닫기 ▲";
-      } else {
-        clocks.classList.add("hidden");
-        nav.classList.add("hidden");
-        ind.innerText = "메뉴 ▼";
-      }
-    }
-
-    window.addEventListener('scroll', () => {
-      if (window.innerWidth < 640) {
-        const clocks = document.getElementById("header-clocks-wrapper");
-        const nav = document.getElementById("header-nav-bar");
-        const ind = document.getElementById("mobile-menu-indicator");
-
-        clocks.classList.remove("hidden");
-        nav.classList.remove("hidden");
-        ind.innerText = "메뉴 ▲";
-
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          if (!isHeaderExpanded) {
-            clocks.classList.add("hidden");
-            nav.classList.add("hidden");
-            ind.innerText = "메뉴 ▼";
-          }
-        }, 2200);
-      }
-    });
-
-    /* 4. 사전 리마인드 데이터 */
+    /* 3. 사전 리마인드 데이터 & 렌더링 */
     const reminderData = [
       {
         cat: "📅 사전 필수 예약",
@@ -1130,7 +1080,7 @@
       }
     }
 
-    /* 5. 마스터 장소 데이터 & 위시리스트 */
+    /* 4. 마스터 장소 데이터 & 위시리스트 */
     const EXCHANGE_RATE = 1385;
     let currentCurrency = 'USD';
 
@@ -1145,7 +1095,7 @@
       { name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
       { name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
       { name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
-      { name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)[cite: 1, 2]", price: "보험 적용[cite: 1, 2]", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
+      { name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
       { name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
       { name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
       { name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
@@ -1153,7 +1103,7 @@
       { name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
       { name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
       { name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
-      { name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트 & 스낵[cite: 2]", price: "품목별", gmap: "Don+Quijote+Honolulu" },
+      { name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
       { name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "프라임 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
       { name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
 
@@ -1296,7 +1246,7 @@
       recalculateTotalBudget();
     }
 
-    /* 6. 시계 로직 (날짜+시간) */
+    /* 6. 시계 로직 */
     function updateClocks() {
       const now = new Date();
       const kstFormatter = new Intl.DateTimeFormat('ko-KR', {
@@ -1576,9 +1526,9 @@
     /* 11. 짐 꾸리기 */
     const packingData = [
       { cat: "필수 서류 & 금융", items: ["여권 (유효 6개월 이상)", "ESTA 승인본", "항공권 E-티켓", "호텔/렌터카 바우처", "국제/국내운전면허증", "해외결제 신용카드", "달러 현금 소액권", "여행자보험 영문증명서"] },
-      { cat: "물놀이 & 웰니스", items: ["래시가드/수영복 (2~3벌)", "아쿠아슈즈 (산호초 보호)", "SUP 패들보드 스트랩 모자", "비치 요가 매트/비치타월", "피트니스용 런닝화/요가복", "스노클링 마스크 & 방수팩", "Reef-Safe 무기자차 선크림[cite: 1, 2]"] },
+      { cat: "물놀이 & 웰니스", items: ["래시가드/수영복 (2~3벌)", "아쿠아슈즈 (산호초 보호)", "SUP 패들보드 스트랩 모자", "비치 요가 매트/비치타월", "피트니스용 런닝화/요가복", "스노클링 마스크 & 방수팩", "Reef-Safe 무기자차 선크림"] },
       { cat: "전자기기 & 렌터카", items: ["110V 11자 돼지코 어댑터", "스마트폰 차량용 거치대", "차량 C타입 고속 시거잭", "보조배터리 (기내 휴대)", "미국 eSIM 또는 유심 장착"] },
-      { cat: "상비약 & 퍼스널케어", items: ["개인 처방약 (원병+영문처방전)[cite: 1, 2]", "한국산 감기약 / 진통제[cite: 1, 2]", "소화제 / 지사제 / 방수밴드[cite: 1, 2]", "멀미약 (보트투어용)[cite: 1, 2]", "알로에 젤 (일광화상용)[cite: 2]", "자외선 차단 선글라스", "기내용 안대 & 목베개", "지퍼백 & 세탁물 비닐백", "가벼운 겉옷 (에어컨 대비)", "트레킹 운동화"] }
+      { cat: "상비약 & 퍼스널케어", items: ["개인 처방약 (원병+영문처방전)", "한국산 감기약 / 진통제", "소화제 / 지사제 / 방수밴드", "멀미약 (보트투어용)", "알로에 젤 (일광화상용)", "자외선 차단 선글라스", "기내용 안대 & 목베개", "지퍼백 & 세탁물 비닐백", "가벼운 겉옷 (에어컨 대비)", "트레킹 운동화"] }
     ];
 
     function renderPackingList() {
@@ -1632,12 +1582,12 @@
       }
     }
 
-    /* 12. 가이드 허브 */
+    /* 12. 가이드 허브 (인용구 표기 제거) */
     const guideItems = [
-      { cat: "세관/검역", title: "미국 입국 세관 신고 원칙 (무조건 'Yes')", badge: "과태료 예방", summary: "가공식품(과자, 김, 햇반 등)만 있어도 세관 키오스크 식품 질문엔 반드시 'Yes' 체크[cite: 1, 2]", detail: "• 신고 시 반입 불가 품목은 단순 현장 압류·폐기 처분[cite: 1, 2]<br>• 미신고 적발 시 허위 신고로 $500~$1,000 과태료 및 영구 정밀검색 등록[cite: 1, 2]" },
-      { cat: "의약품", title: "CBD/대마 제품 & 멜라토닌 반입 금지", badge: "형사처벌 주의", summary: "미국에서 합법이라도 한국 귀국 시 세관에서 형사 처벌 또는 전량 폐기 처리됩니다.[cite: 2]", detail: "• <strong>CBD 오일/젤리:</strong> 한국법상 마약류로 형사 입건 및 처벌 대상[cite: 2]<br>• <strong>멜라토닌:</strong> 한국 기준 전문의약품으로 처방전 없으면 100% 압류 및 폐기수수료 5,500원 부과[cite: 2]<br>• 영양제/비타민 합산 1인당 최대 6병까지만 면세 통관 가능[cite: 2]" },
-      { cat: "의료/응급", title: "응급실 대신 긴급진료소(Urgent Care) 이용", badge: "의료비 절약", summary: "경증 질환은 응급실(수천 달러 청구) 대신 와이키키 긴급진료소로 방문[cite: 1, 2]", detail: "• <strong>Doctors on Call (쉐라톤 2층):</strong> 한국어 원격 통역 지원 및 경증 질환 워크인 진료[cite: 1, 2]<br>• 진료 후 영문 진단서와 세부 영수증(Itemized Bill) 수령 필수 (한국 보험 청구용)[cite: 1, 2]" },
-      { cat: "교통/치안", title: "렌터카 차량 털이(Smash & Grab) 방지", badge: "도난 방지", summary: "차내에 어떤 물건도 남겨두지 마세요. 창문을 깨고 탈취합니다.[cite: 1, 2]", detail: "• 쉐보레 트렉스는 CUV라 트렁크가 보일 수 있으니 가방, 옷, 동전조차 노출 금지[cite: 1, 2]<br>• 짐은 도착지 주차장이 아닌 출발지 호텔에서 미리 트렁크에 넣어둘 것[cite: 1, 2]" }
+      { cat: "세관/검역", title: "미국 입국 세관 신고 원칙 (무조건 'Yes')", badge: "과태료 예방", summary: "가공식품(과자, 김, 햇반 등)만 있어도 세관 키오스크 식품 질문엔 반드시 'Yes' 체크", detail: "• 신고 시 반입 불가 품목은 단순 현장 압류·폐기 처분<br>• 미신고 적발 시 허위 신고로 $500~$1,000 과태료 및 영구 정밀검색 등록" },
+      { cat: "의약품", title: "CBD/대마 제품 & 멜라토닌 반입 금지", badge: "형사처벌 주의", summary: "미국에서 합법이라도 한국 귀국 시 세관에서 형사 처벌 또는 전량 폐기 처리됩니다.", detail: "• <strong>CBD 오일/젤리:</strong> 한국법상 마약류로 형사 입건 및 처벌 대상<br>• <strong>멜라토닌:</strong> 한국 기준 전문의약품으로 처방전 없으면 100% 압류 및 폐기수수료 5,500원 부과<br>• 영양제/비타민 합산 1인당 최대 6병까지만 면세 통관 가능" },
+      { cat: "의료/응급", title: "응급실 대신 긴급진료소(Urgent Care) 이용", badge: "의료비 절약", summary: "경증 질환은 응급실(수천 달러 청구) 대신 와이키키 긴급진료소로 방문", detail: "• <strong>Doctors on Call (쉐라톤 2층):</strong> 한국어 원격 통역 지원 및 경증 질환 워크인 진료<br>• 진료 후 영문 진단서와 세부 영수증(Itemized Bill) 수령 필수 (한국 보험 청구용)" },
+      { cat: "교통/치안", title: "렌터카 차량 털이(Smash & Grab) 방지", badge: "도난 방지", summary: "차내에 어떤 물건도 남겨두지 마세요. 창문을 깨고 탈취합니다.", detail: "• 쉐보레 트렉스는 CUV라 트렁크가 보일 수 있으니 가방, 옷, 동전조차 노출 금지<br>• 짐은 도착지 주차장이 아닌 출발지 호텔에서 미리 트렁크에 넣어둘 것" }
     ];
 
     function renderGuideHub() {
@@ -1662,7 +1612,7 @@
       `).join('');
     }
 
-    /* 13. 종합 여행 통계 차트 (Chart.js 연동)[cite: 3] */
+    /* 13. 종합 여행 통계 차트 (Chart.js 연동) */
     let statRegionChart = null;
     let statCategoryChart = null;
 
@@ -1740,7 +1690,7 @@
       }
     }
 
-    /* 14. 환율/팁 모달 */
+    /* 14. 환율/팁 모달 (인용 텍스트 제거) */
     let activeTip = 18;
     function selectTipRate(rate) {
       activeTip = rate;
