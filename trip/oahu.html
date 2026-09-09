@@ -82,8 +82,6 @@
   <!-- 상단 스마트 헤더 -->
   <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-soft transition-all duration-300">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-1.5 space-y-1.5">
-      
-      <!-- 상단 정보 영역 (스크롤 시 노출, 멈추면 숨김) -->
       <div id="header-top-section" class="mobile-expanded space-y-1.5">
         <div class="flex items-center justify-between gap-2 text-xs pt-0.5">
           <div class="flex items-center gap-2 shrink-0">
@@ -94,9 +92,9 @@
             </div>
           </div>
           
-          <!-- 통합 검색창 추가 -->
-          <div class="flex-1 max-w-xs mx-2">
-            <input type="text" id="global-search-input" oninput="globalTextSearch(this.value)" placeholder="🔍 전체 검색 (장소, 일정, 가이드)..." class="w-full py-1 px-3 bg-surface-muted border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition">
+          <!-- 통합 검색창 -->
+          <div class="flex-1 max-w-xs mx-2 relative">
+            <input type="text" id="global-search-input" oninput="globalTextSearch(this.value)" placeholder="🔍 전체 검색 (장소, 일정)..." class="w-full py-1 px-3 bg-surface-muted border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition">
           </div>
 
           <div class="flex items-center gap-1.5 shrink-0">
@@ -131,7 +129,7 @@
         </div>
       </div>
 
-      <!-- 하단 탭메뉴 (멈춘 상태에서도 상시 유지) -->
+      <!-- 하단 탭메뉴 (멈춘 상태 상시 고정) -->
       <nav id="header-nav-bar" class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-1 border-t border-slate-100 text-xs font-semibold">
         <button onclick="scrollToSec('sec-summary')" class="px-3 py-1 rounded-full bg-brand-500 text-white font-bold transition shrink-0 shadow-xs">📱 요약</button>
         <button onclick="scrollToSec('sec-reminders')" class="px-3 py-1 rounded-full bg-amber-500 text-white font-bold transition shrink-0 shadow-xs">🔔 챙김 리마인드</button>
@@ -627,7 +625,7 @@
     </button>
   </div>
 
-  <!-- 환율/팁 모달 (금액대별 자동 입력 버튼 4종 추가) -->
+  <!-- 환율/팁 모달 (금액대별 다중 클릭 합산 기능 탑재) -->
   <div id="calc-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
       <div class="p-5 bg-brand-600 text-white flex items-center justify-between">
@@ -638,27 +636,26 @@
         <div>
           <label class="block text-xs font-bold text-slate-400 mb-1">결제 달러 금액 ($ USD)</label>
           <input type="number" id="calc-usd-input" value="50" oninput="runCalculator()" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-bold text-slate-900 text-base">
-          <!-- 금액대별 자동 입력 버튼 4종 -->
           <div class="grid grid-cols-4 gap-1.5 mt-2 text-xs font-bold">
-            <button onclick="setCalcUsd(30)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">$30 (카페)</button>
-            <button onclick="setCalcUsd(60)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">$60 (식사)</button>
-            <button onclick="setCalcUsd(150)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">$150 (디너)</button>
-            <button onclick="setCalcUsd(300)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">$300 (투어)</button>
+            <button type="button" onclick="setCalcUsd(30)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">+$30</button>
+            <button type="button" onclick="setCalcUsd(60)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">+$60</button>
+            <button type="button" onclick="setCalcUsd(150)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">+$150</button>
+            <button type="button" onclick="setCalcUsd(300)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">+$300</button>
           </div>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-400 mb-1">팁 비율 (서빙 레스토랑 기준)</label>
           <div class="grid grid-cols-4 gap-2 text-xs font-bold">
-            <button onclick="selectTipRate(0)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">0%<br><span class="text-[10px] text-slate-400">포장</span></button>
-            <button onclick="selectTipRate(15)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">15%<br><span class="text-[10px] text-slate-400">점심</span></button>
-            <button onclick="selectTipRate(18)" class="tip-rate-btn active py-2 border-2 border-brand-600 bg-brand-50 text-brand-700 rounded-xl">18%<br><span class="text-[10px]">저녁</span></button>
-            <button onclick="selectTipRate(20)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">20%<br><span class="text-[10px] text-slate-400">우수</span></button>
+            <button type="button" onclick="selectTipRate(0, this)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">0%<br><span class="text-[10px] text-slate-400">포장</span></button>
+            <button type="button" onclick="selectTipRate(15, this)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">15%<br><span class="text-[10px] text-slate-400">점심</span></button>
+            <button type="button" onclick="selectTipRate(18, this)" class="tip-rate-btn active py-2 border-2 border-brand-600 bg-brand-50 text-brand-700 rounded-xl">18%<br><span class="text-[10px]">저녁</span></button>
+            <button type="button" onclick="selectTipRate(20, this)" class="tip-rate-btn py-2 border rounded-xl border-slate-200 text-slate-600">20%<br><span class="text-[10px] text-slate-400">우수</span></button>
           </div>
         </div>
         <div class="p-3.5 bg-surface-muted rounded-2xl border border-slate-200 space-y-1.5 text-xs">
           <div class="flex justify-between text-slate-500"><span>음식 원금:</span><span id="calc-res-base">$50.00</span></div>
           <div class="flex justify-between text-slate-500"><span>주세 (4.712%):</span><span id="calc-res-tax">+$2.36</span></div>
-          <div class="flex justify-between text-brand-600 font-bold"><span>팁 (18%):</span><span id="calc-res-tip">+$9.00</span></div>
+          <div class="flex justify-between text-brand-600 font-bold"><span>팁 (<span id="calc-tip-pct-label">18</span>%):</span><span id="calc-res-tip">+$9.00</span></div>
           <div class="border-t border-slate-200 pt-1.5 flex justify-between font-black text-sm text-slate-900">
             <span>합계 총액:</span><span id="calc-res-total" class="text-brand-600 text-base">$61.36</span>
           </div>
@@ -706,7 +703,7 @@
     </div>
   </div>
 
-  <!-- 권역별 일러스트 지도 모달 -->
+  <!-- 일러스트 지도 모달 -->
   <div id="illust-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -739,7 +736,7 @@
     <div id="tooltip-desc" class="text-[11px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed"></div>
   </div>
 
-  <!-- 대시보드 핵심 자바스크립트 -->
+  <!-- 완벽 통합 자바스크립트 스크립트 엔진 -->
   <script>
     const APP_PIN = "tmfqofkd!!";
 
@@ -814,19 +811,49 @@
       else m.classList.add('hidden');
     }
 
-    /* 환율 계산기 금액대별 자동 입력 버튼 함수 추가 */
+    /* 환율 계산기 누적 입력 지원 */
     function setCalcUsd(val) {
       const inp = document.getElementById('calc-usd-input');
       if (inp) {
-        inp.value = val;
+        const current = parseFloat(inp.value || 0);
+        inp.value = (current + val).toFixed(0);
         runCalculator();
       }
     }
 
-    /* 통합 검색 기능 (페이지 내 모든 텍스트 대상 필터링/하이라이트) */
+    function selectTipRate(rate, btnEl) {
+      activeTip = rate;
+      document.querySelectorAll('.tip-rate-btn').forEach(b => {
+        b.classList.remove('active', 'border-2', 'border-brand-600', 'bg-brand-50', 'text-brand-700');
+        b.classList.add('border', 'border-slate-200', 'text-slate-600');
+      });
+      if (btnEl) {
+        btnEl.classList.add('active', 'border-2', 'border-brand-600', 'bg-brand-50', 'text-brand-700');
+        btnEl.classList.remove('border', 'border-slate-200', 'text-slate-600');
+      }
+      const label = document.getElementById('calc-tip-pct-label');
+      if (label) label.innerText = rate;
+      runCalculator();
+    }
+
+    function runCalculator() {
+      const base = parseFloat(document.getElementById('calc-usd-input').value) || 0;
+      const tax = base * 0.04712;
+      const tip = base * (activeTip / 100);
+      const total = base + tax + tip;
+      const krw = Math.round(total * EXCHANGE_RATE);
+      document.getElementById('calc-res-base').innerText = '$' + base.toFixed(2);
+      document.getElementById('calc-res-tax').innerText = '+$' + tax.toFixed(2);
+      document.getElementById('calc-res-tip').innerText = '+$' + tip.toFixed(2);
+      document.getElementById('calc-res-total').innerText = '$' + total.toFixed(2);
+      document.getElementById('calc-res-krw').innerText = krw.toLocaleString();
+    }
+
+    /* 통합 검색 및 초기화 기능 */
     function globalTextSearch(keyword) {
       const q = keyword.toLowerCase().trim();
       const sections = document.querySelectorAll('main > section');
+      let firstMatch = null;
       sections.forEach(sec => {
         if (!q) {
           sec.style.opacity = '1';
@@ -837,37 +864,153 @@
         if (text.includes(q)) {
           sec.style.opacity = '1';
           sec.style.display = 'block';
+          if (!firstMatch) firstMatch = sec;
         } else {
           sec.style.opacity = '0.2';
         }
       });
+      if (q && firstMatch) {
+        firstMatch.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
-    /* 모바일 헤더 스크롤 조건: 멈출 때 메뉴탭만 보이고, 스크롤 시 상단 정보 노출 */
+    /* 모바일 헤더 스크롤 제어: 스크롤 시 노출, 멈추면 메뉴탭만 유지 */
     let scrollTimer = null;
     window.addEventListener('scroll', function() {
       if (window.innerWidth >= 640) return;
       const topSec = document.getElementById('header-top-section');
       if (!topSec) return;
-      
-      // 스크롤 중: 상단 정보 펼침
       topSec.classList.remove('mobile-collapsed');
       topSec.classList.add('mobile-expanded');
-
       clearTimeout(scrollTimer);
-      // 스크롤 멈춤 (0.3초 후): 상단 정보 접고 메뉴탭만 유지
       scrollTimer = setTimeout(() => {
-        if (window.scrollY > 20) {
+        if (window.scrollY > 25) {
           topSec.classList.remove('mobile-expanded');
           topSec.classList.add('mobile-collapsed');
         }
       }, 300);
     }, { passive: true });
 
+    /* GitHub 동기화 함수 (state.json 연동) */
+    async function pushStateToGitHub() {
+      const token = document.getElementById('gh-token-input').value.trim();
+      const owner = document.getElementById('gh-owner-input').value.trim();
+      const repo = document.getElementById('gh-repo-input').value.trim();
+      const statusEl = document.getElementById('sync-status');
+      
+      if (!token) { alert('GitHub Token을 입력해주세요.'); return; }
+      localStorage.setItem('gh_sync_token', token);
+      statusEl.className = "text-center text-xs font-bold text-slate-400";
+      statusEl.innerText = "깃허브로 동기화 중...";
+
+      const stateData = {
+        updatedAt: new Date().toISOString(),
+        fuelRecords: fuelRecords || [],
+        customCosts: {
+          hotel: document.getElementById('cost-hotel') ? document.getElementById('cost-hotel').value : 2940,
+          flight: document.getElementById('cost-flight') ? document.getElementById('cost-flight').value : 2800,
+          car: document.getElementById('cost-car') ? document.getElementById('cost-car').value : 940,
+          etc: document.getElementById('cost-etc') ? document.getElementById('cost-etc').value : 130
+        },
+        storage: { ...localStorage }
+      };
+
+      const path = 'trip/data/state.json';
+      const url = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path;
+      
+      try {
+        let sha = null;
+        const getRes = await fetch(url, { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } });
+        if (getRes.ok) { 
+          const fileInfo = await getRes.json(); 
+          sha = fileInfo.sha; 
+        }
+
+        const jsonString = JSON.stringify(stateData, null, 2);
+        const contentB64 = btoa(unescape(encodeURIComponent(jsonString)));
+
+        const putRes = await fetch(url, {
+          method: 'PUT',
+          headers: { 
+            Authorization: 'Bearer ' + token, 
+            'Content-Type': 'application/json',
+            Accept: 'application/vnd.github+json'
+          },
+          body: JSON.stringify({ 
+            message: 'Update trip state via dashboard sync', 
+            content: contentB64, 
+            sha: sha || undefined 
+          })
+        });
+
+        if (putRes.ok) {
+          statusEl.className = "text-center text-xs font-bold text-emerald-600";
+          statusEl.innerText = "✓ 깃허브 동기화 성공! (/trip/data/state.json)";
+        } else {
+          const errJson = await putRes.json();
+          console.error(errJson);
+          statusEl.className = "text-center text-xs font-bold text-rose-600";
+          statusEl.innerText = "✗ 실패: Contents 권한(Read and write)을 확인하세요.";
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.className = "text-center text-xs font-bold text-rose-600";
+        statusEl.innerText = "✗ 네트워크 오류 발생";
+      }
+    }
+
+    async function fetchStateFromGitHub() {
+      const token = document.getElementById('gh-token-input').value.trim();
+      const owner = document.getElementById('gh-owner-input').value.trim();
+      const repo = document.getElementById('gh-repo-input').value.trim();
+      const statusEl = document.getElementById('sync-status');
+      if (!token) { alert('GitHub Token을 입력해주세요.'); return; }
+      statusEl.className = "text-center text-xs font-bold text-slate-400";
+      statusEl.innerText = "깃허브에서 데이터 가져오는 중...";
+
+      const path = 'trip/data/state.json';
+      const url = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path;
+      try {
+        const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+        if (res.ok) {
+          const data = await res.json();
+          const parsed = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+          if (parsed.fuelRecords) {
+            fuelRecords = parsed.fuelRecords;
+            localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+            renderFuelRecords();
+          }
+          if (parsed.customCosts) {
+            document.getElementById('cost-hotel').value = parsed.customCosts.hotel || 2940;
+            document.getElementById('cost-flight').value = parsed.customCosts.flight || 2800;
+            document.getElementById('cost-car').value = parsed.customCosts.car || 940;
+            document.getElementById('cost-etc').value = parsed.customCosts.etc || 130;
+          }
+          if (parsed.storage) {
+            for (let k in parsed.storage) {
+              if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_')) {
+                localStorage.setItem(k, parsed.storage[k]);
+              }
+            }
+            renderReminders();
+            renderWishlists();
+            renderPackingList();
+          }
+          recalculateTotalBudget();
+          statusEl.className = "text-center text-xs font-bold text-emerald-600";
+          statusEl.innerText = "✓ 데이터 복원 완료! 최신 상태로 동기화되었습니다.";
+        } else {
+          statusEl.className = "text-center text-xs font-bold text-rose-600";
+          statusEl.innerText = "✗ 데이터를 찾을 수 없습니다.";
+        }
+      } catch (e) {
+        statusEl.className = "text-center text-xs font-bold text-rose-600";
+        statusEl.innerText = "✗ 복원 실패";
+      }
+    }
+
     const EXCHANGE_RATE = 1385;
     let currentCurrency = 'USD';
-    let activeTip = 18;
-    let fuelRecords = JSON.parse(localStorage.getItem('fuel_records') || '[]');
 
     const OAHU_DATA = {
       variableBudgets: [
@@ -1010,377 +1153,51 @@
       { id: "buy-7", title: "파타고니아 파탈로하(Pataloha) 한정 셔츠", sub: "파타고니아 호놀룰루 독점", desc: "하와이 지점에서만 구입 가능한 Pataloha 로고 오가닉 코튼 티셔츠", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80", tag: "패션의류" }
     ];
 
-    function renderBudgetChecklist() {
-      const container = document.getElementById("budget-checklist-container");
-      if (!container) return;
-      container.innerHTML = OAHU_DATA.variableBudgets.map((item, idx) => {
-        const saved = localStorage.getItem('var_b_' + item.id);
-        const isChecked = saved !== null ? (saved === 'true') : item.checked;
-        item.checked = isChecked;
-        return '<label class="flex items-center justify-between p-3 bg-white hover:bg-brand-50/50 rounded-2xl border border-slate-200/70 transition cursor-pointer text-xs group">' +
-          '<div class="flex items-center gap-2.5 min-w-0 pr-2">' +
-            '<input type="checkbox" ' + (isChecked ? 'checked' : '') + ' onchange="toggleBudgetItem(' + idx + ', this.checked)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0" />' +
-            '<span class="font-medium text-slate-800 truncate ' + (!isChecked ? 'line-through text-slate-400' : '') + '">' + item.title + '</span>' +
-          '</div>' +
-          '<span class="font-mono font-bold text-brand-600 shrink-0">$' + item.usd + '</span>' +
-        '</label>';
-      }).join('');
-      recalculateTotalBudget();
-    }
-
-    function toggleBudgetItem(idx, isChecked) {
-      OAHU_DATA.variableBudgets[idx].checked = isChecked;
-      localStorage.setItem('var_b_' + OAHU_DATA.variableBudgets[idx].id, isChecked);
-      renderBudgetChecklist();
-    }
-
-    function renderPackingList() {
-      const grid = document.getElementById('packing-grid');
-      if (!grid) return;
-      let total = 0, checked = 0;
-      grid.innerHTML = OAHU_DATA.packingList.map((grp, gIdx) => {
-        return '<div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">' +
-          '<h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center justify-between">' +
-            '<span>' + grp.cat + '</span><span class="text-[10px] text-slate-400 font-mono">' + grp.items.length + '개</span>' +
-          '</h4>' +
-          '<div class="space-y-2">' +
-            grp.items.map((item, iIdx) => {
-              total++;
-              const key = 'pack_' + gIdx + '_' + iIdx;
-              const isChk = localStorage.getItem(key) === 'true';
-              if (isChk) checked++;
-              return '<label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer hover:text-brand-600 transition">' +
-                '<input type="checkbox" id="' + key + '" ' + (isChk ? 'checked' : '') + ' onchange="togglePacking(\'' + key + '\')" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer mt-0.5 shrink-0" />' +
-                '<span class="' + (isChk ? 'line-through text-slate-400' : '') + '">' + item + '</span>' +
-              '</label>';
-            }).join('') +
-          '</div>' +
-        '</div>';
-      }).join('');
-      const pct = Math.round((checked / total) * 100);
-      const bar = document.getElementById('pack-progress-bar');
-      const txt = document.getElementById('pack-progress-text');
-      if (bar) bar.style.width = pct + '%';
-      if (txt) txt.innerText = checked + ' / ' + total + ' 완료 (' + pct + '%)';
-      updateOverallProgressStat();
-    }
-
-    function togglePacking(key) {
-      const el = document.getElementById(key);
-      if (el) { localStorage.setItem(key, el.checked); renderPackingList(); }
-    }
-
-    function resetPackingChecklist() {
-      if (confirm('짐 꾸리기 체크 상태를 모두 초기화하시겠습니까?')) {
-        for (let k in localStorage) { if (k.startsWith('pack_')) localStorage.removeItem(k); }
-        renderPackingList();
-      }
-    }
-
-    function renderGuideHub() {
-      const grid = document.getElementById('guide-cards-grid');
-      if (!grid) return;
-      const searchInput = document.getElementById('guide-search-input');
-      const search = searchInput ? searchInput.value.toLowerCase().trim() : '';
-      const filtered = OAHU_DATA.safetyGuides.filter(g => 
-        !search || g.title.toLowerCase().includes(search) || g.summary.toLowerCase().includes(search) || g.detail.toLowerCase().includes(search)
-      );
-      grid.innerHTML = filtered.map(item => 
-        '<div class="bg-white rounded-2xl border border-slate-200/80 p-4 space-y-2">' +
-          '<div class="flex items-center justify-between">' +
-            '<span class="px-2 py-0.5 bg-brand-50 text-brand-700 text-[11px] font-bold rounded-md">' + item.cat + '</span>' +
-            '<span class="px-2 py-0.5 bg-pastel-rose text-pastel-roseText text-[10px] font-bold rounded-md">' + item.badge + '</span>' +
-          '</div>' +
-          '<h4 class="text-xs sm:text-sm font-bold text-slate-900">' + item.title + '</h4>' +
-          '<p class="text-xs text-slate-600 leading-relaxed">' + item.summary + '</p>' +
-          '<div class="pt-2 border-t border-slate-100 text-xs text-slate-500 leading-relaxed bg-surface-muted p-2.5 rounded-xl">' + item.detail + '</div>' +
-        '</div>'
-      ).join('');
-    }
-
-    function renderReminders() {
-      const grid = document.getElementById('reminders-grid');
-      if (!grid) return;
-      let total = 0, checked = 0;
-      grid.innerHTML = OAHU_DATA.reminders.map(group => 
-        '<div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 space-y-3">' +
-          '<h4 class="font-bold text-xs text-slate-800 pb-2 border-b border-slate-200 flex items-center justify-between">' +
-            '<span>' + group.cat + '</span><span class="text-[10px] text-slate-400 font-mono">' + group.items.length + '건</span>' +
-          '</h4>' +
-          '<div class="space-y-2.5">' +
-            group.items.map(item => {
-              total++;
-              const isChecked = localStorage.getItem(item.id) === 'true';
-              if (isChecked) checked++;
-              return '<label class="flex items-start gap-2.5 cursor-pointer text-xs group">' +
-                '<input type="checkbox" id="' + item.id + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleReminder(\'' + item.id + '\')" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 cursor-pointer mt-0.5 shrink-0" />' +
-                '<div class="min-w-0 flex-1">' +
-                  '<p class="font-bold text-slate-800 group-hover:text-amber-700 transition leading-snug ' + (isChecked ? 'line-through text-slate-400' : '') + '">' + item.text + '</p>' +
-                  '<p class="text-[10px] text-slate-500 mt-0.5">' + item.sub + '</p>' +
-                '</div>' +
-              '</label>';
-            }).join('') +
-          '</div>' +
-        '</div>'
-      ).join('');
-      const badge = document.getElementById('remind-progress-badge');
-      if (badge) badge.innerText = checked + ' / ' + total + ' 완료 (' + Math.round((checked/total)*100) + '%)';
-      updateOverallProgressStat();
-    }
-
-    function toggleReminder(id) {
-      const el = document.getElementById(id);
-      if (el) { localStorage.setItem(id, el.checked); renderReminders(); }
-    }
-
-    function renderVideos(list = OAHU_DATA.videos) {
-      const container = document.getElementById('video-cards-carousel');
-      if (!container) return;
-      if (list.length === 0) {
-        container.innerHTML = '<div class="text-xs text-slate-400 py-8 text-center w-full">검색된 영상이 없습니다.</div>';
-        return;
-      }
-      container.innerHTML = list.map(v => 
-        '<div class="w-[85vw] sm:w-[45vw] lg:w-[23%] shrink-0 snap-start bg-surface-muted rounded-3xl p-3 border border-slate-200/80 shadow-soft flex flex-col justify-between space-y-2.5">' +
-          '<div class="video-card-ratio overflow-hidden shadow-xs">' +
-            '<iframe src="https://www.youtube.com/embed/' + v.ytid + '" title="' + v.title + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
-          '</div>' +
-          '<div class="space-y-1">' +
-            '<div class="flex items-center justify-between">' +
-              '<span class="text-[10px] font-bold px-2 py-0.5 bg-red-100 text-red-700 rounded-md">' + v.cat + '</span>' +
-              '<a href="https://www.youtube.com/watch?v=' + v.ytid + '" target="_blank" class="text-[10px] text-brand-600 font-bold hover:underline">유튜브 ↗</a>' +
-            '</div>' +
-            '<h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2">' + v.title + '</h4>' +
-            '<p class="text-[11px] text-slate-500 leading-relaxed line-clamp-2">' + v.desc + '</p>' +
-          '</div>' +
-        '</div>'
-      ).join('');
-    }
-
-    function filterVideos() {
-      const q = document.getElementById('video-search-input').value.toLowerCase().trim();
-      const filtered = OAHU_DATA.videos.filter(v => v.title.toLowerCase().includes(q) || v.desc.toLowerCase().includes(q) || v.cat.toLowerCase().includes(q));
-      renderVideos(filtered);
-    }
-
-    function recalculateTotalBudget() {
-      const hotel = parseFloat(document.getElementById('cost-hotel').value || 0);
-      const flight = parseFloat(document.getElementById('cost-flight').value || 0);
-      const car = parseFloat(document.getElementById('cost-car').value || 0);
-      const etc = parseFloat(document.getElementById('cost-etc').value || 0);
-      const fixedTotal = hotel + flight + car + etc;
-
-      let activeVarUsd = 0;
-      OAHU_DATA.variableBudgets.forEach(item => { if (item.checked) activeVarUsd += item.usd; });
-
-      let fuelTotal = 0;
-      fuelRecords.forEach(r => { fuelTotal += parseFloat(r.total || 0); });
-      activeVarUsd += fuelTotal;
-
-      const totalUsd = fixedTotal + activeVarUsd;
-      const totalKrw = Math.round(totalUsd * EXCHANGE_RATE);
-      const perPersonKrw = Math.round(totalKrw / 2);
-
-      if (currentCurrency === 'USD') {
-        document.getElementById('budget-total-val').innerText = '$' + totalUsd.toLocaleString();
-        document.getElementById('budget-fixed-val').innerText = '$' + fixedTotal.toLocaleString();
-        document.getElementById('budget-variable-val').innerText = '$' + activeVarUsd.toFixed(2);
-        document.getElementById('budget-total-krw').innerText = '약 ' + (Math.round(totalKrw/10000)).toLocaleString() + '만 원 (1인당 약 ' + (Math.round(perPersonKrw/10000)).toLocaleString() + '만 원)';
-      } else {
-        document.getElementById('budget-total-val').innerText = '₩' + totalKrw.toLocaleString();
-        document.getElementById('budget-fixed-val').innerText = '₩' + (fixedTotal * EXCHANGE_RATE).toLocaleString();
-        document.getElementById('budget-variable-val').innerText = '₩' + Math.round(activeVarUsd * EXCHANGE_RATE).toLocaleString();
-        document.getElementById('budget-total-krw').innerText = '기준 환율: $1 = ₩' + EXCHANGE_RATE;
-      }
-    }
-
-    function setCurrency(curr) {
-      currentCurrency = curr;
-      const usdBtn = document.getElementById('curr-usd-btn');
-      const krwBtn = document.getElementById('curr-krw-btn');
-      if (curr === 'USD') {
-        usdBtn.className = "px-3 py-1 rounded-lg bg-white text-brand-600 shadow-xs font-bold";
-        krwBtn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800";
-      } else {
-        krwBtn.className = "px-3 py-1 rounded-lg bg-white text-brand-600 shadow-xs font-bold";
-        usdBtn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800";
-      }
-      recalculateTotalBudget();
-    }
-
-    function saveCustomCosts() { recalculateTotalBudget(); }
-
-    function renderFuelRecords() {
-      const list = document.getElementById('fuel-log-list');
-      const totalDisplay = document.getElementById('fuel-total-display');
-      let total = 0;
-      if (!list) return;
-      list.innerHTML = fuelRecords.map((r, i) => {
-        total += parseFloat(r.total || 0);
-        return '<div class="flex items-center justify-between bg-white p-2 rounded-xl border border-amber-200/70 text-xs">' +
-          '<span class="font-bold text-slate-700">' + r.loc + ' (' + r.gallons + ' Gal)</span>' +
-          '<div class="flex items-center gap-2">' +
-            '<span class="font-mono font-bold text-amber-900">$' + parseFloat(r.total).toFixed(2) + '</span>' +
-            '<button onclick="removeFuelRecord(' + i + ')" class="text-slate-400 hover:text-rose-600">✕</button>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-      if (totalDisplay) totalDisplay.innerText = '$' + total.toFixed(2);
-      recalculateTotalBudget();
-    }
-
-    function addFuelRecord() {
-      const loc = document.getElementById('fuel-input-loc').value || '오아후 주유소';
-      const gallons = document.getElementById('fuel-input-gallons').value || '0';
-      const total = parseFloat(document.getElementById('fuel-input-total').value || 0);
-      if (total <= 0) { alert('결제 금액을 올바르게 입력해주세요.'); return; }
-      fuelRecords.push({ loc, gallons, total });
-      localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-      document.getElementById('fuel-input-loc').value = '';
-      document.getElementById('fuel-input-gallons').value = '';
-      document.getElementById('fuel-input-total').value = '';
-      renderFuelRecords();
-    }
-
-    function removeFuelRecord(idx) {
-      fuelRecords.splice(idx, 1);
-      localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-      renderFuelRecords();
-    }
-
-    function renderWishlists() {
-      renderWishGroup('must-do-extreme-list', mustDoExtremeItems);
-      renderWishGroup('must-do-wellness-list', mustDoWellnessItems);
-      renderWishGroup('must-eat-list', mustEatItems);
-      renderWishGroup('must-buy-list', mustBuyItems);
-    }
-
-    function renderWishGroup(containerId, items) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = items.map(item => {
-        const isChecked = localStorage.getItem('wish_' + item.id) === 'true';
-        return '<div class="flex items-start gap-3 p-3 bg-surface-muted hover:bg-brand-50/40 rounded-2xl border border-slate-200/60 transition cursor-pointer group" onmouseenter="showImageTooltip(event, \'' + item.title + '\', \'' + item.desc + '\', \'' + item.img + '\', \'' + item.tag + '\')" onmousemove="moveImageTooltip(event)" onmouseleave="hideImageTooltip()">' +
-          '<input type="checkbox" id="' + item.id + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleWishItem(\'' + item.id + '\')" class="w-4 h-4 mt-0.5 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0" />' +
-          '<div class="flex-1 min-w-0">' +
-            '<div class="flex items-center justify-between">' +
-              '<h4 class="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-brand-600 transition truncate">' + item.title + '</h4>' +
-              '<span class="text-[10px] font-semibold text-slate-400 shrink-0 ml-1">' + item.tag + '</span>' +
-            '</div>' +
-            '<p class="text-[11px] text-slate-500 truncate mt-0.5">' + item.sub + '</p>' +
-          '</div>' +
-          '<span class="text-xs text-slate-400 shrink-0">🔍</span>' +
-        '</div>';
-      }).join('');
-    }
-
-    function toggleWishItem(id) {
-      const checkbox = document.getElementById(id);
-      if (checkbox) {
-        localStorage.setItem('wish_' + id, checkbox.checked);
-        updateOverallProgressStat();
-      }
-    }
-
-    function showImageTooltip(e, title, desc, imgUrl, tag) {
-      const tooltip = document.getElementById('hover-tooltip');
-      document.getElementById('tooltip-img').src = imgUrl;
-      document.getElementById('tooltip-title').innerText = title;
-      document.getElementById('tooltip-desc').innerText = desc;
-      document.getElementById('tooltip-badge').innerText = tag;
-      tooltip.style.display = 'block';
-      moveImageTooltip(e);
-    }
-
-    function moveImageTooltip(e) {
-      const tooltip = document.getElementById('hover-tooltip');
-      const offset = 18;
-      let x = e.clientX + offset; let y = e.clientY + offset;
-      if (x + 270 > window.innerWidth) x = e.clientX - 280;
-      if (y + 240 > window.innerHeight) y = e.clientY - 250;
-      tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
-    }
-
-    function hideImageTooltip() {
-      const tooltip = document.getElementById('hover-tooltip');
-      if (tooltip) tooltip.style.display = 'none';
-    }
-
-    function renderTimeline() {
-      const container = document.getElementById('timeline-container');
-      if (!container) return;
-      container.innerHTML = timelineSchedules.map(s => 
-        '<div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft flex flex-col justify-between space-y-3">' +
-          '<div>' +
-            '<div class="flex items-center justify-between">' +
-              '<span class="px-2.5 py-0.5 bg-brand-50 text-brand-600 text-xs font-bold rounded-full border border-brand-100">DAY ' + s.day + '</span>' +
-              '<span class="text-xs text-slate-400 font-mono">' + s.date + '</span>' +
-            '</div>' +
-            '<h4 class="text-sm font-bold text-slate-900 mt-2">' + s.theme + '</h4>' +
-            '<p class="text-xs text-slate-500 mt-1 leading-relaxed">' + s.desc + '</p>' +
-          '</div>' +
-          '<div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">' +
-            '<span>렌터카 & 웰니스</span>' +
-            '<button onclick="filterTableByDay(\'Day ' + s.day + '\')" class="text-brand-600 font-bold hover:underline">상세 일정 ➔</button>' +
-          '</div>' +
-        '</div>'
-      ).join('');
-    }
-
-    function renderMasterTable() {
-      const tbody = document.getElementById('master-table-body');
-      const search = document.getElementById('table-search-input').value.toLowerCase();
-      const regionFilter = document.getElementById('filter-region').value;
-      const catFilter = document.getElementById('filter-category').value;
-      const dayFilter = document.getElementById('filter-day').value;
-      const countBadge = document.getElementById('table-count-badge');
-      let filtered = placesData.filter(p => {
-        const matchSearch = p.name.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search);
-        const matchRegion = (regionFilter === 'all') || (p.region === regionFilter);
-        const matchCat = (catFilter === 'all') || (p.cat === catFilter);
-        const matchDay = (dayFilter === 'all') || (p.day.includes(dayFilter));
-        return matchSearch && matchRegion && matchCat && matchDay;
-      });
-      if (countBadge) countBadge.innerText = filtered.length + '개 항목';
-      tbody.innerHTML = filtered.map(p => 
-        '<tr class="hover:bg-brand-50/30 transition-colors">' +
-          '<td class="py-3 px-4 font-bold text-slate-600 text-xs">' + p.day + '</td>' +
-          '<td class="py-3 px-4 font-bold text-slate-900">' + p.name + '</td>' +
-          '<td class="py-3 px-3"><span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-surface-muted text-slate-600 border border-slate-200/60">' + p.region + '</span></td>' +
-          '<td class="py-3 px-3 text-xs font-semibold ' + (p.cat === '웰니스' ? 'text-brand-600' : 'text-slate-500') + '">' + p.cat + '</td>' +
-          '<td class="py-3 px-4 text-xs text-slate-600">' + p.desc + '</td>' +
-          '<td class="py-3 px-3 font-bold text-slate-700 text-xs">' + p.price + '</td>' +
-          '<td class="py-3 px-4 text-center">' +
-            '<a href="https://www.google.com/maps/search/?api=1&query=' + p.gmap + '" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-brand-50 hover:bg-brand-600 text-brand-600 hover:text-white transition" title="구글맵 길찾기">📍</a>' +
-          '</td>' +
-        '</tr>'
-      ).join('');
-    }
-
-    function updateOverallProgressStat() {
-      let total = 0, checked = 0;
-      for (let k in localStorage) {
-        if (k.startsWith('pack_') || k.startsWith('rem_') || k.startsWith('wish_')) {
-          total++;
-          if (localStorage.getItem(k) === 'true') checked++;
-        }
-      }
-      const el = document.getElementById('stat-total-progress');
-      if (el) {
-        const pct = total > 0 ? Math.round((checked / Math.max(total, 68)) * 100) : 0;
-        el.innerText = pct + '%';
-      }
-    }
-
-    function updateClocks() {
-      const now = new Date();
-      const kstFormatter = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-      const hstFormatter = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Pacific/Honolulu', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-      const kstEl = document.getElementById('clock-kst');
-      const hstEl = document.getElementById('clock-hst');
-      if (kstEl) kstEl.innerText = kstFormatter.format(now);
-      if (hstEl) hstEl.innerText = hstFormatter.format(now);
-    }
+    const placesData = [
+      { name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
+      { name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
+      { name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
+      { name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
+      { name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
+      { name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
+      { name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
+      { name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
+      { name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
+      { name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
+      { name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
+      { name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
+      { name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
+      { name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
+      { name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
+      { name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
+      { name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
+      { name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
+      { name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
+      { name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "프라임 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
+      { name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
+      { name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
+      { name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
+      { name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
+      { name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
+      { name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
+      { name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
+      { name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
+      { name: "라니카이 필박스 트레일", lat: 21.3895, lng: -157.7125, region: "동부", cat: "액티비티", day: "Day 2", desc: "능선 군사관측소 파노라마 하이킹", price: "무료", gmap: "Lanikai+Pillbox+Trail" },
+      { name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
+      { name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
+      { name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
+      { name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
+      { name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
+      { name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
+      { name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
+      { name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
+      { name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
+      { name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
+      { name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
+      { name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
+      { name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
+      { name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
+    ];
 
     function startDashboardApp() {
       try { updateClocks(); setInterval(updateClocks, 1000); } catch(e){}
