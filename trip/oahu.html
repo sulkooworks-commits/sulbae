@@ -53,10 +53,10 @@
       z-index: 40 !important;
     }
     #header-top-section {
-      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin 0.25s ease, padding 0.25s ease;
+      transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease, padding 0.2s ease;
       overflow: hidden;
     }
-    .top-collapsed {
+    .top-collapsed, .mobile-collapsed {
       max-height: 0 !important;
       opacity: 0 !important;
       margin-top: 0 !important;
@@ -65,10 +65,25 @@
       padding-bottom: 0 !important;
       pointer-events: none !important;
     }
-    .top-expanded {
+    .top-expanded, .mobile-expanded {
       max-height: 260px !important;
       opacity: 1 !important;
       pointer-events: auto !important;
+    }
+    /* 메뉴바 무조건 최상단 스티키 밀착 보정 */
+    #header-top-section.top-collapsed + #header-nav-bar,
+    #header-top-section.mobile-collapsed + #header-nav-bar {
+      border-top: none !important;
+      margin-top: 0 !important;
+      padding-top: 2px !important;
+      padding-bottom: 4px !important;
+    }
+    /* 모바일 헤더 스티키 최적화: 상단 접힘 시 메뉴바 최상단 밀착 */
+    #header-top-section.top-collapsed + #header-nav-bar {
+      border-top: none !important;
+      margin-top: 0 !important;
+      padding-top: 2px !important;
+      padding-bottom: 4px !important;
     }
     @media print {
       body { background-color: #ffffff !important; padding-bottom: 0 !important; }
@@ -1076,20 +1091,41 @@
       }
     }
 
-    let scrollTimer = null;
+    // 모바일 헤더 스티키: 하향 스크롤 시 메뉴만 고정, 상향 스크롤 시 헤더 전체 슬라이드 노출
+    let lastScrollY = window.scrollY;
+    let isTicking = false;
+
     window.addEventListener('scroll', function() {
-      if (window.innerWidth >= 640) return;
-      const topSec = document.getElementById('header-top-section');
-      if (!topSec) return;
-      topSec.classList.remove('mobile-collapsed');
-      topSec.classList.add('mobile-expanded');
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        if (window.scrollY > 25) {
-          topSec.classList.remove('mobile-expanded');
-          topSec.classList.add('mobile-collapsed');
-        }
-      }, 300);
+      if (!isTicking) {
+        window.requestAnimationFrame(function() {
+          const currentScrollY = window.scrollY;
+          const topSec = document.getElementById('header-top-section');
+          if (topSec) {
+            // 1. 최상단 영역 (15px 이하): 무조건 전체 헤더 노출
+            if (currentScrollY <= 15) {
+              topSec.classList.remove('top-collapsed', 'mobile-collapsed');
+              topSec.classList.add('top-expanded', 'mobile-expanded');
+            } else {
+              const diff = currentScrollY - lastScrollY;
+              // 미세 스크롤 jitter 방지 (6px 이상 이동 시에만 반응)
+              if (Math.abs(diff) >= 6) {
+                if (diff > 0) {
+                  // 하향 스크롤 (Scroll Down): 상단 헤더 숨기고 메뉴바만 최상단 고정 (무조건 스티키)
+                  topSec.classList.remove('top-expanded', 'mobile-expanded');
+                  topSec.classList.add('top-collapsed', 'mobile-collapsed');
+                } else {
+                  // 상향 스크롤 (Scroll Up): 헤더 전체 다시 펼치기
+                  topSec.classList.remove('top-collapsed', 'mobile-collapsed');
+                  topSec.classList.add('top-expanded', 'mobile-expanded');
+                }
+              }
+            }
+          }
+          lastScrollY = Math.max(0, currentScrollY);
+          isTicking = false;
+        });
+        isTicking = true;
+      }
     }, { passive: true });
 
     const OAHU_DATA = {
