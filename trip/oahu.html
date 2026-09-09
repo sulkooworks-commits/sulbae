@@ -15,10 +15,10 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN (종합 통계 시각화) -->
+  <!-- Chart.js CDN (종합 통계 시각화)[cite: 3] -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Leaflet Map CSS & JS CDN (오아후 40개 북마크 인터랙티브 지도) -->
+  <!-- Leaflet Map CSS & JS CDN (오아후 40개 북마크 인터랙티브 지도)[cite: 3] -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -217,10 +217,12 @@
         </div>
       </div>
 
-      <!-- Bottom Row: 네비게이션 버튼 (마지막 탭: 📊 종합 통계 연동) -->
+      <!-- Bottom Row: 네비게이션 버튼 (마지막 탭: 📊 종합 통계) -->
       <nav id="header-nav-bar" class="hidden sm:flex items-center gap-1 overflow-x-auto text-xs font-semibold pb-0.5 border-t border-slate-100 pt-1.5 custom-scrollbar">
         <button onclick="scrollToSection('sec-summary')" class="nav-btn px-3 py-1.5 rounded-full bg-brand-500 text-white font-bold transition whitespace-nowrap shadow-xs">📱 요약</button>
         <button onclick="scrollToSection('sec-reminders')" class="nav-btn px-3 py-1.5 rounded-full bg-amber-500 text-white font-bold transition whitespace-nowrap shadow-xs">🔔 챙김 리마인드</button>
+        <button onclick="scrollToSection('sec-field-tips')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">💡 현장 디테일 4선</button>
+        <button onclick="scrollToSection('sec-customs')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🛃 면세 & 관세 대응</button>
         <button onclick="scrollToSection('sec-map')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🗺️ 720px 지도</button>
         <button onclick="scrollToSection('sec-wishlist')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">✨ 웰니스 & Top 7</button>
         <button onclick="scrollToSection('sec-timeline')" class="nav-btn px-3 py-1.5 rounded-full bg-surface-muted hover:bg-slate-200/60 text-slate-600 transition whitespace-nowrap">🗓️ 7박 8일 일정</button>
@@ -311,7 +313,7 @@
       </div>
     </section>
 
-    <!-- [신설 상단 섹션] 🔔 사전 필수 리마인드 & 마일스톤 (예약·예치금·확인·발급) -->
+    <!-- [상단 배치 섹션] 🔔 사전 필수 리마인드 & 마일스톤 -->
     <section id="sec-reminders" class="scroll-mt-24 space-y-5">
       <div class="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-soft space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
@@ -334,14 +336,140 @@
           </div>
         </div>
 
-        <!-- 4대 카테고리 그리드 (예약, 발급, 예치금/결제, 사전확인) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="reminders-grid">
-          <!-- JS 렌더링 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="reminders-grid"></div>
+      </div>
+    </section>
+
+    <!-- [신설 섹션] 💡 현장 실패 없는 핵심 실전 디테일 4선 -->
+    <section id="sec-field-tips" class="scroll-mt-24 space-y-5">
+      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="px-3 py-0.5 bg-pastel-blue text-pastel-blueText text-xs font-bold rounded-full">FIELD ESSENTIALS</span>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2">
+            <span>💡</span> 현장 동선 & 실제 변수 대비 핵심 실전 디테일 4선
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">주유·주차, 10월 파도/복장, 음영지역 오프라인 지도, 쇼핑 보관 노하우 총정리</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 1. 주유 & 주차 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 bg-amber-100 text-amber-800 rounded-lg text-sm">⛽</span>
+              <h3 class="font-bold text-sm text-slate-900">1. 렌터카 주유 & 주차 동선 최적화</h3>
+            </div>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside">
+              <li><strong>귀국일(Day 8) 코스트코 주유소 활용:</strong> 공항 인근 이윌레이(Iwilei) 코스트코 주유소는 오아후 최저가 주유소입니다. 반납 직전 Full 주유 시 일반 주유소 대비 갤런당 $1 이상 절약됩니다.</li>
+              <li><strong>와이키키 주차 패스 확인:</strong> 하얏트 리젠시 주차는 1박당 $50~$60선입니다. 체크인 시 프런트에서 <strong>'인앤아웃(자유 입출차)'</strong> 패스를 즉시 확정 지어야 출차 시 중복 과금을 막을 수 있습니다.</li>
+            </ul>
+          </div>
+
+          <!-- 2. 10월 계절 & 복장 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 bg-sky-100 text-sky-800 rounded-lg text-sm">🌊</span>
+              <h3 class="font-bold text-sm text-slate-900">2. 10월 계절 변수 & 액티비티 복장 팁</h3>
+            </div>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside">
+              <li><strong>노스쇼어 10월 파도(Swell) 체크:</strong> 10월 중순부터 겨울철 빅웨이브 시즌이 시작됩니다. 샤크스 코브 스노클링 당일 파도가 4~5ft 이상이면 입수가 통제되므로 해양경찰 서프 리포트를 확인하고 카일루아/하나우마 베이로 대체하세요.</li>
+              <li><strong>쿠알로아 UTV 복장 규정:</strong> 비포장 적토마 계곡을 달려 붉은 흙먼지가 뒤덮입니다. <strong>버리기 직전의 어두운 옷과 신발</strong>, 랩어라운드 선글라스, 먼지 차단용 버프(마스크)를 한국에서 꼭 챙겨가세요.</li>
+            </ul>
+          </div>
+
+          <!-- 3. 음영 지역 오프라인 세팅 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg text-sm">📶</span>
+              <h3 class="font-bold text-sm text-slate-900">3. 음영 지역 대비 오프라인 세팅</h3>
+            </div>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside">
+              <li><strong>구글 오프라인 지도 다운로드:</strong> H-3 터널 계곡 구간, 동부 해안(마카푸~와이마날로), 노스쇼어 외곽은 통신 음영 지역이 발생합니다. 출국 전 구글맵 앱에서 '오아후 섬 전체' 오프라인 지도를 받아두면 끊김 없이 안내됩니다.</li>
+              <li><strong>하나우마 베이 티켓팅 타이밍:</strong> Day 3(10/11) 티켓은 <strong>Day 1(10/9) 오전 07:00 HST</strong> 정각에 열립니다. 비행기 기내 와이파이나 공항 도착 직후 시간대와 겹칠 수 있으므로 예약 알람 시점을 캘린더에 정확히 박아두세요.</li>
+            </ul>
+          </div>
+
+          <!-- 4. 쇼핑 시기 & 보관 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 bg-purple-100 text-purple-800 rounded-lg text-sm">🛍️</span>
+              <h3 class="font-bold text-sm text-slate-900">4. 쇼핑 & 팁 결제 실전</h3>
+            </div>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside">
+              <li><strong>기념품 쇼핑 시기:</strong> 코나 커피 원두와 호놀룰루 쿠키는 트렁크에 싣고 다닐 경우 하와이의 뜨거운 차량 열기로 인해 산패되거나 초콜릿 딥이 녹아버립니다. Day 7 오후 와이키키 도보 쇼핑 시 몰아서 구매하고 즉시 호텔 룸으로 보관하세요.</li>
+              <li><strong>영수증 확인 철저:</strong> 와이키키 레스토랑 중 이미 영수증에 18% Tip이 포함된 상태(Gratuity Included)로 나오는 곳이 많으니 이중 지불에 유의하세요[cite: 1, 2].</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- [섹션 2] 720px 지도 & 권역별 일러스트 팝업 -->
+    <!-- [신설 섹션] 🛃 한국 입국 면세 & 관세 완벽 대응 가이드 -->
+    <section id="sec-customs" class="scroll-mt-24 space-y-5">
+      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="px-3 py-0.5 bg-pastel-emerald text-pastel-emeraldText text-xs font-bold rounded-full">CUSTOMS & DUTY FREE</span>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2">
+            <span>🛃</span> 한국 입국 면세 한도 & 관세 자진신고 완벽 대응 가이드
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">귀국 시 세관 정밀검색과 가산세를 예방하는 합법적 절세 및 통관 전략</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 1. 기본 면세 한도 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+              <span>📦</span> 기본 휴대품 면세 한도
+            </h3>
+            <div class="text-xl font-black text-brand-600 font-mono">$800 USD <span class="text-xs font-normal text-slate-500">(1인당)</span></div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              성인 2인 동반 여행 시 <strong>각자 $800씩 총 $1,600</strong>까지 면세 적용됩니다. (단, $1,000짜리 명품 가방 1개를 2명으로 나누어 합산 면세 처리는 불가능하며 1인 한도 $800 초과분 $200에 대해 과세됩니다.)
+            </p>
+          </div>
+
+          <!-- 2. 별도 면세 품목 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+              <span>🍾</span> 별도 면세 품목 ($800 한도 미포함)
+            </h3>
+            <ul class="text-xs text-slate-600 space-y-1 leading-relaxed">
+              <li>• <strong>주류 (술):</strong> 1인당 <strong>2병 (합산 2L 이하 & $400 이하)</strong></li>
+              <li>• <strong>담배:</strong> 궐련 200개비 (1보루)</li>
+              <li>• <strong>향수:</strong> 100ml 이하 (병수 제한 없음)</li>
+              <li>• <strong>영양제/의약품:</strong> 합산 <strong>최대 6병</strong>까지만 반입 가능 (6병 초과 시 의사 처방전 필수)[cite: 2]</li>
+            </ul>
+          </div>
+
+          <!-- 3. 자진신고 혜택 -->
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+              <span>⚖️</span> 자진신고 vs 미신고 과태료
+            </h3>
+            <div class="text-xs text-slate-600 space-y-1 leading-relaxed">
+              <p class="text-emerald-700 font-bold bg-emerald-50 p-2 rounded-xl border border-emerald-200">
+                ✓ 자진신고 시: 산출 관세의 <strong>30% 감면</strong> (최대 20만 원 한도)
+              </p>
+              <p class="text-rose-700 font-bold bg-rose-50 p-2 rounded-xl border border-rose-200">
+                ✗ 미신고 적발 시: 납부할 세액의 <strong>40% 가산세</strong> (2년 내 2회 이상 적발 시 60% 가산세)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 실전 세관 대응 팁 박스 -->
+        <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200/70 text-xs text-amber-900 space-y-1.5">
+          <p class="font-bold flex items-center gap-1.5">
+            <span>💡</span> 세관 통관 실전 팁 (모바일 세관신고 앱 활용)
+          </p>
+          <ul class="list-disc list-inside space-y-1 text-amber-800">
+            <li><strong>영수증(Receipt) 일체 보관:</strong> 와이켈레 아울렛이나 시내에서 구매한 영수증을 버리지 마세요. 실구매가 영수증이 없으면 세관 정가 기준으로 더 높게 과세될 수 있습니다.</li>
+            <li><strong>'여행자 세관신고' 모바일 앱:</strong> 귀국 비행기 탑승 전 앱에서 모바일로 신고서를 작성하면 공항 입국장 QR 전용 게이트를 통해 기다림 없이 1분 만에 신속 통과할 수 있습니다.</li>
+            <li><strong>육류 성분 절대 반입 금지:</strong> 육포, 소시지, 쇠고기 스프 라면 등은 면세 한도와 무관하게 100% 검역 압류 대상입니다[cite: 1, 2].</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- [섹션 2] 720px 지도 & 권역별 일러스트 팝업[cite: 3] -->
     <section id="sec-map" class="scroll-mt-24 space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -372,7 +500,7 @@
         <button onclick="filterMapMarkers('의료')" class="map-filter-btn px-3 py-1.5 bg-white border border-slate-200 text-rose-600 rounded-xl hover:bg-rose-50 transition shrink-0">🏥 드럭스토어·병원</button>
       </div>
 
-      <!-- 지도 본체 (720px) -->
+      <!-- 지도 본체 (720px)[cite: 3] -->
       <div class="relative w-full bg-white rounded-3xl border border-slate-200/80 shadow-soft overflow-hidden map-container-720">
         <div id="leaflet-map" class="w-full h-full"></div>
         <div id="gmap-frame-container" class="hidden w-full h-full">
@@ -643,7 +771,7 @@
       </div>
     </section>
 
-    <!-- [신설 맨마지막 섹션] 📊 전반적인 종합 여행 통계 분석 -->
+    <!-- [맨마지막 섹션] 📊 전반적인 종합 여행 통계 분석 -->
     <section id="sec-analytics" class="scroll-mt-24 space-y-5">
       <div class="bg-white rounded-3xl p-6 border border-indigo-200 shadow-soft space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
@@ -661,7 +789,6 @@
           </div>
         </div>
 
-        <!-- 4대 통계 스탯 위젯 -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-center space-y-1">
             <span class="text-xs text-slate-400 font-bold">📍 총 방문지 수</span>
@@ -688,9 +815,8 @@
           </div>
         </div>
 
-        <!-- 2대 차트 시각화 (Chart.js) -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
-          <!-- 도넛 차트: 권역별 체류 비중 -->
+          <!-- 도넛 차트[cite: 3] -->
           <div class="bg-surface-muted p-5 rounded-2xl border border-slate-200/70 space-y-2">
             <div class="flex items-center justify-between">
               <h3 class="font-bold text-xs text-slate-700">📍 권역별 일정 및 체류 비중[cite: 3]</h3>
@@ -701,7 +827,7 @@
             </div>
           </div>
 
-          <!-- 바 차트: 테마별 활동 비율 -->
+          <!-- 바 차트 -->
           <div class="bg-surface-muted p-5 rounded-2xl border border-slate-200/70 space-y-2">
             <div class="flex items-center justify-between">
               <h3 class="font-bold text-xs text-slate-700">🏄 활동 테마별 일정 밸런스</h3>
@@ -713,7 +839,6 @@
           </div>
         </div>
 
-        <!-- 8일간 주행 & 식음료 일정 집계표 -->
         <div class="space-y-2 pt-2">
           <h3 class="font-bold text-xs text-slate-700 uppercase tracking-wider">📅 8일간의 동선 및 이동 요약표</h3>
           <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-2xl">
@@ -915,7 +1040,7 @@
       }
     });
 
-    /* 4. 사전 일정 리마인드 데이터 & 렌더링 */
+    /* 4. 사전 리마인드 데이터 */
     const reminderData = [
       {
         cat: "📅 사전 필수 예약",
@@ -949,8 +1074,8 @@
         items: [
           { id: "rem_esim", text: "미국 무제한 eSIM/유심 설치", sub: "QR코드 저장 및 공항 전환 준비" },
           { id: "rem_checkin", text: "출국 24시간 전 모바일 체크인", sub: "사전 모바일 탑승권 발급" },
-          { id: "rem_car_gear", text: "차량용 송풍구 거치대 & 시거잭", sub: "렌터카 내비게이션 연결 준비" },
-          { id: "rem_sunscreen", text: "Reef-Safe 무기자차 선크림 확인", sub: "옥시벤존 미함유 제품 검증" }
+          { id: "rem_offline_map", text: "구글 오프라인 지도 오아후 다운로드", sub: "통신 음영지역 대비 내비 세팅" },
+          { id: "rem_utv_gear", text: "UTV용 버릴 옷/신발 & 버프 챙기기", sub: "적토마 붉은 흙먼지 차단용" }
         ]
       }
     ];
@@ -1005,7 +1130,7 @@
       }
     }
 
-    /* 5. 마스터 장소 & 위시리스트 */
+    /* 5. 마스터 장소 데이터 & 위시리스트 */
     const EXCHANGE_RATE = 1385;
     let currentCurrency = 'USD';
 
@@ -1054,6 +1179,7 @@
 
       { name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장 (가방 반입 금지)", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
       { name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
+      { name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", desc: "오아후 기름값 최저가 주유소 (반납 직전 주유 최적)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
       { name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변 전통 훌라 & 디너 뷔페", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
     ];
 
@@ -1099,7 +1225,7 @@
       { id: "b_yoga", title: "🧘 와이키키 비치 요가 매트 & 세션", usd: 40, checked: true },
       { id: "b_luau", title: "🌺 코올리나 파라다이스 코브 루아우 2인", usd: 320, checked: true },
       { id: "b_souvenir", title: "🛍️ 기념품 & 호놀룰루 쿠키/쇼핑 기본", usd: 350, checked: true },
-      { id: "b_gas", title: "⛽ 렌터카 7일간 2회 가득 주유비", usd: 85, checked: true },
+      { id: "b_gas", title: "⛽ 렌터카 7일간 2회 가득 주유비 (코스트코)", usd: 85, checked: true },
       { id: "b_emergency", title: "🚨 비상 예비금 / 팁(Tip) 여유분", usd: 200, checked: true }
     ];
 
@@ -1170,7 +1296,7 @@
       recalculateTotalBudget();
     }
 
-    /* 6. 시계 로직 */
+    /* 6. 시계 로직 (날짜+시간) */
     function updateClocks() {
       const now = new Date();
       const kstFormatter = new Intl.DateTimeFormat('ko-KR', {
@@ -1195,14 +1321,14 @@
 
     /* 7. 타임라인 */
     const timelineSchedules = [
-      { day: 1, date: "10/9(금)", theme: "호놀룰루 입국 & 호텔 풀 / 바다수영", desc: "12:25 도착 ➔ 렌터카 인수 ➔ 하얏트 체크인 ➔ 이야스메 무스비 ➔ 3층 야외 수영장 & 퀸즈 비치 바다수영 ➔ 마구로 스팟 포케" },
+      { day: 1, date: "10/9(금)", theme: "호놀룰루 입국 & 호텔 풀 / 바다수영", desc: "12:25 도착 ➔ 렌터카 인수 ➔ 하얏트 체크인(인앤아웃 주차 등록) ➔ 이야스메 무스비 ➔ 3층 풀 & 퀸즈 비치 수영 ➔ 마구로 스팟 포케" },
       { day: 2, date: "10/10(토)", theme: "카일루아 에메랄드 패들보드(SUP) & 트레킹", desc: "레오나즈 말라사다 ➔ 다이아몬드 헤드 하이킹 ➔ 72번 국도 ➔ 카일루아 SUP 패들보드 & 바다수영 ➔ 라니카이 필박스 능선" },
       { day: 3, date: "10/11(일)", theme: "하나우마베이 스노클 & 호텔 풀 태닝 힐링", desc: "오전 하나우마베이 산호초 스노클링 ➔ 와이키키 마켓 로컬 런치 ➔ 호텔 오션뷰 수영장 태닝 ➔ 리틀 조스 스테이크 만찬" },
-      { day: 4, date: "10/12(월)", theme: "모닝 헬스 & 쿠알로아 랩터 UTV 어드벤처", desc: "하얏트 StayFit 모닝 헬스 ➔ 코올라우 터널 ➔ 쿠알로아 랜치 UTV 랩터 쥐라기 계곡 질주 ➔ 릴리하 로코모코 ➔ 매직아일랜드 선셋" },
-      { day: 5, date: "10/13(화)", theme: "노스쇼어 샤크스코브 수영 & 선셋 비치", desc: "돌 플랜테이션 ➔ 지오반니 갈릭새우 ➔ 할레이바 서퍼타운 산책 ➔ 샤크스코브 천연 암초 수영 & 스노클 ➔ 선셋 비치 노을" },
-      { day: 6, date: "10/14(수)", theme: "모닝 헬스 런 & 와이켈레 프리미엄 쇼핑", desc: "StayFit 모닝 유산소 런 ➔ 진주만 국립 기념관 ➔ 와이켈레 프리미엄 아울렛 본격 쇼핑 ➔ 테디스 비거 버거 & 와이키키 밤거리" },
-      { day: 7, date: "10/15(목)", theme: "모닝 비치 요가 & 파라다이스 코브 루아우", desc: "06:30 와이키키 선라이즈 비치 요가 & 모닝 수영 ➔ 모니 스누피, 파탈로하, 쿠키 쇼핑 ➔ 코올리나 파라다이스 코브 전통 루아우 디너" },
-      { day: 8, date: "10/16(금)", theme: "발코니 모닝 스트레칭 & 귀국길", desc: "하얏트 발코니 와이키키 바다 뷰 스트레칭 ➔ 11:00 체크아웃 ➔ 렌터카 주유 및 반납 ➔ 14:35 탑승 인천 귀국길" }
+      { day: 4, date: "10/12(월)", theme: "모닝 헬스 & 쿠알로아 랩터 UTV 어드벤처", desc: "StayFit 헬스 ➔ 코올라우 터널 ➔ 쿠알로아 UTV 랩터(버릴 옷 착용) ➔ 릴리하 로코모코 ➔ 매직아일랜드 선셋" },
+      { day: 5, date: "10/13(화)", theme: "노스쇼어 샤크스코브 수영 & 선셋 비치", desc: "돌 플랜테이션 ➔ 지오반니 갈릭새우 ➔ 할레이바 서퍼타운 ➔ 샤크스코브(파도 확인 후 입수) ➔ 선셋 비치 노을" },
+      { day: 6, date: "10/14(수)", theme: "모닝 헬스 런 & 와이켈레 프리미엄 쇼핑", desc: "StayFit 유산소 런 ➔ 진주만 국립 기념관 ➔ 와이켈레 아울렛 쇼핑(영수증 보관) ➔ 테디스 비거 버거 & 밤거리" },
+      { day: 7, date: "10/15(목)", theme: "모닝 비치 요가 & 도보 기념품 쇼핑 ➔ 루아우", desc: "06:30 비치 요가 ➔ 오후 코나커피·쿠키 몰아서 도보 쇼핑 후 룸 보관 ➔ 코올리나 파라다이스 코브 루아우 디너" },
+      { day: 8, date: "10/16(금)", theme: "체크아웃 ➔ 코스트코 최저가 주유 ➔ 귀국", desc: "발코니 스트레칭 ➔ 11:00 체크아웃 ➔ 이윌레이 코스트코 주유소 Full 주유 ➔ 차량 반납 ➔ 14:35 탑승 귀국길" }
     ];
 
     function renderTimeline() {
@@ -1226,7 +1352,7 @@
       `).join('');
     }
 
-    /* 8. 지도 */
+    /* 8. 지도 초기화 */
     let leafletMap = null;
     let markersLayer = null;
 
@@ -1541,7 +1667,6 @@
     let statCategoryChart = null;
 
     function initAnalyticsCharts() {
-      // 1. 권역별 도넛 차트[cite: 3]
       const regEl = document.getElementById('statRegionChart');
       if (regEl) {
         if (statRegionChart) statRegionChart.destroy();
@@ -1569,7 +1694,6 @@
         });
       }
 
-      // 2. 테마별 바 차트
       const catEl = document.getElementById('statCategoryChart');
       if (catEl) {
         if (statCategoryChart) statCategoryChart.destroy();
@@ -1602,7 +1726,6 @@
     }
 
     function updateOverallProgressStat() {
-      // 짐 꾸리기(30) + 리마인드(16) + 위시리스트(22) 총 체크 달성률 집계
       let total = 0, checked = 0;
       for (let k in localStorage) {
         if (k.startsWith('pack_') || k.startsWith('rem_') || k.startsWith('wish_')) {
