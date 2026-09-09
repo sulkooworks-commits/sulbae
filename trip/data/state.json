@@ -13,7 +13,7 @@
     "etc": 130
   },
   "fuelRecords": [],
-  "variableBudgetItems": [
+  "variableBudgets": [
     { "id": "b_food", "title": "🍽️ 2인 7박 8일 식음료 & 카페", "usd": 800, "checked": true },
     { "id": "b_kualoa", "title": "🏎️ 쿠알로아 랜치 UTV 랩터 2인", "usd": 290, "checked": true },
     { "id": "b_sup", "title": "🛶 카일루아 비치 SUP 패들보드 2인", "usd": 130, "checked": true },
@@ -61,52 +61,52 @@
       ]
     }
   ],
-  "wishlists": {
-    "mustDoExtreme": [
-      { "id": "do-ex-1", "title": "쿠알로아 랜치 UTV 랩터 쥐라기 질주", "sub": "동북부 쥐라기 계곡 오프로드", "desc": "사륜 랩터를 직접 몰고 거친 계곡과 영화 촬영지를 질주하는 액티비티", "img": "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=600&auto=format&fit=crop&q=80", "tag": "오프로드" },
-      { "id": "do-ex-2", "title": "다이아몬드 헤드 분화구 정상 트레킹", "sub": "와이키키 사화산 분화구", "desc": "터널과 나선형 계단을 올라 와이키키 도심과 바다를 360도로 조망", "img": "https://images.unsplash.com/photo-1542259009-559971a0d02a?w=600&auto=format&fit=crop&q=80", "tag": "분화구하이킹" },
-      { "id": "do-ex-3", "title": "라니카이 필박스 능선 절벽 하이킹", "sub": "카일루아 능선 군사관측소", "desc": "에메랄드 바다와 모쿨루아 쌍둥이 섬을 굽어보는 파노라마 뷰포인트", "img": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80", "tag": "능선트레킹" },
-      { "id": "do-ex-4", "title": "노스쇼어 거대 파도 & 선셋 비치 석양", "sub": "북부 할레이바~선셋 비치", "desc": "세계 서퍼들의 성지에서 태평양 거친 파도와 수평선 붉은 노을 감상", "img": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=80", "tag": "노스쇼어" }
-    ],
-    "mustDoWellness": [
-      { "id": "do-well-1", "title": "카일루아 에메랄드 바다 패들보드(SUP)", "sub": "카일루아 비치 어드벤처스", "desc": "서핑 대신 잔잔한 투명한 바다 위에서 즐기는 평화로운 패들링", "img": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&auto=format&fit=crop&q=80", "tag": "패들보드(SUP)" },
-      { "id": "do-well-2", "title": "와이키키 선라이즈 모닝 비치 요가", "sub": "퀸즈 비치 백사장 (06:30)", "desc": "아침 바닷바람을 맞으며 다이아몬드 헤드 일출과 함께하는 매트 요가", "img": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&fit=crop&q=80", "tag": "비치요가" },
-      { "id": "do-well-3", "title": "하얏트 StayFit 모닝 헬스 & 러닝", "sub": "하얏트 리젠시 3층 피트니스", "desc": "오션뷰 러닝머신에서 땀 흘리고 컨디션을 깨우는 쾌적한 운동 루틴", "img": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&auto=format&fit=crop&q=80", "tag": "호텔헬스" },
-      { "id": "do-well-4", "title": "하얏트 오션뷰 풀 태닝 & 와이키키 바다수영", "sub": "3층 야외 풀 & 와이키키 해변", "desc": "파도 잔잔한 방파제 바다수영 후 선베드 온수 자쿠지 칵테일 휴식", "img": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&auto=format&fit=crop&q=80", "tag": "호텔수영&바다" }
-    ],
-    "mustEat": [
-      { "id": "eat-1", "title": "마구로 스팟 (Maguro Spot) 생참치 포케", "sub": "와이키키 도보 3분", "desc": "신선한 당일 생참치에 스파이시 마요 & 쇼유 소스를 버무린 참치 덮밥", "img": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80", "tag": "포케볼" },
-      { "id": "eat-2", "title": "지오반니 새우 트럭 원조 갈릭 스캠피", "sub": "노스쇼어 할레이바", "desc": "버터와 볶은 마늘을 듬뿍 얹어 밥과 함께 먹는 오아후 원조 새우 요리", "img": "https://images.unsplash.com/photo-1559742811-822873691df8?w=600&auto=format&fit=crop&q=80", "tag": "갈릭쉬림프" },
-      { "id": "eat-3", "title": "레오나즈 베이커리 갓 튀긴 말라사다 도넛", "sub": "카파훌루 본점", "desc": "겉은 설탕으로 바삭하고 속은 쫄깃한 오리지널 & 하우피아 코코넛 도넛", "img": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&auto=format&fit=crop&q=80", "tag": "도넛" },
-      { "id": "eat-4", "title": "릴리하 베이커리 로코모코 & 코코퍼프", "sub": "쿠아키니 본점", "desc": "진한 그레이비소스를 얹은 로코모코와 달콤한 초코 슈크림 코코퍼프", "img": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80", "tag": "소울푸드" },
-      { "id": "eat-5", "title": "헤일레바 볼스 아사이볼 & 마츠모토 빙수", "sub": "노스쇼어 할레이바", "desc": "유기농 과일 그래놀라 아사이볼과 70년 전통 레인보우 쉐이브 아이스", "img": "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=600&auto=format&fit=crop&q=80", "tag": "디저트" },
-      { "id": "eat-6", "title": "이야스메 무스비 카페 스팸 & 아보카도", "sub": "와이키키 본점", "desc": "구운 스팸, 계란, 아보카도를 김으로 감싼 따뜻한 국민 주먹밥", "img": "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80", "tag": "무스비" },
-      { "id": "eat-7", "title": "리틀 조스 프라임 립 & 티본 스테이크", "sub": "다운타운 근교 다이너", "desc": "물놀이 후 피로를 씻어주는 두툼한 정통 아메리칸 프라임 비프 스테이크", "img": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80", "tag": "스테이크" }
-    ],
-    "mustBuy": [
-      { "id": "buy-1", "title": "태닝 키티 (탄키티) & 산리오 인형", "sub": "ABC Stores / 돌 플랜테이션 한정", "desc": "구릿빛 피부에 훌라 스커트를 입은 하와이 한정판 헬로키티 키링", "img": "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80", "tag": "캐릭터" },
-      { "id": "buy-2", "title": "모니(Moni) 태닝 스누피 서핑 굿즈", "sub": "와이키키 모니 매장 독점", "desc": "서핑보드를 든 태닝 스누피 프린팅 오리지널 코튼 에코백과 티셔츠", "img": "https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&auto=format&fit=crop&q=80", "tag": "한정판" },
-      { "id": "buy-3", "title": "하와이 로컬 서적 & 일러스트 북", "sub": "Da Shop / Nā Mea Hawaiʻi", "desc": "《ABC's of Hawai‘i》 그림책 및 하와이 바다와 자연을 담은 사진집", "img": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80", "tag": "로컬문화" },
-      { "id": "buy-4", "title": "코아 우든 북마크 & 대시보드 훌라걸", "sub": "로컬 기프트 샵 / ABC", "desc": "코아 원목 거북이 각인 책갈피와 차 안에서 흔들리는 빈티지 훌라 인형", "img": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&auto=format&fit=crop&q=80", "tag": "인테리어" },
-      { "id": "buy-5", "title": "호놀룰루 쿠키 파인애플 틴 쇼트브레드", "sub": "호놀룰루 쿠키 매장 전역", "desc": "초콜릿 딥 & 열대과일 맛이 담긴 시그니처 파인애플 틴케이스 세트", "img": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80", "tag": "디저트" },
-      { "id": "buy-6", "title": "100% 코나 커피 최고급 Extra Fancy 원두", "sub": "아일랜드 빈티지 / 로컬 숍", "desc": "세계 3대 커피의 꽃향기와 부드러운 산미를 가진 100% 정품 코나 원두", "img": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80", "tag": "원두커피" },
-      { "id": "buy-7", "title": "파타고니아 파탈로하(Pataloha) 한정 셔츠", "sub": "파타고니아 호놀룰루 독점", "desc": "하와이 지점에서만 구입 가능한 Pataloha 로고 오가닉 코튼 티셔츠", "img": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80", "tag": "패션의류" }
-    ]
-  },
-  "timelineSchedules": [
-    { "day": 1, "date": "10/9(금)", "theme": "호놀룰루 입국 & 호텔 풀 / 바다수영", "desc": "12:25 도착 ➔ 렌터카 인수 ➔ 하얏트 체크인(인앤아웃 주차 등록) ➔ 이야스메 무스비 ➔ 3층 풀 & 퀸즈 비치 수영 ➔ 마구로 스팟 포케" },
-    { "day": 2, "date": "10/10(토)", "theme": "카일루아 에메랄드 패들보드(SUP) & 트레킹", "desc": "레오나즈 말라사다 ➔ 다이아몬드 헤드 하이킹 ➔ 72번 국도 ➔ 카일루아 SUP 패들보드 & 바다수영 ➔ 라니카이 필박스 능선" },
-    { "day": 3, "date": "10/11(일)", "theme": "하나우마베이 스노클 & 호텔 풀 태닝 힐링", "desc": "오전 하나우마베이 산호초 스노클링 ➔ 와이키키 마켓 로컬 런치 ➔ 호텔 오션뷰 수영장 태닝 ➔ 리틀 조스 스테이크 만찬" },
-    { "day": 4, "date": "10/12(월)", "theme": "모닝 헬스 & 쿠알로아 랩터 UTV 어드벤처", "desc": "StayFit 헬스 ➔ 코올라우 터널 ➔ 쿠알로아 UTV 랩터(버릴 옷 착용) ➔ 릴리하 로코모코 ➔ 매직아일랜드 선셋" },
-    { "day": 5, "date": "10/13(화)", "theme": "노스쇼어 샤크스코브 수영 & 선셋 비치", "desc": "돌 플랜테이션 ➔ 지오반니 갈릭새우 ➔ 할레이바 서퍼타운 ➔ 샤크스코브(파도 확인 후 입수) ➔ 선셋 비치 노을" },
-    { "day": 6, "date": "10/14(수)", "theme": "모닝 헬스 런 & 와이켈레 프리미엄 쇼핑", "desc": "StayFit 유산소 런 ➔ 진주만 국립 기념관 ➔ 와이켈레 아울렛 쇼핑(영수증 보관) ➔ 테디스 비거 버거 & 밤거리" },
-    { "day": 7, "date": "10/15(목)", "theme": "모닝 비치 요가 & 도보 기념품 쇼핑 ➔ 루아우", "desc": "06:30 비치 요가 ➔ 오후 코나커피·쿠키 몰아서 도보 쇼핑 후 룸 보관 ➔ 코올리나 파라다이스 코브 루아우 디너" },
-    { "day": 8, "date": "10/16(금)", "theme": "체크아웃 ➔ 코스트코 최저가 주유 ➔ 귀국", "desc": "발코니 스트레칭 ➔ 11:00 체크아웃 ➔ 이윌레이 코스트코 주유소 Full 주유 ➔ 차량 반납 ➔ 14:35 탑승 귀국길" }
+  "packingList": [
+    {
+      "cat": "필수 서류 & 금융",
+      "items": ["여권 (유효 6개월 이상)", "ESTA 승인본", "항공권 E-티켓", "호텔/렌터카 바우처", "국제/국내운전면허증", "해외결제 신용카드", "달러 현금 소액권", "여행자보험 영문증명서"]
+    },
+    {
+      "cat": "물놀이 & 웰니스",
+      "items": ["래시가드/수영복 (2~3벌)", "아쿠아슈즈 (산호초 보호)", "SUP 패들보드 모자", "비치 요가 매트/비치타월", "피트니스용 런닝화/요가복", "스노클링 마스크 & 방수팩", "Reef-Safe 무기자차 선크림"]
+    },
+    {
+      "cat": "전자기기 & 렌터카",
+      "items": ["110V 11자 돼지코 어댑터", "스마트폰 차량용 거치대", "차량 C타입 고속 시거잭", "보조배터리 (기내 휴대)", "미국 eSIM 또는 유심 장착"]
+    },
+    {
+      "cat": "상비약 & 퍼스널케어",
+      "items": ["개인 처방약 (원병+영문처방전)", "한국산 감기약 / 진통제", "소화제 / 지사제 / 방수밴드", "멀미약 (보트투어용)", "알로에 젤 (일광화상용)", "자외선 차단 선글라스", "기내용 안대 & 목베개", "지퍼백 & 세탁물 비닐백", "가벼운 겉옷 (에어컨 대비)", "트레킹 운동화"]
+    }
   ],
-  "packingData": [
-    { "cat": "필수 서류 & 금융", "items": ["여권 (유효 6개월 이상)", "ESTA 승인본", "항공권 E-티켓", "호텔/렌터카 바우처", "국제/국내운전면허증", "해외결제 신용카드", "달러 현금 소액권", "여행자보험 영문증명서"] },
-    { "cat": "물놀이 & 웰니스", "items": ["래시가드/수영복 (2~3벌)", "아쿠아슈즈 (산호초 보호)", "SUP 패들보드 모자", "비치 요가 매트/비치타월", "피트니스용 런닝화/요가복", "스노클링 마스크 & 방수팩", "Reef-Safe 무기자차 선크림"] },
-    { "cat": "전자기기 & 렌터카", "items": ["110V 11자 돼지코 어댑터", "스마트폰 차량용 거치대", "차량 C타입 고속 시거잭", "보조배터리 (기내 휴대)", "미국 eSIM 또는 유심 장착"] },
-    { "cat": "상비약 & 퍼스널케어", "items": ["개인 처방약 (원병+영문처방전)", "한국산 감기약 / 진통제", "소화제 / 지사제 / 방수밴드", "멀미약 (보트투어용)", "알로에 젤 (일광화상용)", "자외선 차단 선글라스", "기내용 안대 & 목베개", "지퍼백 & 세탁물 비닐백", "가벼운 겉옷 (에어컨 대비)", "트레킹 운동화"] }
+  "safetyGuides": [
+    {
+      "cat": "세관/검역",
+      "title": "미국 입국 세관 신고 원칙 (무조건 'Yes')",
+      "badge": "과태료 예방",
+      "summary": "가공식품(과자, 김, 햇반 등)만 있어도 세관 키오스크 질문엔 반드시 'Yes' 체크",
+      "detail": "• 신고 시 반입 불가 품목은 단순 현장 폐기<br>• 미신고 적발 시 $500~$1,000 과태료 및 정밀검색 등록"
+    },
+    {
+      "cat": "의약품",
+      "title": "CBD/대마 제품 & 멜라토닌 반입 금지",
+      "badge": "형사처벌 주의",
+      "summary": "미국에서 합법이라도 한국 귀국 시 형사 처벌 또는 전량 폐기됩니다.",
+      "detail": "• CBD 오일/젤리: 한국법상 마약류 처벌 대상<br>• 멜라토닌: 처방전 없으면 100% 압류 및 폐기수수료 부과<br>• 영양제 합산 1인 최대 6병 면세"
+    },
+    {
+      "cat": "의료/응급",
+      "title": "응급실 대신 긴급진료소(Urgent Care) 이용",
+      "badge": "의료비 절약",
+      "summary": "경증 질환은 응급실 대신 와이키키 긴급진료소 방문 권장",
+      "detail": "• Doctors on Call (쉐라톤 2층): 한국어 원격 통역 지원<br>• 진료 후 영문 진단서와 진료비 영수증 수령 필수"
+    },
+    {
+      "cat": "교통/치안",
+      "title": "렌터카 차량 털이(Smash & Grab) 방지",
+      "badge": "도난 방지",
+      "summary": "차내에 어떤 물건도 남겨두지 마세요. 창문을 깨고 탈취합니다.",
+      "detail": "• 트렁크가 보일 수 있으니 쇼핑백, 옷, 동전조차 노출 금지<br>• 짐은 호텔 출발 시 미리 트렁크에 넣어둘 것"
+    }
   ]
 }
