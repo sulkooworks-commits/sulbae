@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T06:19:16.996Z",
+  "updatedAt": "2026-09-10T08:07:41.996Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -18,7 +18,8 @@
     "rem_hanauma": 0,
     "rem_car_deposit": 0,
     "rem_luau": 0,
-    "rem_diamond": 0
+    "rem_diamond": 0,
+    "ledger_usd_l_sup": 1789027659705
   },
   "customCosts": {
     "hotel": "3900",
@@ -49,6 +50,7 @@
     "rem_hanauma": "false",
     "rem_car_deposit": "false",
     "rem_luau": "false",
-    "rem_diamond": "false"
+    "rem_diamond": "false",
+    "ledger_usd_l_sup": "65.050"
   }
 }
