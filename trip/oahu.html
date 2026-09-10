@@ -47,7 +47,9 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
     .video-card-ratio { position: relative; width: 100%; padding-bottom: 56.25%; }
     .video-card-ratio iframe { position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 1rem; }
-        #main-header {
+    /* 헤더 완벽 스티키 고정 (웹 & 모바일 크로스브라우징) */
+    #main-header {
+      position: -webkit-sticky !important;
       position: sticky !important;
       top: 0 !important;
       z-index: 40 !important;
@@ -124,7 +126,7 @@
 
 
   <!-- 상단 스마트 헤더 -->
-  <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-soft transition-all duration-300 relative">
+  <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-soft transition-all duration-300">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-1.5 space-y-1.5">
       <div id="header-top-section" class="top-expanded space-y-1.5">
         <div class="flex items-center justify-between gap-2 text-xs pt-0.5">
@@ -169,7 +171,6 @@
             <span>✈️ 10/9(금) D-Day 스마트 일정</span>
           </div>
         </div>
-      </div>
       </div>
 
       <nav id="header-nav-bar" class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-1 border-t border-slate-100 text-xs font-semibold">
