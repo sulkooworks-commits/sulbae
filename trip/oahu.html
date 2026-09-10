@@ -47,13 +47,16 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
     .video-card-ratio { position: relative; width: 100%; padding-bottom: 56.25%; }
     .video-card-ratio iframe { position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 1rem; }
-        #main-header {
+    /* 헤더 완벽 스티키 고정 및 스무스 슬라이드 트랜지션 */
+    #main-header {
+      position: -webkit-sticky !important;
       position: sticky !important;
       top: 0 !important;
       z-index: 40 !important;
+      will-change: transform;
     }
     #header-top-section {
-      transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+      transition: max-height 0.26s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease, padding 0.2s ease;
       overflow: hidden;
     }
     .top-collapsed, .mobile-collapsed {
@@ -73,13 +76,6 @@
     /* 메뉴바 무조건 최상단 스티키 밀착 보정 */
     #header-top-section.top-collapsed + #header-nav-bar,
     #header-top-section.mobile-collapsed + #header-nav-bar {
-      border-top: none !important;
-      margin-top: 0 !important;
-      padding-top: 2px !important;
-      padding-bottom: 4px !important;
-    }
-    /* 모바일 헤더 스티키 최적화: 상단 접힘 시 메뉴바 최상단 밀착 */
-    #header-top-section.top-collapsed + #header-nav-bar {
       border-top: none !important;
       margin-top: 0 !important;
       padding-top: 2px !important;
@@ -124,10 +120,11 @@
 
 
   <!-- 상단 스마트 헤더 -->
-  <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-soft transition-all duration-300">
+  <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-soft transition-all duration-300 relative">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-1.5 space-y-1.5">
       <div id="header-top-section" class="top-expanded space-y-1.5">
         <div class="flex items-center justify-between gap-2 text-xs pt-0.5">
+          <!-- 좌측: 파비콘 로고 & 타이틀 -->
           <div class="flex items-center gap-2 shrink-0">
             <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-sm shadow-xs">🌺</div>
             <div class="flex items-center gap-1.5">
@@ -136,27 +133,23 @@
             </div>
           </div>
           
-          <!-- 통합 검색창 & 초기화 버튼 -->
-          <div class="flex-1 max-w-xs mx-2 relative flex items-center gap-1">
-            <input type="text" id="global-search-input" oninput="globalTextSearch(this.value)" placeholder="🔍 전체 검색 (장소, 일정)..." class="w-full py-1 px-3 bg-surface-muted border border-slate-200 rounded-lg text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition">
-            <button onclick="clearGlobalSearch()" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-lg text-[10px] font-bold shrink-0" title="검색 초기화">초기화</button>
-          </div>
-
+          <!-- 우측: 환율 & 검색 버튼 & 더보기 버튼 -->
           <div class="flex items-center gap-1.5 shrink-0">
             <div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-lg border border-emerald-200/60 text-[11px] font-bold hidden sm:flex">
               $1 = <span id="header-rate">1,385</span>원
             </div>
-            <button id="header-sync-btn" onclick="toggleSyncModal(true)" class="px-2 py-0.5 bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200/80 text-[11px] font-bold rounded-lg transition flex items-center gap-1" title="클라우드 동기화 상태">
-              <span>☁️</span> <span id="header-sync-label" class="hidden sm:inline">동기화</span>
+            <!-- 검색 토글 버튼 (클릭 시 헤더 바로 아래 검색창 호출) -->
+            <button id="header-search-toggle-btn" onclick="toggleSearchOverlay()" class="px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200/80 text-[11px] font-bold rounded-lg transition flex items-center gap-1 shadow-2xs" title="전체 검색">
+              <span>🔍</span> <span class="hidden sm:inline">검색</span>
             </button>
-            <button onclick="window.print()" class="px-2 py-0.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200/80 text-[11px] font-bold rounded-lg transition flex items-center gap-1">
-              <span>📄</span> <span class="hidden sm:inline">PDF</span>
-            </button>
-            <button onclick="lockScreen()" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-bold rounded-lg transition" title="가이드북 잠금 (로그아웃)">
-              🔒 <span class="hidden sm:inline">잠금</span>
+            <!-- 더보기 버튼 (클릭 시 하단 셀렉트 리스트창 노출) -->
+            <button id="header-more-btn" onclick="toggleMoreSheet(true)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded-lg transition flex items-center gap-1" title="더보기 메뉴 (클라우드/다운로드/잠금)">
+              <span class="text-sm font-black leading-none">⋮</span> <span class="hidden sm:inline">더보기</span>
             </button>
           </div>
         </div>
+
+        <!-- 2번째 줄: 듀얼 시계 & D-Day 뱃지 -->
         <div class="grid grid-cols-2 sm:flex sm:items-center sm:justify-start gap-1.5 text-[11px]">
           <div class="flex items-center justify-center gap-1 py-1 px-2 bg-surface-muted rounded-lg border border-slate-200/70 text-slate-700 truncate">
             <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse shrink-0"></span>
@@ -191,6 +184,18 @@
         <button onclick="scrollToSec('sec-analytics')" class="px-3 py-1 rounded-full bg-indigo-600 text-white font-bold transition shrink-0 shadow-xs">📊 종합 통계</button>
         <button onclick="scrollToSec('sec-ledger')" class="px-3 py-1 rounded-full bg-teal-600 text-white font-bold transition shrink-0 shadow-xs">💳 현장 스마트 가계부</button>
       </nav>
+    </div>
+  
+    <!-- 검색 토글 오버레이 패널 (헤더 바로 아래 띄워 시간~탭메뉴 3줄을 덮음) -->
+    <div id="header-search-overlay" class="absolute inset-x-0 top-[40px] sm:top-[44px] bottom-0 z-50 bg-white/98 backdrop-blur-md px-3 sm:px-6 flex items-center border-t border-slate-200/70 hidden shadow-sm transition-all duration-200">
+      <div class="max-w-7xl w-full mx-auto flex items-center gap-2">
+        <div class="flex-1 relative flex items-center gap-2">
+          <span class="text-sm text-slate-400 pl-1">🔍</span>
+          <input type="text" id="global-search-input" oninput="globalTextSearch(this.value)" placeholder="전체 검색 (장소명, 메뉴, 팁, 일정, 준비물)..." class="w-full py-1.5 px-3 bg-surface-muted border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+          <button onclick="clearGlobalSearch()" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold shrink-0 transition" title="검색어 초기화">초기화</button>
+        </div>
+        <button onclick="toggleSearchOverlay(false)" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold shrink-0 transition" title="검색창 닫기">✕ 닫기</button>
+      </div>
     </div>
   </header>
 
@@ -812,6 +817,11 @@
           ⬇️ 깃허브에서 불러오기 (Fetch)
         </button>
       </div>
+      <div class="pt-1">
+        <button type="button" onclick="copyMobileSyncLink()" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-2xs">
+          <span>📱</span> 모바일 연동용 링크 복사 (원클릭 토큰 등록)
+        </button>
+      </div>
       <div id="sync-status" class="text-center text-xs font-bold"></div>
     </div>
   </div>
@@ -836,6 +846,66 @@
           <g transform="translate(380, 140)"><rect x="-10" y="-18" width="95" height="34" rx="8" fill="#059669" /><text x="37" y="3" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">노스쇼어</text></g>
           <g transform="translate(210, 310)"><rect x="-10" y="-18" width="90" height="34" rx="8" fill="#0284c7" /><text x="35" y="3" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">와이켈레</text></g>
         </svg>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- 더보기 하단 셀렉트 리스트창 (Bottom Action Sheet) -->
+  <div id="more-sheet-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity duration-200">
+    <div id="more-sheet-backdrop" onclick="toggleMoreSheet(false)" class="absolute inset-0"></div>
+    <div class="relative bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10 p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-brand-50 text-brand-600 rounded-xl text-sm font-bold">⚙️</span>
+          <h3 class="font-bold text-sm text-slate-900">더보기 메뉴</h3>
+        </div>
+        <button onclick="toggleMoreSheet(false)" class="p-1 text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <!-- 하단 셀렉트 리스트 항목 (클라우드, 파일다운, 잠금) -->
+      <div class="space-y-2.5 text-xs font-semibold">
+        <!-- 1. 클라우드 -->
+        <button onclick="actionCloudSync()" class="w-full flex items-center justify-between p-3.5 bg-surface-muted hover:bg-brand-50 hover:border-brand-200 border border-slate-200/80 rounded-2xl transition text-left group">
+          <div class="flex items-center gap-3">
+            <span class="text-xl p-2 bg-white rounded-xl shadow-2xs group-hover:scale-110 transition">☁️</span>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-brand-700 transition">클라우드 동기화</div>
+              <div class="text-[11px] text-slate-500 font-normal">GitHub 기반 모바일/PC 실시간 동기화 설정</div>
+            </div>
+          </div>
+          <span id="sheet-sync-badge" class="text-[10px] font-bold px-2 py-0.5 bg-white text-slate-500 border border-slate-200 rounded-lg">확인</span>
+        </button>
+
+        <!-- 2. 파일다운 -->
+        <button onclick="actionFileDownload()" class="w-full flex items-center justify-between p-3.5 bg-surface-muted hover:bg-purple-50 hover:border-purple-200 border border-slate-200/80 rounded-2xl transition text-left group">
+          <div class="flex items-center gap-3">
+            <span class="text-xl p-2 bg-white rounded-xl shadow-2xs group-hover:scale-110 transition">📥</span>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-purple-700 transition">파일 다운로드 (PDF / 인쇄)</div>
+              <div class="text-[11px] text-slate-500 font-normal">오아후 7박8일 대시보드 인쇄 및 PDF 저장</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 bg-white text-purple-700 border border-purple-200 rounded-lg">PDF</span>
+        </button>
+
+        <!-- 3. 잠금 -->
+        <button onclick="actionScreenLock()" class="w-full flex items-center justify-between p-3.5 bg-surface-muted hover:bg-rose-50 hover:border-rose-200 border border-slate-200/80 rounded-2xl transition text-left group">
+          <div class="flex items-center gap-3">
+            <span class="text-xl p-2 bg-white rounded-xl shadow-2xs group-hover:scale-110 transition">🔒</span>
+            <div>
+              <div class="font-bold text-slate-900 group-hover:text-rose-700 transition">화면 잠금 (로그아웃)</div>
+              <div class="text-[11px] text-slate-500 font-normal">30분 인증 세션을 종료하고 암호 잠금 화면으로 전환</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 bg-white text-rose-600 border border-rose-200 rounded-lg">잠금</span>
+        </button>
+      </div>
+
+      <div class="pt-1">
+        <button onclick="toggleMoreSheet(false)" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl transition">
+          닫기
+        </button>
       </div>
     </div>
   </div>
@@ -956,6 +1026,52 @@
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
+    }
+
+    
+    function toggleSearchOverlay(show) {
+      const overlay = document.getElementById('header-search-overlay');
+      const input = document.getElementById('global-search-input');
+      if (!overlay) return;
+      if (show === undefined) show = overlay.classList.contains('hidden');
+      if (show) {
+        overlay.classList.remove('hidden');
+        setTimeout(() => { input?.focus(); }, 100);
+      } else {
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function toggleMoreSheet(show) {
+      const m = document.getElementById('more-sheet-modal');
+      if (!m) return;
+      if (show === undefined) show = m.classList.contains('hidden');
+      if (show) {
+        const cfg = getGhConfig();
+        const badge = document.getElementById('sheet-sync-badge');
+        if (badge) {
+          badge.innerText = cfg.token ? '연동됨' : '연동 필요';
+          badge.className = cfg.token ? 'text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg' : 'text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg';
+        }
+        m.classList.remove('hidden');
+      } else {
+        m.classList.add('hidden');
+      }
+    }
+
+    function actionCloudSync() {
+      toggleMoreSheet(false);
+      toggleSyncModal(true);
+    }
+
+    function actionFileDownload() {
+      toggleMoreSheet(false);
+      setTimeout(() => { window.print(); }, 200);
+    }
+
+    function actionScreenLock() {
+      toggleMoreSheet(false);
+      lockScreen();
     }
 
     function toggleCalcModal(show) {
@@ -1091,7 +1207,7 @@
       }
     }
 
-    // 모바일 헤더 스티키: 하향 스크롤 시 메뉴만 고정, 상향 스크롤 시 헤더 전체 슬라이드 노출
+    // 웹/모바일 헤더 스티키: 하향 스크롤 시 탭 메뉴만 최상단 고정, 상향 스크롤 시 헤더 전체 슬라이드 노출
     let lastScrollY = window.scrollY;
     let isTicking = false;
 
@@ -1100,21 +1216,24 @@
         window.requestAnimationFrame(function() {
           const currentScrollY = window.scrollY;
           const topSec = document.getElementById('header-top-section');
+          const searchOverlay = document.getElementById('header-search-overlay');
+          const isSearchOpen = searchOverlay && !searchOverlay.classList.contains('hidden');
+
           if (topSec) {
-            // 1. 최상단 영역 (15px 이하): 무조건 전체 헤더 노출
-            if (currentScrollY <= 15) {
+            // 검색 오버레이가 열려있거나 최상단(15px 이하)일 때는 항상 전체 노출 유지
+            if (isSearchOpen || currentScrollY <= 15) {
               topSec.classList.remove('top-collapsed', 'mobile-collapsed');
               topSec.classList.add('top-expanded', 'mobile-expanded');
             } else {
               const diff = currentScrollY - lastScrollY;
-              // 미세 스크롤 jitter 방지 (6px 이상 이동 시에만 반응)
+              // 미세 스크롤 지터 방지 (6px 이상 유의미한 변위 시에만 반응)
               if (Math.abs(diff) >= 6) {
                 if (diff > 0) {
-                  // 하향 스크롤 (Scroll Down): 상단 헤더 숨기고 메뉴바만 최상단 고정 (무조건 스티키)
+                  // 하향 스크롤 (Scroll Down): 상단 영역 접고 탭메뉴만 최상단 무조건 스티키 고정
                   topSec.classList.remove('top-expanded', 'mobile-expanded');
                   topSec.classList.add('top-collapsed', 'mobile-collapsed');
                 } else {
-                  // 상향 스크롤 (Scroll Up): 헤더 전체 다시 펼치기
+                  // 상향 스크롤 (Scroll Up): 헤더 전체 부드럽게 슬라이드 노출
                   topSec.classList.remove('top-collapsed', 'mobile-collapsed');
                   topSec.classList.add('top-expanded', 'mobile-expanded');
                 }
@@ -1365,6 +1484,7 @@
 
     function toggleReminder(id, checked) {
       localStorage.setItem(id, checked);
+      localStorage.setItem('_mod_' + id, Date.now());
       renderReminders();
       triggerAutoSync();
     }
@@ -1467,7 +1587,9 @@
     }
 
     function toggleWishItem(id, checked) {
-      localStorage.setItem('wish_' + id, checked);
+      const key = 'wish_' + id;
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
       renderWishlists();
       triggerAutoSync();
     }
@@ -1556,15 +1678,21 @@
     }
 
     function toggleVariableBudget(id, checked) {
-      localStorage.setItem('var_b_' + id, checked);
+      const key = 'var_b_' + id;
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
       recalculateTotalBudget();
       triggerAutoSync();
     }
 
     function saveCustomCosts() {
+      const now = Date.now();
       localStorage.setItem('cost_hotel', document.getElementById('cost-hotel').value);
       localStorage.setItem('cost_car', document.getElementById('cost-car').value);
       localStorage.setItem('cost_etc', document.getElementById('cost-etc').value);
+      localStorage.setItem('_mod_cost_hotel', now);
+      localStorage.setItem('_mod_cost_car', now);
+      localStorage.setItem('_mod_cost_etc', now);
       recalculateTotalBudget();
       triggerAutoSync();
     }
@@ -1652,8 +1780,10 @@
 
       if (total <= 0) { alert('주유 결제 금액을 입력해주세요.'); return; }
 
-      fuelRecords.push({ loc: loc || '오아후 주유소', gallons, total });
+      const rec = { id: 'fuel_' + Date.now() + '_' + Math.floor(Math.random()*1000), loc: loc || '오아후 주유소', gallons, total, timestamp: Date.now() };
+      fuelRecords.push(rec);
       localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+      localStorage.setItem('_mod_fuel_records', Date.now());
       triggerAutoSync();
 
       document.getElementById('fuel-input-loc').value = '';
@@ -1666,6 +1796,7 @@
     function deleteFuelRecord(idx) {
       fuelRecords.splice(idx, 1);
       localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+      localStorage.setItem('_mod_fuel_records', Date.now());
       renderFuelRecords();
       triggerAutoSync();
     }
@@ -1709,17 +1840,23 @@
 
     function togglePackingItem(key, checked) {
       localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
       renderPackingList();
       triggerAutoSync();
     }
 
     function resetPackingChecklist() {
       if (!confirm('짐 꾸리기 체크리스트를 모두 초기화하시겠습니까?')) return;
+      const now = Date.now();
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const k = localStorage.key(i);
-        if (k && k.startsWith('pack_')) localStorage.removeItem(k);
+        if (k && k.startsWith('pack_')) {
+          localStorage.setItem(k, 'false');
+          localStorage.setItem('_mod_' + k, now);
+        }
       }
       renderPackingList();
+      triggerAutoSync();
     }
 
     function renderGuideHub() {
@@ -1944,13 +2081,17 @@
     }
 
     function toggleLedgerY(id, checked) {
-      localStorage.setItem('ledger_y_' + id, checked);
+      const key = 'ledger_y_' + id;
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
       renderLedgerTable();
       triggerAutoSync();
     }
 
     function updateLedgerVal(id, field, val) {
-      localStorage.setItem('ledger_' + field + '_' + id, val);
+      const key = 'ledger_' + field + '_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
       renderLedgerTable();
       triggerAutoSync();
     }
@@ -1975,7 +2116,7 @@
       link.click();
     }
 
-        // UTF-8 안전 Base64 인코딩 / 디코딩 (모든 모바일/PC 브라우저 완벽 호환)
+            // UTF-8 안전 Base64 인코딩 / 디코딩 (모든 모바일/PC 브라우저 완벽 호환)
     function utf8ToBase64(str) {
       const bytes = new TextEncoder().encode(str);
       let binary = '';
@@ -2012,18 +2153,107 @@
       }
     }
 
+    // 모바일 원클릭 토큰 연동 링크 생성 및 클립보드 복사
+    function copyMobileSyncLink() {
+      const cfg = getGhConfig();
+      const tokenInput = document.getElementById('gh-token-input');
+      const token = tokenInput && tokenInput.value.trim() ? tokenInput.value.trim() : cfg.token;
+      if (!token) {
+        alert('먼저 GitHub Token을 입력해주세요.');
+        return;
+      }
+      localStorage.setItem('gh_sync_token', token);
+      
+      const baseUrl = window.location.href.split('#')[0].split('?')[0];
+      const syncUrl = `${baseUrl}#token=${encodeURIComponent(token)}`;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(syncUrl).then(() => {
+          alert('✓ 모바일 연동 링크가 복사되었습니다!\n\n이 링크를 스마트폰(카카오톡, 메모장 등)으로 전송하여 열면 모바일에서도 토큰 입력 없이 즉시 자동 연동됩니다.');
+        }).catch(() => {
+          prompt('아래 링크를 복사하여 모바일에서 접속하세요:', syncUrl);
+        });
+      } else {
+        prompt('아래 링크를 복사하여 모바일에서 접속하세요:', syncUrl);
+      }
+    }
+
     let autoSyncTimeout = null;
+    let isPushInProgress = false;
+    let hasQueuedPush = false;
+
     function triggerAutoSync() {
       const cfg = getGhConfig();
-      if (!cfg.token) return;
+      if (!cfg.token) {
+        updateHeaderSyncStatus('토큰 등록 필요', false);
+        return;
+      }
       updateHeaderSyncStatus('동기화 대기…');
       clearTimeout(autoSyncTimeout);
       autoSyncTimeout = setTimeout(() => {
         pushStateToGitHub(true);
-      }, 2500);
+      }, 1500);
     }
 
-    async function pushStateToGitHub(isAuto = false) {
+    // 양방향 머지 알고리즘 (Last-Write-Wins CRDT)
+    function mergeStateData(remote, localKV, localFuel, localCosts) {
+      const remoteStorage = remote && remote.storage ? remote.storage : {};
+      const remoteTimestamps = remote && remote.timestamps ? remote.timestamps : {};
+      const remoteFuel = remote && Array.isArray(remote.fuelRecords) ? remote.fuelRecords : [];
+      
+      const mergedStorage = Object.assign({}, remoteStorage);
+      const mergedTimestamps = Object.assign({}, remoteTimestamps);
+
+      // 로컬 키 병합 (수정 타임스탬프 기반 최신 우선)
+      for (let k in localKV) {
+        const localTime = parseInt(localStorage.getItem('_mod_' + k) || '0', 10);
+        const remoteTime = parseInt(remoteTimestamps[k] || '0', 10);
+
+        if (localTime >= remoteTime) {
+          mergedStorage[k] = localKV[k];
+          mergedTimestamps[k] = localTime;
+        }
+      }
+
+      // 주유 기록 병합 (고유 ID / 필드 기준 중복 방지)
+      const fuelMap = {};
+      remoteFuel.forEach(r => {
+        const fid = r.id || `${r.loc}_${r.total}_${r.gallons}`;
+        fuelMap[fid] = r;
+      });
+      (localFuel || []).forEach(r => {
+        const fid = r.id || `${r.loc}_${r.total}_${r.gallons}`;
+        fuelMap[fid] = r;
+      });
+      const mergedFuel = Object.values(fuelMap);
+
+      // 고정 비용 병합
+      const mergedCosts = Object.assign({ hotel: 3900, car: 305, etc: 130 }, remote.customCosts || {});
+      const hotelMod = parseInt(localStorage.getItem('_mod_cost_hotel') || '0', 10);
+      const carMod = parseInt(localStorage.getItem('_mod_cost_car') || '0', 10);
+      const etcMod = parseInt(localStorage.getItem('_mod_cost_etc') || '0', 10);
+      const remoteUpd = remote.updatedAt ? new Date(remote.updatedAt).getTime() : 0;
+
+      if (hotelMod >= remoteUpd && localCosts.hotel) mergedCosts.hotel = localCosts.hotel;
+      if (carMod >= remoteUpd && localCosts.car) mergedCosts.car = localCosts.car;
+      if (etcMod >= remoteUpd && localCosts.etc) mergedCosts.etc = localCosts.etc;
+
+      return {
+        updatedAt: new Date().toISOString(),
+        timestamps: mergedTimestamps,
+        customCosts: mergedCosts,
+        fuelRecords: mergedFuel,
+        storage: mergedStorage
+      };
+    }
+
+    async function pushStateToGitHub(isAuto = false, retryCount = 0) {
+      if (isPushInProgress) {
+        hasQueuedPush = true;
+        return;
+      }
+      isPushInProgress = true;
+
       const cfg = getGhConfig();
       const statusEl = document.getElementById('sync-status');
       
@@ -2036,11 +2266,11 @@
       const repo = repoInput && repoInput.value.trim() ? repoInput.value.trim() : cfg.repo;
 
       if (!token) {
+        isPushInProgress = false;
         if (!isAuto) alert('GitHub Token을 1회 입력해주세요. 이후에는 다시 열지 않아도 자동 유지됩니다.');
         return;
       }
 
-      // 1회 등록 시 로컬스토리지 영구 저장
       localStorage.setItem('gh_sync_token', token);
       localStorage.setItem('gh_sync_owner', owner);
       localStorage.setItem('gh_sync_repo', repo);
@@ -2051,30 +2281,27 @@
       }
       updateHeaderSyncStatus('백업 중…');
 
-      // 저장할 데이터 정리 (토큰/세션키 제외)
-      const stateStorage = {};
+      // 1. 로컬 저장소 상태 수집
+      const localKV = {};
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         if (k && (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_'))) {
-          stateStorage[k] = localStorage.getItem(k);
+          localKV[k] = localStorage.getItem(k);
         }
       }
-
-      const stateData = {
-        updatedAt: new Date().toISOString(),
-        fuelRecords: fuelRecords || [],
-        customCosts: {
-          hotel: document.getElementById('cost-hotel') ? document.getElementById('cost-hotel').value : 3900,
-          car: document.getElementById('cost-car') ? document.getElementById('cost-car').value : 305,
-          etc: document.getElementById('cost-etc') ? document.getElementById('cost-etc').value : 130
-        },
-        storage: stateStorage
+      const localCosts = {
+        hotel: document.getElementById('cost-hotel') ? document.getElementById('cost-hotel').value : 3900,
+        car: document.getElementById('cost-car') ? document.getElementById('cost-car').value : 305,
+        etc: document.getElementById('cost-etc') ? document.getElementById('cost-etc').value : 130
       };
 
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${cfg.path}`;
 
       try {
         let sha = null;
+        let remoteData = null;
+
+        // 원본 원격 파일 조회 (최신 SHA 및 원격 데이터 확인)
         const getRes = await fetch(`${url}?t=${Date.now()}`, {
           cache: 'no-store',
           headers: {
@@ -2087,11 +2314,23 @@
         if (getRes.ok) {
           const fileInfo = await getRes.json();
           sha = fileInfo.sha;
+          try {
+            remoteData = JSON.parse(base64ToUtf8(fileInfo.content));
+          } catch(e) {
+            console.warn('Remote JSON parse error, overwriting with clean merge', e);
+          }
         }
 
-        const jsonString = JSON.stringify(stateData, null, 2);
+        // 2. 스마트 양방향 병합 (다른 기기 변경사항 보존)
+        const mergedState = mergeStateData(remoteData, localKV, fuelRecords, localCosts);
+
+        // 3. 로컬 저장소도 병합 결과로 최신 동기화 적용
+        applyStateToLocal(mergedState);
+
+        const jsonString = JSON.stringify(mergedState, null, 2);
         const contentB64 = utf8ToBase64(jsonString);
 
+        // 4. GitHub 저장소에 PUT 커밋
         const putRes = await fetch(url, {
           method: 'PUT',
           headers: {
@@ -2114,6 +2353,11 @@
             statusEl.innerText = `✓ 깃허브 백업 성공! (${nowStr})`;
           }
           updateHeaderSyncStatus(`동기화됨 (${nowStr})`);
+        } else if (putRes.status === 409 && retryCount < 3) {
+          console.warn('409 Conflict detected, retrying with fresh remote sha...');
+          isPushInProgress = false;
+          await new Promise(r => setTimeout(r, 600));
+          return pushStateToGitHub(isAuto, retryCount + 1);
         } else {
           const errData = await putRes.json().catch(() => ({}));
           console.warn('GitHub Push Failed:', errData);
@@ -2130,7 +2374,59 @@
           statusEl.innerText = '✗ 네트워크 오류 발생';
         }
         updateHeaderSyncStatus('네트워크 오류', true);
+      } finally {
+        isPushInProgress = false;
+        if (hasQueuedPush) {
+          hasQueuedPush = false;
+          setTimeout(() => pushStateToGitHub(true), 500);
+        }
       }
+    }
+
+    // 원격 데이터를 로컬스토리지 및 대시보드 화면에 완전히 반영하는 헬퍼 함수
+    function applyStateToLocal(parsed) {
+      if (!parsed) return;
+
+      // 1. 주유 기록 복원
+      if (parsed.fuelRecords && Array.isArray(parsed.fuelRecords)) {
+        fuelRecords = parsed.fuelRecords;
+        localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+        renderFuelRecords();
+      }
+
+      // 2. 고정 비용 복원
+      if (parsed.customCosts) {
+        const h = parsed.customCosts.hotel || 3900;
+        const c = parsed.customCosts.car || 305;
+        const e = parsed.customCosts.etc || 130;
+        if (document.getElementById('cost-hotel')) document.getElementById('cost-hotel').value = h;
+        if (document.getElementById('cost-car')) document.getElementById('cost-car').value = c;
+        if (document.getElementById('cost-etc')) document.getElementById('cost-etc').value = e;
+        localStorage.setItem('cost_hotel', h);
+        localStorage.setItem('cost_car', c);
+        localStorage.setItem('cost_etc', e);
+      }
+
+      // 3. 체크 상태 및 가계부 복원
+      if (parsed.storage && typeof parsed.storage === 'object') {
+        for (let k in parsed.storage) {
+          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_')) {
+            localStorage.setItem(k, parsed.storage[k]);
+          }
+        }
+        if (parsed.timestamps && typeof parsed.timestamps === 'object') {
+          for (let k in parsed.timestamps) {
+            localStorage.setItem('_mod_' + k, parsed.timestamps[k]);
+          }
+        }
+        renderReminders();
+        renderWishlists();
+        renderPackingList();
+        renderBudgetChecklist();
+        renderLedgerTable();
+      }
+
+      recalculateTotalBudget();
     }
 
     async function fetchStateFromGitHub(isAuto = false) {
@@ -2145,15 +2441,6 @@
       const owner = ownerInput && ownerInput.value.trim() ? ownerInput.value.trim() : cfg.owner;
       const repo = repoInput && repoInput.value.trim() ? repoInput.value.trim() : cfg.repo;
 
-      if (!token) {
-        if (!isAuto) alert('GitHub Token을 1회 입력해주세요.');
-        return;
-      }
-
-      localStorage.setItem('gh_sync_token', token);
-      localStorage.setItem('gh_sync_owner', owner);
-      localStorage.setItem('gh_sync_repo', repo);
-
       if (statusEl) {
         statusEl.className = 'text-center text-xs font-bold text-slate-400';
         statusEl.innerText = '깃허브에서 데이터 가져오는 중…';
@@ -2161,15 +2448,16 @@
       updateHeaderSyncStatus('불러오는 중…');
 
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${cfg.path}?t=${Date.now()}`;
+      const reqHeaders = {
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+      if (token) reqHeaders['Authorization'] = 'Bearer ' + token;
 
       try {
         const res = await fetch(url, {
           cache: 'no-store',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Accept': 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
+          headers: reqHeaders
         });
 
         if (res.ok) {
@@ -2177,41 +2465,7 @@
           const decodedJson = base64ToUtf8(data.content);
           const parsed = JSON.parse(decodedJson);
 
-          // 1. 주유 기록 복원
-          if (parsed.fuelRecords && Array.isArray(parsed.fuelRecords)) {
-            fuelRecords = parsed.fuelRecords;
-            localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-            renderFuelRecords();
-          }
-
-          // 2. 고정 비용 복원
-          if (parsed.customCosts) {
-            const h = parsed.customCosts.hotel || 3900;
-            const c = parsed.customCosts.car || 305;
-            const e = parsed.customCosts.etc || 130;
-            if (document.getElementById('cost-hotel')) document.getElementById('cost-hotel').value = h;
-            if (document.getElementById('cost-car')) document.getElementById('cost-car').value = c;
-            if (document.getElementById('cost-etc')) document.getElementById('cost-etc').value = e;
-            localStorage.setItem('cost_hotel', h);
-            localStorage.setItem('cost_car', c);
-            localStorage.setItem('cost_etc', e);
-          }
-
-          // 3. 체크 상태 및 가계부 복원
-          if (parsed.storage && typeof parsed.storage === 'object') {
-            for (let k in parsed.storage) {
-              if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_')) {
-                localStorage.setItem(k, parsed.storage[k]);
-              }
-            }
-            renderReminders();
-            renderWishlists();
-            renderPackingList();
-            renderBudgetChecklist();
-            renderLedgerTable();
-          }
-
-          recalculateTotalBudget();
+          applyStateToLocal(parsed);
 
           const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           if (statusEl) {
@@ -2230,7 +2484,7 @@
             statusEl.className = 'text-center text-xs font-bold text-rose-600';
             statusEl.innerText = `✗ 실패 (상태 코드: ${res.status})`;
           }
-          updateHeaderSyncStatus('불러오기 실패', true);
+          updateHeaderSyncStatus(token ? '불러오기 실패' : '연동 필요', true);
         }
       } catch (e) {
         console.error('GitHub Fetch Error:', e);
@@ -2240,6 +2494,27 @@
         }
         updateHeaderSyncStatus('네트워크 오류', true);
       }
+    }
+
+    
+    // URL Hash를 통한 모바일 원클릭 토큰 등록 (#token=github_pat_...)
+    function checkHashTokenImport() {
+      try {
+        const h = window.location.hash || '';
+        if (h.includes('token=')) {
+          const m = h.match(/token=([^&]+)/);
+          if (m && m[1]) {
+            const tok = decodeURIComponent(m[1]).trim();
+            if (tok.startsWith('gh') || tok.startsWith('github')) {
+              localStorage.setItem('gh_sync_token', tok);
+              history.replaceState(null, '', window.location.pathname + window.location.search);
+              console.log('✓ Token imported from URL hash successfully!');
+              return true;
+            }
+          }
+        }
+      } catch(e) {}
+      return false;
     }
 
     function startDashboardApp() {
@@ -2259,13 +2534,11 @@
       setTimeout(safeInitMap, 300);
       setTimeout(safeInitCharts, 400);
 
-      // 시작 시 깃허브 토큰이 1회라도 저장되어 있으면 자동 최신 데이터 복원 (Auto-fetch)
+      // 시작 시 URL Hash 토큰 체크 및 최신 데이터 자동 복원
+      checkHashTokenImport();
       const cfg = getGhConfig();
-      if (cfg.token) {
-        fetchStateFromGitHub(true);
-      } else {
-        updateHeaderSyncStatus('연동 필요');
-      }
+      // 토큰이 있거나 공개 저장소인 경우 자동 최신 데이터 불러오기 실행
+      fetchStateFromGitHub(true);
     }
 
     // 세션 유효 여부 확인 후 자동 열림 또는 잠금 대기
