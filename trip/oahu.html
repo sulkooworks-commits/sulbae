@@ -216,8 +216,8 @@
           <div class="text-[11px] text-white/90 font-mono mt-0.5">보안 복호화 완료</div>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
+      <div class="flex md:grid md:grid-cols-3 gap-3.5 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 custom-scrollbar">
+        <div class="w-[82vw] sm:w-[80vw] md:w-auto shrink-0 snap-center md:shrink bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
           <div class="flex items-center justify-between"><span class="text-xs font-bold px-2.5 py-0.5 bg-pastel-blue text-pastel-blueText rounded-full">✈️ 항공+숙박 (트립닷컴)</span><span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">발권 완료</span></div>
           <div class="space-y-1.5 text-xs">
             <div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-500">항공편</span><span class="font-bold text-slate-900">KE8053 / KE8054 (2인 왕복)</span></div>
@@ -225,7 +225,7 @@
           </div>
           <div class="text-[10px] text-slate-400 bg-surface-muted p-2 rounded-xl border border-slate-100">총 결제금액: 5,404,810원 (항공+숙박 패키지)</div>
         </div>
-        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
+        <div class="w-[82vw] sm:w-[80vw] md:w-auto shrink-0 snap-center md:shrink bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
           <div class="flex items-center justify-between"><span class="text-xs font-bold px-2.5 py-0.5 bg-pastel-amber text-pastel-amberText rounded-full">🚗 소형 SUV 렌터카</span><span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">예약 확정</span></div>
           <div class="space-y-1 text-xs text-slate-600">
             <div class="flex justify-between"><span>인수: 10/9(금) 10:00 공항</span><span class="font-bold text-slate-800">반납: 10/16(금) 20:30</span></div>
@@ -233,7 +233,7 @@
             <p class="text-[11px] text-rose-600 font-medium bg-pastel-rose/50 p-2 rounded-xl border border-rose-200/60 mt-1">⚠️ 주의: 트렁크 차내 소지품 노출 금지</p>
           </div>
         </div>
-        <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
+        <div class="w-[82vw] sm:w-[80vw] md:w-auto shrink-0 snap-center md:shrink bg-white p-5 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
           <div class="flex items-center justify-between"><span class="text-xs font-bold px-2.5 py-0.5 bg-pastel-purple text-pastel-purpleText rounded-full">🏨 숙소 & 웰니스 베이스</span><span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">7박 확정</span></div>
           <div class="space-y-1 text-xs text-slate-600">
             <p class="font-bold text-slate-900">오션 뷰룸 퀸 침대 2개 (고층)</p>
@@ -255,7 +255,12 @@
             </div>
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2"><span>🔔</span> 그때그때 미리 챙겨야 하는 일정 리마인드</h2>
           </div>
-          <span id="remind-progress-badge" class="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-xl border border-amber-200">0 / 16 완료</span>
+          <div class="flex items-center gap-2">
+            <span id="remind-progress-badge" class="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-xl border border-amber-200">0 / 16 완료</span>
+            <button id="remind-toggle-btn" type="button" onclick="toggleRemindersCollapse()" class="sm:hidden px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-xl transition flex items-center gap-1 shadow-2xs" title="리마인드 접기/펼치기">
+              <span id="remind-toggle-icon">▲</span> <span id="remind-toggle-text">접기</span>
+            </button>
+          </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="reminders-grid"></div>
       </div>
@@ -308,8 +313,13 @@
             </div>
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2"><span>🎬</span> 여행 필수 실전 교육 영상 세션</h2>
           </div>
-          <div class="relative w-full md:w-64">
-            <input type="text" id="video-search-input" oninput="filterVideos()" placeholder="영상 검색 (주유, 렌트, 내비)..." class="w-full text-xs p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="relative flex-1 md:w-64">
+              <input type="text" id="video-search-input" oninput="filterVideos()" placeholder="영상 검색 (주유, 렌트, 내비)..." class="w-full text-xs p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            </div>
+            <button type="button" onclick="openVideoAddModal()" class="px-3 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
+              <span class="text-sm font-black leading-none">+</span> <span>영상 등록</span>
+            </button>
           </div>
         </div>
         <div class="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory" id="video-cards-carousel"></div>
@@ -477,7 +487,12 @@
             <span class="px-3 py-0.5 bg-pastel-emerald text-pastel-emeraldText text-xs font-bold rounded-full">MASTER SCHEDULE</span>
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1">📋 전체 일정 & 장소 종합 데이터 표</h2>
           </div>
-          <span id="table-count-badge" class="bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-xl shadow-xs">40개 항목</span>
+          <div class="flex items-center gap-2">
+            <span id="table-count-badge" class="bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">40개 항목</span>
+            <button type="button" onclick="openPlaceModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
+              <span class="text-sm font-black leading-none">+</span> <span>장소 등록</span>
+            </button>
+          </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-xs">
           <div><label class="block font-bold text-slate-400 mb-1">🔍 검색</label><input type="text" id="table-search-input" oninput="renderMasterTable()" placeholder="장소명, 메뉴 검색..." class="w-full p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none"></div>
@@ -556,11 +571,16 @@
             </div>
             <span class="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-xl">누적 유류비: <span id="fuel-total-display" class="font-mono text-sm">$0.00</span></span>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
-            <input type="text" id="fuel-input-loc" placeholder="주유소 (예: 코스트코 Iwilei)" class="p-2 bg-white border border-amber-200 rounded-lg">
-            <input type="number" id="fuel-input-gallons" step="0.1" placeholder="주유량 (갤런)" class="p-2 bg-white border border-amber-200 rounded-lg">
-            <input type="number" id="fuel-input-total" step="0.01" placeholder="총 결제액 ($ USD)" class="p-2 bg-white border border-amber-200 rounded-lg font-bold text-amber-900">
-            <button onclick="addFuelRecord()" class="py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition shadow-xs">+ 주유 기록 추가</button>
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs">
+            <input type="text" id="fuel-input-loc" placeholder="주유소 (예: 코스트코 Iwilei)" class="p-2 bg-white border border-amber-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500">
+            <input type="number" id="fuel-input-gallons" step="0.1" placeholder="주유량 (갤런)" class="p-2 bg-white border border-amber-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500">
+            <input type="number" id="fuel-input-total" step="0.01" placeholder="총 결제액 ($ USD)" class="p-2 bg-white border border-amber-200 rounded-lg font-bold text-amber-900 focus:outline-none focus:ring-1 focus:ring-amber-500">
+            <select id="fuel-input-payer" class="p-2 bg-white border border-amber-200 rounded-lg font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500">
+              <option value="-">결제자: - (미지정)</option>
+              <option value="S">결제자: 🌸 S</option>
+              <option value="B">결제자: 🚙 B</option>
+            </select>
+            <button onclick="addFuelRecord()" class="py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition shadow-xs flex items-center justify-center gap-1">+ 주유 추가</button>
           </div>
           <div id="fuel-log-list" class="space-y-1.5 pt-1"></div>
         </div>
@@ -688,9 +708,66 @@
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2"><span>💳</span> 현장 스마트 가계부 & 지출 정산</h2>
             <p class="text-xs text-slate-500 mt-0.5">일정 수행 여부(Y) 체크 시 가계부 리스트로 자동 연동되며, 원가·팁·결제 환율을 실시간 정산합니다.</p>
           </div>
-          <button onclick="exportLedgerCSV()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 shrink-0">
-            <span>📥</span> 엑셀(CSV) 다운로드
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="openAddLedgerModal()" class="px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
+              <span>+</span> <span>지출 추가</span>
+            </button>
+            <button onclick="exportLedgerCSV()" class="px-3 py-2 bg-surface-muted hover:bg-slate-200 text-slate-700 border border-slate-200 font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 shrink-0">
+              <span>📥</span> <span class="hidden sm:inline">엑셀</span> 다운로드
+            </button>
+          </div>
+        </div>
+
+        <!-- 가계부 탭 구분 (전체 vs 일정별) & 필터/정렬 바 -->
+        <div class="space-y-3 bg-surface-muted p-4 rounded-2xl border border-slate-200/80">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <!-- 탭 구분: 전체 vs 일정별 -->
+            <div class="inline-flex p-1 bg-white rounded-xl border border-slate-200 text-xs font-bold shrink-0">
+              <button type="button" id="ledger-tab-all" onclick="setLedgerTab('all')" class="px-3.5 py-1.5 rounded-lg bg-teal-600 text-white shadow-xs transition">전체</button>
+              <button type="button" id="ledger-tab-days" onclick="setLedgerTab('days')" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">일정별 (Day 1~8)</button>
+            </div>
+
+            <!-- 필터 (분류) & 정렬 옵션 -->
+            <div class="flex items-center gap-2 flex-wrap text-xs">
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 font-bold">🏷️ 분류:</span>
+                <select id="ledger-filter-category" onchange="renderLedgerTable()" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:ring-1 focus:ring-teal-500">
+                  <option value="all">전체 분류</option>
+                  <option value="웰니스">🧘 웰니스</option>
+                  <option value="명소">🏞️ 관광·명소</option>
+                  <option value="미식">🍽️ 식당·카페 (미식)</option>
+                  <option value="액티비티">🏄 액티비티</option>
+                  <option value="쇼핑">🛍️ 쇼핑</option>
+                  <option value="의료">🏥 의료</option>
+                  <option value="주유비">⛽ 주유비 (실비 연동)</option>
+                  <option value="기타">기타 / 현지결제</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 font-bold">↕️ 정렬:</span>
+                <select id="ledger-sort-order" onchange="renderLedgerTable()" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:ring-1 focus:ring-teal-500">
+                  <option value="default">기본 순</option>
+                  <option value="doneFirst">수행(Y) 우선</option>
+                  <option value="priceDesc">금액 높은 순</option>
+                  <option value="priceAsc">금액 낮은 순</option>
+                  <option value="nameAsc">장소명 순</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 일정별 세부 Day 탭 바 (일정별 탭 선택 시 노출) -->
+          <div id="ledger-day-subtabs" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-bold border-t border-slate-200/60 pt-2.5 hidden custom-scrollbar">
+            <button type="button" onclick="setLedgerDaySub('all')" class="ledger-sub-btn px-3 py-1 bg-teal-600 text-white rounded-lg transition shrink-0" data-day="all">Day 전체</button>
+            <button type="button" onclick="setLedgerDaySub('Day 1')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 1">Day 1</button>
+            <button type="button" onclick="setLedgerDaySub('Day 2')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 2">Day 2</button>
+            <button type="button" onclick="setLedgerDaySub('Day 3')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 3">Day 3</button>
+            <button type="button" onclick="setLedgerDaySub('Day 4')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 4">Day 4</button>
+            <button type="button" onclick="setLedgerDaySub('Day 5')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 5">Day 5</button>
+            <button type="button" onclick="setLedgerDaySub('Day 6')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 6">Day 6</button>
+            <button type="button" onclick="setLedgerDaySub('Day 7')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 7">Day 7</button>
+            <button type="button" onclick="setLedgerDaySub('Day 8')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 8">Day 8</button>
+          </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -906,6 +983,206 @@
         <button onclick="toggleMoreSheet(false)" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl transition">
           닫기
         </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- 1. 유튜브 영상 등록 모달 -->
+  <div id="video-add-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-red-100 text-red-700 rounded-xl text-sm font-bold">🎬</span>
+          <h3 class="font-bold text-sm text-slate-900">새 교육 영상 등록</h3>
+        </div>
+        <button onclick="closeVideoAddModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">유튜브 링크 / 영상 URL</label>
+          <input type="text" id="modal-video-url" oninput="previewVideoId(this.value)" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://youtu.be/..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
+          <p id="video-url-hint" class="text-[10px] text-slate-400 mt-1">유튜브 주소를 입력하면 비디오 ID가 자동으로 추출됩니다.</p>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">영상 제목</label>
+          <input type="text" id="modal-video-title" placeholder="영상 제목 (예: 하와이 셀프 주유 완벽 가이드)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">구분 (카테고리)</label>
+          <div class="flex gap-2">
+            <select id="modal-video-cat-select" onchange="syncVideoCat(this.value)" class="flex-1 p-2 bg-surface-muted border border-slate-200 rounded-xl">
+              <option value="렌터카">렌터카</option>
+              <option value="주유소">주유소</option>
+              <option value="금융">금융</option>
+              <option value="내비">내비</option>
+              <option value="스노클링">스노클링</option>
+              <option value="세관">세관</option>
+              <option value="쇼핑">쇼핑</option>
+              <option value="꿀팁">꿀팁</option>
+              <option value="custom">직접 입력</option>
+            </select>
+            <input type="text" id="modal-video-cat-custom" placeholder="직접 입력" class="w-28 p-2 bg-surface-muted border border-slate-200 rounded-xl hidden">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">상세 설명</label>
+          <textarea id="modal-video-desc" rows="2" placeholder="영상 요약 및 현장 활용 팁 입력..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-100">
+        <button onclick="closeVideoAddModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
+        <button onclick="saveCustomVideo()" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-xs transition">영상 등록하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 장소 등록 / 수정 모달 -->
+  <div id="place-edit-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6 max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-brand-50 text-brand-600 rounded-xl text-sm font-bold">📍</span>
+          <h3 id="modal-place-header-title" class="font-bold text-sm text-slate-900">장소 등록</h3>
+        </div>
+        <button onclick="closePlaceModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs overflow-y-auto custom-scrollbar flex-1 pr-1">
+        <!-- 1. 구글 지도 링크 입력 및 자동 추출 -->
+        <div class="p-3 bg-brand-50/50 border border-brand-100 rounded-2xl space-y-1.5">
+          <label class="block font-bold text-brand-900">🔗 구글 지도 링크 입력 (장소명·권역 자동 감지)</label>
+          <input type="text" id="modal-place-gmap" oninput="autoParseGoogleMapLink(this.value)" placeholder="구글맵 링크 붙여넣기 (예: https://maps.app.goo.gl/... 또는 검색어)" class="w-full p-2 bg-white border border-brand-200 rounded-xl text-xs">
+          <p class="text-[10px] text-brand-700">구글맵 링크를 넣으면 장소명과 권역이 자동으로 추천되며, 직접 수정도 가능합니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">장소명</label>
+            <input type="text" id="modal-place-name" placeholder="장소명 (예: 마구로 스팟)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-bold text-slate-900">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">일정 (Day)</label>
+            <select id="modal-place-day" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-medium">
+              <option value="Day 1">Day 1 (10/9 금)</option>
+              <option value="Day 2">Day 2 (10/10 토)</option>
+              <option value="Day 3">Day 3 (10/11 일)</option>
+              <option value="Day 4">Day 4 (10/12 월)</option>
+              <option value="Day 5">Day 5 (10/13 화)</option>
+              <option value="Day 6">Day 6 (10/14 수)</option>
+              <option value="Day 7">Day 7 (10/15 목)</option>
+              <option value="Day 8">Day 8 (10/16 금)</option>
+              <option value="비상시">비상시</option>
+              <option value="상시">상시</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">권역</label>
+            <select id="modal-place-region" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-medium">
+              <option value="와이키키">와이키키 & 다운타운</option>
+              <option value="동부">동부 해안</option>
+              <option value="노스쇼어">북부 노스쇼어</option>
+              <option value="진주만">진주만·서부</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">분류</label>
+            <select id="modal-place-cat" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-medium">
+              <option value="웰니스">🧘 웰니스</option>
+              <option value="명소">🏞️ 관광·명소</option>
+              <option value="미식">🍽️ 식당·카페</option>
+              <option value="액티비티">🏄 액티비티</option>
+              <option value="쇼핑">🛍️ 쇼핑</option>
+              <option value="의료">🏥 의료</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-bold text-slate-600">상세 설명 (최대 50자)</label>
+            <span class="text-[10px] text-slate-400 font-mono"><span id="modal-desc-count">0</span>/50자</span>
+          </div>
+          <input type="text" id="modal-place-desc" maxlength="50" oninput="updatePlaceDescCounter(this.value)" placeholder="주요 특징, 추천 메뉴, 팁 (최대 50자)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">예상 비용</label>
+          <input type="text" id="modal-place-price" placeholder="예: $15~$25, 무료, 개당 $2" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-mono">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+        <button id="modal-place-delete-btn" type="button" onclick="deleteCurrentPlace()" class="py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl text-xs transition hidden">삭제</button>
+        <button type="button" onclick="closePlaceModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
+        <button type="button" onclick="savePlaceModal()" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition">저장 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 가계부 지출 항목 직접 추가 모달 -->
+  <div id="ledger-add-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-teal-50 text-teal-700 rounded-xl text-sm font-bold">💳</span>
+          <h3 class="font-bold text-sm text-slate-900">가계부 지출 항목 추가</h3>
+        </div>
+        <button onclick="closeAddLedgerModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">항목 / 장소명</label>
+          <input type="text" id="modal-ledger-name" placeholder="예: ABC마트 간식 & 음료" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-bold text-slate-900">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">일정 (Day)</label>
+            <select id="modal-ledger-day" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl">
+              <option value="Day 1">Day 1</option>
+              <option value="Day 2">Day 2</option>
+              <option value="Day 3">Day 3</option>
+              <option value="Day 4">Day 4</option>
+              <option value="Day 5">Day 5</option>
+              <option value="Day 6">Day 6</option>
+              <option value="Day 7">Day 7</option>
+              <option value="Day 8">Day 8</option>
+              <option value="상시">상시/공통</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">분류</label>
+            <select id="modal-ledger-cat" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl">
+              <option value="미식">🍽️ 식당·카페</option>
+              <option value="쇼핑">🛍️ 쇼핑·마트</option>
+              <option value="액티비티">🏄 액티비티</option>
+              <option value="웰니스">🧘 웰니스</option>
+              <option value="명소">🏞️ 관광·명소</option>
+              <option value="기타">기타 / 경비</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">원가 ($ USD)</label>
+            <input type="number" step="0.1" id="modal-ledger-usd" value="20" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">팁 (%)</label>
+            <input type="number" step="1" id="modal-ledger-tip" value="0" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-100">
+        <button onclick="closeAddLedgerModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
+        <button onclick="saveCustomLedgerItem()" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs shadow-xs transition">가계부 등록</button>
       </div>
     </div>
   </div>
@@ -1388,51 +1665,65 @@
       { id: "buy-7", title: "파타고니아 파탈로하(Pataloha) 한정 셔츠", sub: "파타고니아 호놀룰루 독점", desc: "Pataloha 하와이 한정판 티셔츠", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80", tag: "패션의류" }
     ];
 
+    // 40개 기본 장소 데이터 (디폴트 유지 + 일정/설명/비용 사용자 수정 지원)
     const placesData = [
-      { name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
-      { name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
-      { name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
-      { name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
-      { name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
-      { name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
-      { name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
-      { name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
-      { name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
-      { name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
-      { name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
-      { name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
-      { name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
-      { name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
-      { name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
-      { name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
-      { name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
-      { name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
-      { name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
-      { name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "프리미엄 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
-      { name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
-      { name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
-      { name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
-      { name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
-      { name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
-      { name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
-      { name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
-      { name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
-      { name: "라니카이 필박스 트레일", lat: 21.3895, lng: -157.7125, region: "동부", cat: "액티비티", day: "Day 2", desc: "능선 군사관측소 파노라마 하이킹", price: "무료", gmap: "Lanikai+Pillbox+Trail" },
-      { name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
-      { name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
-      { name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
-      { name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
-      { name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
-      { name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
-      { name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
-      { name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
-      { name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
-      { name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
-      { name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
-      { name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
-      { name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
-      { name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
+      { id: "p1", name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
+      { id: "p2", name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
+      { id: "p3", name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
+      { id: "p4", name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
+      { id: "p5", name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
+      { id: "p6", name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
+      { id: "p7", name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
+      { id: "p8", name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
+      { id: "p9", name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
+      { id: "p10", name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
+      { id: "p11", name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
+      { id: "p12", name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
+      { id: "p13", name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
+      { id: "p14", name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
+      { id: "p15", name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
+      { id: "p16", name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
+      { id: "p17", name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
+      { id: "p18", name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
+      { id: "p19", name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
+      { id: "p20", name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "프리미엄 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
+      { id: "p21", name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
+      { id: "p22", name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
+      { id: "p23", name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
+      { id: "p24", name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
+      { id: "p25", name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
+      { id: "p26", name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
+      { id: "p27", name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
+      { id: "p28", name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
+      { id: "p29", name: "라니카이 필박스 트레일", lat: 21.3895, lng: -157.7125, region: "동부", cat: "액티비티", day: "Day 2", desc: "능선 군사관측소 파노라마 하이킹", price: "무료", gmap: "Lanikai+Pillbox+Trail" },
+      { id: "p30", name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
+      { id: "p31", name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
+      { id: "p32", name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
+      { id: "p33", name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
+      { id: "p34", name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
+      { id: "p35", name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
+      { id: "p36", name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
+      { id: "p37", name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
+      { id: "p38", name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
+      { id: "p39", name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
+      { id: "p40", name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
+      { id: "p41", name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
+      { id: "p42", name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
+      { id: "p43", name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
     ];
+
+    // 사용자 추가 및 수정 저장소
+    let placeOverrides = JSON.parse(localStorage.getItem('place_overrides') || '{}');
+    let customPlaces = JSON.parse(localStorage.getItem('custom_places_list') || '[]');
+    let currentEditingPlaceId = null;
+
+    function getAllPlaces() {
+      const list = placesData.map(p => {
+        const ovr = placeOverrides[p.id] || placeOverrides[p.name];
+        return ovr ? Object.assign({}, p, ovr) : Object.assign({}, p);
+      });
+      return list.concat(customPlaces);
+    }
 
     const timelineData = [
       { day: "Day 1 (10/9 금)", title: "입국 & 와이키키 바다수영", dist: "18 km", spots: "5개소", items: ["호놀룰루 공항 10:00 렌터카 인수", "이야스메 무스비 점심 포장", "하얏트 리젠시 와이키키 체크인", "호텔 3층 야외 풀 & 퀸즈 비치 수영", "마구로 스팟 생참치 포케 & 치즈케이크 팩토리 디너"] },
@@ -1445,611 +1736,477 @@
       { day: "Day 8 (10/16 금)", title: "체크아웃 & 귀국 출국", dist: "15 km", spots: "2개소", items: ["발코니 모닝 스트레칭 & 와이키키 뷰 작별", "11:00 하얏트 리젠시 체크아웃", "코스트코 Iwilei 최저가 Full 주유", "20:30 호놀룰루 공항 렌터카 반납 후 KE8054 탑승"] }
     ];
 
-    function renderReminders() {
+    
+    function toggleRemindersCollapse() {
       const grid = document.getElementById('reminders-grid');
-      const badge = document.getElementById('remind-progress-badge');
+      const icon = document.getElementById('remind-toggle-icon');
+      const text = document.getElementById('remind-toggle-text');
       if (!grid) return;
-
-      let total = 0;
-      let completed = 0;
-
-      grid.innerHTML = OAHU_DATA.reminders.map(cat => {
-        const itemHtml = cat.items.map(item => {
-          total++;
-          const isDone = localStorage.getItem(item.id) === 'true';
-          if (isDone) completed++;
-
-          return `
-            <label class="flex items-start gap-2.5 p-2 bg-surface-muted hover:bg-slate-100 rounded-xl cursor-pointer transition">
-              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleReminder('${item.id}', this.checked)" class="w-4 h-4 mt-0.5 rounded text-amber-600 focus:ring-amber-500 cursor-pointer">
-              <div class="flex-1 min-w-0">
-                <div class="text-xs font-bold text-slate-800 ${isDone ? 'line-through text-slate-400' : ''}">${item.text}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">${item.sub}</div>
-              </div>
-            </label>
-          `;
-        }).join('');
-
-        return `
-          <div class="p-4 bg-amber-50/40 rounded-2xl border border-amber-100 space-y-2">
-            <h3 class="font-bold text-xs text-amber-900 flex items-center gap-1.5">${cat.cat}</h3>
-            <div class="space-y-1.5">${itemHtml}</div>
-          </div>
-        `;
-      }).join('');
-
-      if (badge) badge.innerText = `${completed} / ${total} 완료`;
-      updateStatProgress();
-    }
-
-    function toggleReminder(id, checked) {
-      localStorage.setItem(id, checked);
-      localStorage.setItem('_mod_' + id, Date.now());
-      renderReminders();
-      triggerAutoSync();
-    }
-
-    function renderVideos() {
-      const carousel = document.getElementById('video-cards-carousel');
-      const searchInput = document.getElementById('video-search-input');
-      const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-      if (!carousel) return;
-
-      const filtered = OAHU_DATA.videos.filter(v => {
-        if (!query) return true;
-        return v.title.toLowerCase().includes(query) || v.cat.toLowerCase().includes(query) || v.desc.toLowerCase().includes(query);
-      });
-
-      carousel.innerHTML = filtered.map(v => `
-        <div class="w-80 shrink-0 bg-surface-muted rounded-2xl border border-slate-200 overflow-hidden shadow-xs space-y-2 p-3 snap-center">
-          <div class="video-card-ratio">
-            <iframe src="https://www.youtube.com/embed/${v.ytid}" title="${v.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="space-y-1 pt-1">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-md">${v.cat}</span>
-              <a href="https://www.youtube.com/watch?v=${v.ytid}" target="_blank" class="text-[10px] text-slate-400 hover:text-brand-600">YouTube ↗</a>
-            </div>
-            <h4 class="font-bold text-xs text-slate-900 leading-tight">${v.title}</h4>
-            <p class="text-[11px] text-slate-500 leading-relaxed">${v.desc}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function filterVideos() {
-      renderVideos();
-    }
-
-    function renderTimeline() {
-      const container = document.getElementById('timeline-container');
-      if (!container) return;
-
-      container.innerHTML = timelineData.map(d => `
-        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-soft space-y-3 flex flex-col justify-between">
-          <div class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 bg-brand-50 text-brand-700 text-xs font-bold rounded-full border border-brand-100">${d.day}</span>
-              <span class="text-[11px] font-mono text-slate-400 font-bold">🚗 ${d.dist}</span>
-            </div>
-            <h3 class="font-bold text-sm text-slate-900">${d.title}</h3>
-            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside pt-1">
-              ${d.items.map(it => `<li>${it}</li>`).join('')}
-            </ul>
-          </div>
-          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-            <span>주요 동선 ${d.spots}</span>
-            <button onclick="filterTableDay('${d.day.split(' ')[0]}')" class="text-brand-600 hover:underline font-bold">일정표 보기 →</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function filterTableDay(dayStr) {
-      const sel = document.getElementById('filter-day');
-      if (sel) {
-        sel.value = dayStr;
-        renderMasterTable();
-        scrollToSec('sec-table');
-      }
-    }
-
-    function renderWishlists() {
-      renderWishlistGroup('must-do-extreme-list', mustDoExtremeItems);
-      renderWishlistGroup('must-do-wellness-list', mustDoWellnessItems);
-      renderWishlistGroup('must-eat-list', mustEatItems);
-      renderWishlistGroup('must-buy-list', mustBuyItems);
-      updateStatProgress();
-    }
-
-    function renderWishlistGroup(containerId, items) {
-      const el = document.getElementById(containerId);
-      if (!el) return;
-
-      el.innerHTML = items.map(item => {
-        const isDone = localStorage.getItem('wish_' + item.id) === 'true';
-        return `
-          <div class="flex items-center justify-between p-3 bg-surface-muted hover:bg-slate-100 rounded-2xl border border-slate-100 transition group"
-               onmouseenter="showTooltip(event, '${item.img}', '${item.title.replace(/'/g, "\'")}', '${item.desc.replace(/'/g, "\'")}', '${item.tag}')"
-               onmousemove="moveTooltip(event)"
-               onmouseleave="hideTooltip()">
-            <div class="flex items-center gap-3 min-w-0">
-              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleWishItem('${item.id}', this.checked)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0">
-              <div class="truncate">
-                <div class="font-bold text-xs text-slate-900 group-hover:text-brand-600 transition truncate ${isDone ? 'line-through text-slate-400' : ''}">${item.title}</div>
-                <div class="text-[11px] text-slate-400 truncate">${item.sub}</div>
-              </div>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-lg shrink-0 ml-2 shadow-2xs">${item.tag}</span>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleWishItem(id, checked) {
-      const key = 'wish_' + id;
-      localStorage.setItem(key, checked);
-      localStorage.setItem('_mod_' + key, Date.now());
-      renderWishlists();
-      triggerAutoSync();
-    }
-
-    function showTooltip(e, img, title, desc, tag) {
-      const tip = document.getElementById('hover-tooltip');
-      if (!tip) return;
-      document.getElementById('tooltip-img').src = img;
-      document.getElementById('tooltip-badge').innerText = tag;
-      document.getElementById('tooltip-title').innerText = title;
-      document.getElementById('tooltip-desc').innerText = desc;
-      tip.style.display = 'block';
-      moveTooltip(e);
-    }
-
-    function moveTooltip(e) {
-      const tip = document.getElementById('hover-tooltip');
-      if (!tip || tip.style.display === 'none') return;
-      const x = Math.min(window.innerWidth - 275, e.clientX + 15);
-      const y = Math.min(window.innerHeight - 250, e.clientY + 15);
-      tip.style.left = x + 'px';
-      tip.style.top = y + 'px';
-    }
-
-    function hideTooltip() {
-      const tip = document.getElementById('hover-tooltip');
-      if (tip) tip.style.display = 'none';
-    }
-
-    function renderMasterTable() {
-      const tbody = document.getElementById('master-table-body');
-      const badge = document.getElementById('table-count-badge');
-      if (!tbody) return;
-
-      const q = (document.getElementById('table-search-input')?.value || '').toLowerCase().trim();
-      const region = document.getElementById('filter-region')?.value || 'all';
-      const category = document.getElementById('filter-category')?.value || 'all';
-      const day = document.getElementById('filter-day')?.value || 'all';
-
-      const filtered = placesData.filter(p => {
-        if (q && !(p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q))) return false;
-        if (region !== 'all' && p.region !== region) return false;
-        if (category !== 'all' && p.cat !== category) return false;
-        if (day !== 'all' && !p.day.includes(day)) return false;
-        return true;
-      });
-
-      if (badge) badge.innerText = `${filtered.length}개 항목`;
-
-      tbody.innerHTML = filtered.map(p => `
-        <tr class="hover:bg-brand-50/30 transition-colors">
-          <td class="py-2.5 px-4 font-mono font-bold text-xs text-brand-600">${p.day}</td>
-          <td class="py-2.5 px-4 font-bold text-slate-900">${p.name}</td>
-          <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-xs">${p.region}</span></td>
-          <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-pastel-blue text-pastel-blueText rounded-md text-xs font-bold">${p.cat}</span></td>
-          <td class="py-2.5 px-4 text-xs text-slate-600">${p.desc}</td>
-          <td class="py-2.5 px-3 text-xs font-mono font-bold text-slate-700">${p.price}</td>
-          <td class="py-2.5 px-4 text-center">
-            <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap}" target="_blank" class="px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition inline-flex items-center gap-1">
-              <span>📍</span> 길찾기
-            </a>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function renderBudgetChecklist() {
-      const container = document.getElementById('budget-checklist-container');
-      if (!container) return;
-
-      container.innerHTML = OAHU_DATA.variableBudgets.map(item => {
-        const saved = localStorage.getItem('var_b_' + item.id);
-        const isChecked = saved !== null ? saved === 'true' : item.checked;
-        return `
-          <label class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition cursor-pointer">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleVariableBudget('${item.id}', this.checked)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0">
-              <span class="text-xs font-bold text-slate-800 truncate">${item.title}</span>
-            </div>
-            <span class="text-xs font-mono font-bold text-brand-600 ml-2">$${item.usd}</span>
-          </label>
-        `;
-      }).join('');
-
-      recalculateTotalBudget();
-    }
-
-    function toggleVariableBudget(id, checked) {
-      const key = 'var_b_' + id;
-      localStorage.setItem(key, checked);
-      localStorage.setItem('_mod_' + key, Date.now());
-      recalculateTotalBudget();
-      triggerAutoSync();
-    }
-
-    function saveCustomCosts() {
-      const now = Date.now();
-      localStorage.setItem('cost_hotel', document.getElementById('cost-hotel').value);
-      localStorage.setItem('cost_car', document.getElementById('cost-car').value);
-      localStorage.setItem('cost_etc', document.getElementById('cost-etc').value);
-      localStorage.setItem('_mod_cost_hotel', now);
-      localStorage.setItem('_mod_cost_car', now);
-      localStorage.setItem('_mod_cost_etc', now);
-      recalculateTotalBudget();
-      triggerAutoSync();
-    }
-
-    function recalculateTotalBudget() {
-      const hotel = parseFloat(document.getElementById('cost-hotel')?.value || 3900);
-      const car = parseFloat(document.getElementById('cost-car')?.value || 305);
-      const etc = parseFloat(document.getElementById('cost-etc')?.value || 130);
-      const fixedUsd = hotel + car + etc;
-
-      let variableUsd = 0;
-      OAHU_DATA.variableBudgets.forEach(item => {
-        const saved = localStorage.getItem('var_b_' + item.id);
-        const isChecked = saved !== null ? saved === 'true' : item.checked;
-        if (isChecked) variableUsd += item.usd;
-      });
-
-      let fuelUsd = 0;
-      fuelRecords.forEach(f => { fuelUsd += parseFloat(f.total || 0); });
-
-      const totalUsd = fixedUsd + variableUsd + fuelUsd;
-      const totalKrw = Math.round(totalUsd * EXCHANGE_RATE);
-      const fixedKrw = Math.round(fixedUsd * EXCHANGE_RATE);
-      const varKrw = Math.round((variableUsd + fuelUsd) * EXCHANGE_RATE);
-
-      const totalValEl = document.getElementById('budget-total-val');
-      const totalKrwEl = document.getElementById('budget-total-krw');
-      const fixedValEl = document.getElementById('budget-fixed-val');
-      const varValEl = document.getElementById('budget-variable-val');
-
-      if (currentCurrency === 'USD') {
-        if (totalValEl) totalValEl.innerText = '$' + Math.round(totalUsd).toLocaleString();
-        if (fixedValEl) fixedValEl.innerText = '$' + Math.round(fixedUsd).toLocaleString();
-        if (varValEl) varValEl.innerText = '$' + Math.round(variableUsd + fuelUsd).toLocaleString();
+      const isHidden = grid.classList.contains('hidden');
+      if (isHidden) {
+        grid.classList.remove('hidden');
+        if (icon) icon.innerText = '▲';
+        if (text) text.innerText = '접기';
       } else {
-        if (totalValEl) totalValEl.innerText = '₩' + totalKrw.toLocaleString();
-        if (fixedValEl) fixedValEl.innerText = '₩' + fixedKrw.toLocaleString();
-        if (varValEl) varValEl.innerText = '₩' + varKrw.toLocaleString();
-      }
-      if (totalKrwEl) totalKrwEl.innerText = `약 ${(totalKrw / 10000).toFixed(0)}만 원 (환율 ₩${EXCHANGE_RATE.toLocaleString()})`;
-    }
-
-    function setCurrency(curr) {
-      currentCurrency = curr;
-      const usdBtn = document.getElementById('curr-usd-btn');
-      const krwBtn = document.getElementById('curr-krw-btn');
-      if (curr === 'USD') {
-        usdBtn.className = "px-3 py-1 rounded-lg bg-white text-brand-600 shadow-xs";
-        krwBtn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800";
-      } else {
-        krwBtn.className = "px-3 py-1 rounded-lg bg-white text-brand-600 shadow-xs";
-        usdBtn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800";
-      }
-      recalculateTotalBudget();
-    }
-
-    function renderFuelRecords() {
-      const list = document.getElementById('fuel-log-list');
-      const totalDisplay = document.getElementById('fuel-total-display');
-      if (!list) return;
-
-      let sum = 0;
-      list.innerHTML = fuelRecords.map((r, idx) => {
-        const amt = parseFloat(r.total || 0);
-        sum += amt;
-        return `
-          <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-amber-200 text-xs">
-            <span class="font-bold text-slate-700">${r.loc || '주유소'} <span class="text-slate-400 font-normal">(${r.gallons || 0} gal)</span></span>
-            <div class="flex items-center gap-2">
-              <span class="font-mono font-bold text-amber-900">$${amt.toFixed(2)}</span>
-              <button onclick="deleteFuelRecord(${idx})" class="text-rose-500 hover:text-rose-700 font-bold px-1">✕</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      if (totalDisplay) totalDisplay.innerText = '$' + sum.toFixed(2);
-      recalculateTotalBudget();
-    }
-
-    function addFuelRecord() {
-      const loc = document.getElementById('fuel-input-loc').value.trim();
-      const gallons = parseFloat(document.getElementById('fuel-input-gallons').value) || 0;
-      const total = parseFloat(document.getElementById('fuel-input-total').value) || 0;
-
-      if (total <= 0) { alert('주유 결제 금액을 입력해주세요.'); return; }
-
-      const rec = { id: 'fuel_' + Date.now() + '_' + Math.floor(Math.random()*1000), loc: loc || '오아후 주유소', gallons, total, timestamp: Date.now() };
-      fuelRecords.push(rec);
-      localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-      localStorage.setItem('_mod_fuel_records', Date.now());
-      triggerAutoSync();
-
-      document.getElementById('fuel-input-loc').value = '';
-      document.getElementById('fuel-input-gallons').value = '';
-      document.getElementById('fuel-input-total').value = '';
-
-      renderFuelRecords();
-    }
-
-    function deleteFuelRecord(idx) {
-      fuelRecords.splice(idx, 1);
-      localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-      localStorage.setItem('_mod_fuel_records', Date.now());
-      renderFuelRecords();
-      triggerAutoSync();
-    }
-
-    function renderPackingList() {
-      const grid = document.getElementById('packing-grid');
-      const bar = document.getElementById('pack-progress-bar');
-      const text = document.getElementById('pack-progress-text');
-      if (!grid) return;
-
-      let total = 0;
-      let checkedCount = 0;
-
-      grid.innerHTML = OAHU_DATA.packingList.map(cat => {
-        const itemsHtml = cat.items.map(item => {
-          total++;
-          const safeKey = 'pack_' + encodeURIComponent(item);
-          const isDone = localStorage.getItem(safeKey) === 'true';
-          if (isDone) checkedCount++;
-
-          return `
-            <label class="flex items-center gap-2 text-xs cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 transition">
-              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePackingItem('${safeKey}', this.checked)" class="w-3.5 h-3.5 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0">
-              <span class="${isDone ? 'line-through text-slate-400' : 'text-slate-700'} truncate">${item}</span>
-            </label>
-          `;
-        }).join('');
-
-        return `
-          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
-            <h3 class="font-bold text-xs text-slate-900 flex items-center gap-1.5">${cat.cat}</h3>
-            <div class="space-y-0.5">${itemsHtml}</div>
-          </div>
-        `;
-      }).join('');
-
-      if (bar) bar.style.width = (total > 0 ? (checkedCount / total * 100) : 0) + '%';
-      if (text) text.innerText = `${checkedCount} / ${total} 완료`;
-      updateStatProgress();
-    }
-
-    function togglePackingItem(key, checked) {
-      localStorage.setItem(key, checked);
-      localStorage.setItem('_mod_' + key, Date.now());
-      renderPackingList();
-      triggerAutoSync();
-    }
-
-    function resetPackingChecklist() {
-      if (!confirm('짐 꾸리기 체크리스트를 모두 초기화하시겠습니까?')) return;
-      const now = Date.now();
-      for (let i = localStorage.length - 1; i >= 0; i--) {
-        const k = localStorage.key(i);
-        if (k && k.startsWith('pack_')) {
-          localStorage.setItem(k, 'false');
-          localStorage.setItem('_mod_' + k, now);
-        }
-      }
-      renderPackingList();
-      triggerAutoSync();
-    }
-
-    function renderGuideHub() {
-      const grid = document.getElementById('guide-cards-grid');
-      const q = (document.getElementById('guide-search-input')?.value || '').toLowerCase().trim();
-      if (!grid) return;
-
-      const filtered = OAHU_DATA.safetyGuides.filter(g => {
-        if (!q) return true;
-        return g.title.toLowerCase().includes(q) || g.summary.toLowerCase().includes(q) || g.detail.toLowerCase().includes(q) || g.cat.toLowerCase().includes(q);
-      });
-
-      grid.innerHTML = filtered.map(g => `
-        <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold px-2 py-0.5 bg-pastel-rose text-pastel-roseText rounded-md">${g.cat}</span>
-            <span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-100">${g.badge}</span>
-          </div>
-          <h3 class="font-bold text-sm text-slate-900">${g.title}</h3>
-          <p class="text-xs text-slate-600 font-medium bg-white p-2.5 rounded-xl border border-slate-100">${g.summary}</p>
-          <div class="text-xs text-slate-500 leading-relaxed pt-1">${g.detail}</div>
-        </div>
-      `).join('');
-    }
-
-    function safeInitMap() {
-      if (typeof L === 'undefined') return;
-      const mapEl = document.getElementById('leaflet-map');
-      if (!mapEl) return;
-
-      if (!leafletMapInstance) {
-        leafletMapInstance = L.map('leaflet-map', { scrollWheelZoom: false }).setView([21.4645, -157.98], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          attribution: '&copy; OpenStreetMap'
-        }).addTo(leafletMapInstance);
-
-        mapMarkers = [];
-        placesData.forEach(p => {
-          const marker = L.marker([p.lat, p.lng]).addTo(leafletMapInstance);
-          marker.bindPopup(`
-            <div style="font-family:'Gowun Batang',serif; min-width:180px;">
-              <div style="font-size:10px; color:#6366f1; font-weight:bold;">${p.day} • ${p.cat}</div>
-              <div style="font-size:13px; font-weight:bold; margin-top:2px;">${p.name}</div>
-              <div style="font-size:11px; color:#64748b; margin-top:3px;">${p.desc}</div>
-              <div style="margin-top:6px;"><a href="https://www.google.com/maps/search/?api=1&query=${p.gmap}" target="_blank" style="font-size:11px; color:#4f46e5; text-decoration:underline; font-weight:bold;">구글맵 길찾기 ↗</a></div>
-            </div>
-          `);
-          marker.category = p.cat;
-          mapMarkers.push(marker);
-        });
+        grid.classList.add('hidden');
+        if (icon) icon.innerText = '▼';
+        if (text) text.innerText = '펼치기';
       }
     }
 
-    function filterMapMarkers(cat) {
-      document.querySelectorAll('.map-filter-btn').forEach(b => {
-        b.classList.remove('bg-brand-500', 'text-white');
-        b.classList.add('bg-white', 'text-slate-600');
-      });
-      if (event && event.target) {
-        event.target.classList.remove('bg-white', 'text-slate-600');
-        event.target.classList.add('bg-brand-500', 'text-white');
-      }
 
-      if (!leafletMapInstance) return;
-      mapMarkers.forEach(m => {
-        if (cat === 'all' || m.category === cat) {
-          leafletMapInstance.addLayer(m);
+    let customVideos = JSON.parse(localStorage.getItem('custom_videos_list') || '[]');
+
+    function extractYouTubeId(url) {
+      if (!url) return '';
+      const u = url.trim();
+      if (u.length === 11 && !u.includes('/') && !u.includes('.')) return u;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = u.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : '';
+    }
+
+    function previewVideoId(val) {
+      const id = extractYouTubeId(val);
+      const hint = document.getElementById('video-url-hint');
+      if (hint) {
+        if (id) {
+          hint.innerText = '✓ 감지된 유튜브 ID: ' + id;
+          hint.className = 'text-[10px] text-emerald-600 font-bold mt-1';
         } else {
-          leafletMapInstance.removeLayer(m);
+          hint.innerText = '유튜브 주소를 입력하면 비디오 ID가 자동으로 추출됩니다.';
+          hint.className = 'text-[10px] text-slate-400 mt-1';
         }
-      });
+      }
     }
 
-    function toggleMapType() {
-      const lMap = document.getElementById('leaflet-map');
-      const gMap = document.getElementById('gmap-frame-container');
-      const btn = document.getElementById('toggle-map-btn');
+    function openVideoAddModal() {
+      document.getElementById('modal-video-url').value = '';
+      document.getElementById('modal-video-title').value = '';
+      document.getElementById('modal-video-desc').value = '';
+      document.getElementById('modal-video-cat-select').value = '렌터카';
+      document.getElementById('modal-video-cat-custom').value = '';
+      document.getElementById('modal-video-cat-custom').classList.add('hidden');
+      previewVideoId('');
+      document.getElementById('video-add-modal')?.classList.remove('hidden');
+    }
 
-      if (lMap.classList.contains('hidden')) {
-        lMap.classList.remove('hidden');
-        gMap.classList.add('hidden');
-        btn.innerText = '🛰️ 구글맵 전환';
-        if (leafletMapInstance) leafletMapInstance.invalidateSize();
+    function closeVideoAddModal() {
+      document.getElementById('video-add-modal')?.classList.add('hidden');
+    }
+
+    function syncVideoCat(val) {
+      const cust = document.getElementById('modal-video-cat-custom');
+      if (val === 'custom') {
+        cust.classList.remove('hidden');
+        cust.focus();
       } else {
-        lMap.classList.add('hidden');
-        gMap.classList.remove('hidden');
-        btn.innerText = '🗺️ 상세지도 전환';
+        cust.classList.add('hidden');
       }
     }
 
-    function safeInitCharts() {
-      if (typeof Chart === 'undefined') return;
+    function saveCustomVideo() {
+      const url = document.getElementById('modal-video-url').value.trim();
+      const title = document.getElementById('modal-video-title').value.trim();
+      const desc = document.getElementById('modal-video-desc').value.trim();
+      const catSel = document.getElementById('modal-video-cat-select').value;
+      const catCust = document.getElementById('modal-video-cat-custom').value.trim();
+      const cat = catSel === 'custom' ? (catCust || '기타') : catSel;
 
-      const regionCanvas = document.getElementById('statRegionChart');
-      if (regionCanvas && !regionChartInstance) {
-        const counts = { '와이키키': 0, '동부': 0, '노스쇼어': 0, '진주만': 0 };
-        placesData.forEach(p => { if (counts[p.region] !== undefined) counts[p.region]++; });
+      const ytid = extractYouTubeId(url);
+      if (!ytid) {
+        alert('올바른 유튜브 링크를 입력해주세요.');
+        return;
+      }
+      if (!title) {
+        alert('영상 제목을 입력해주세요.');
+        return;
+      }
 
-        regionChartInstance = new Chart(regionCanvas, {
-          type: 'doughnut',
-          data: {
-            labels: Object.keys(counts),
-            datasets: [{
-              data: Object.values(counts),
-              backgroundColor: ['#6366f1', '#0284c7', '#059669', '#ea580c'],
-              borderWidth: 2,
-              borderColor: '#ffffff'
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: '"Gowun Batang", serif' } } }
-            }
+      const newVid = {
+        id: 'cvid_' + Date.now(),
+        title: title,
+        cat: cat,
+        desc: desc || '현장 맞춤 여행 꿀팁 영상',
+        ytid: ytid,
+        isCustom: true
+      };
+
+      customVideos.push(newVid);
+      localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
+      localStorage.setItem('_mod_custom_videos_list', Date.now());
+      closeVideoAddModal();
+      renderVideos();
+      triggerAutoSync();
+    }
+
+    function deleteCustomVideo(id) {
+      if (!confirm('이 영상을 삭제하시겠습니까?')) return;
+      customVideos = customVideos.filter(v => v.id !== id);
+      localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
+      localStorage.setItem('_mod_custom_videos_list', Date.now());
+      renderVideos();
+      triggerAutoSync();
+    }
+
+
+    function autoParseGoogleMapLink(val) {
+      if (!val) return;
+      let query = '';
+      try {
+        if (val.includes('query=')) {
+          query = decodeURIComponent(val.split('query=')[1].split('&')[0]);
+        } else if (val.includes('/place/')) {
+          query = decodeURIComponent(val.split('/place/')[1].split('/')[0]);
+        } else if (val.includes('?q=')) {
+          query = decodeURIComponent(val.split('?q=')[1].split('&')[0]);
+        } else if (!val.startsWith('http')) {
+          query = val.trim();
+        }
+      } catch(e) { query = val; }
+
+      query = query.replace(/\+/g, ' ').trim();
+      if (query) {
+        const nameInput = document.getElementById('modal-place-name');
+        if (nameInput && (!nameInput.value || nameInput.dataset.autoFilled === 'true')) {
+          nameInput.value = query;
+          nameInput.dataset.autoFilled = 'true';
+        }
+        // 권역 자동 추천
+        const lower = query.toLowerCase();
+        const regSelect = document.getElementById('modal-place-region');
+        if (regSelect) {
+          if (lower.includes('waikiki') || lower.includes('와이키키') || lower.includes('ala moana') || lower.includes('알라모아나') || lower.includes('kuhio') || lower.includes('downtown') || lower.includes('kalakaua')) {
+            regSelect.value = '와이키키';
+          } else if (lower.includes('kailua') || lower.includes('카일루아') || lower.includes('lanikai') || lower.includes('라니카이') || lower.includes('hanauma') || lower.includes('하나우마') || lower.includes('diamond') || lower.includes('kualoa') || lower.includes('waimanalo')) {
+            regSelect.value = '동부';
+          } else if (lower.includes('haleiwa') || lower.includes('할레이바') || lower.includes('north') || lower.includes('dole') || lower.includes('shrimp') || lower.includes('shark') || lower.includes('sunset')) {
+            regSelect.value = '노스쇼어';
+          } else if (lower.includes('pearl') || lower.includes('진주만') || lower.includes('waikele') || lower.includes('와이켈레') || lower.includes('costco') || lower.includes('ko olina') || lower.includes('paradise')) {
+            regSelect.value = '진주만';
           }
-        });
+        }
+      }
+    }
+
+    // 구글맵 링크 수동 분석/적용 버튼 핸들러
+    function manualParseGmap() {
+      const gmapInput = document.getElementById('modal-place-gmap');
+      const val = gmapInput ? gmapInput.value.trim() : '';
+      if (!val) {
+        alert('구글 지도 링크 또는 장소 검색어를 입력해주세요.');
+        gmapInput?.focus();
+        return;
+      }
+      autoParseGoogleMapLink(val);
+      const nameVal = document.getElementById('modal-place-name')?.value;
+      if (nameVal) {
+        alert(`✓ 구글맵 정보 분석 완료!\n장소명: "${nameVal}"\n권역: "${document.getElementById('modal-place-region')?.value}"`);
+      }
+    }
+
+    function updatePlaceDescCounter(val) {
+      const cnt = document.getElementById('modal-desc-count');
+      if (cnt) cnt.innerText = (val || '').length;
+    }
+
+    function openPlaceModal() {
+      currentEditingPlaceId = null;
+      document.getElementById('modal-place-header-title').innerText = '새 장소 등록';
+      document.getElementById('modal-place-gmap').value = '';
+      document.getElementById('modal-place-name').value = '';
+      document.getElementById('modal-place-name').disabled = false;
+      document.getElementById('modal-place-name').dataset.autoFilled = 'false';
+      document.getElementById('modal-place-day').value = 'Day 1';
+      document.getElementById('modal-place-region').value = '와이키키';
+      document.getElementById('modal-place-cat').value = '명소';
+      document.getElementById('modal-place-desc').value = '';
+      updatePlaceDescCounter('');
+      document.getElementById('modal-place-price').value = '무료';
+      document.getElementById('modal-place-delete-btn')?.classList.add('hidden');
+      document.getElementById('place-edit-modal')?.classList.remove('hidden');
+    }
+
+    function openPlaceEditModal(placeId) {
+      const all = getAllPlaces();
+      const p = all.find(x => x.id === placeId || x.name === placeId);
+      if (!p) return;
+
+      currentEditingPlaceId = p.id || p.name;
+      document.getElementById('modal-place-header-title').innerText = `장소 수정: ${p.name}`;
+      document.getElementById('modal-place-gmap').value = p.gmap ? (p.gmap.startsWith('http') ? p.gmap : `https://www.google.com/maps/search/?api=1&query=${p.gmap}`) : '';
+      document.getElementById('modal-place-name').value = p.name;
+      document.getElementById('modal-place-name').dataset.autoFilled = 'false';
+      document.getElementById('modal-place-name').disabled = !p.isCustom;
+      
+      document.getElementById('modal-place-day').value = p.day ? p.day.split(',')[0].trim() : 'Day 1';
+      document.getElementById('modal-place-region').value = p.region || '와이키키';
+      document.getElementById('modal-place-cat').value = p.cat || '명소';
+      document.getElementById('modal-place-desc').value = p.desc || '';
+      updatePlaceDescCounter(p.desc || '');
+      document.getElementById('modal-place-price').value = p.price || '';
+
+      const delBtn = document.getElementById('modal-place-delete-btn');
+      if (delBtn) {
+        if (p.isCustom) delBtn.classList.remove('hidden');
+        else delBtn.classList.add('hidden');
       }
 
-      const catCanvas = document.getElementById('statCategoryChart');
-      if (catCanvas && !categoryChartInstance) {
-        const cats = { '웰니스': 0, '명소': 0, '미식': 0, '액티비티': 0, '쇼핑': 0, '의료': 0 };
-        placesData.forEach(p => { if (cats[p.cat] !== undefined) cats[p.cat]++; });
+      document.getElementById('place-edit-modal')?.classList.remove('hidden');
+    }
 
-        categoryChartInstance = new Chart(catCanvas, {
-          type: 'bar',
-          data: {
-            labels: Object.keys(cats),
-            datasets: [{
-              label: '방문 수',
-              data: Object.values(cats),
-              backgroundColor: ['#a855f7', '#3b82f6', '#10b981', '#f97316', '#ec4899', '#ef4444'],
-              borderRadius: 8
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, ticks: { stepSize: 2 } }
+    function closePlaceModal() {
+      document.getElementById('place-edit-modal')?.classList.add('hidden');
+      currentEditingPlaceId = null;
+    }
+
+    function savePlaceModal(forceSync = true) {
+      const name = document.getElementById('modal-place-name').value.trim();
+      const day = document.getElementById('modal-place-day').value;
+      const region = document.getElementById('modal-place-region').value;
+      const cat = document.getElementById('modal-place-cat').value;
+      const desc = document.getElementById('modal-place-desc').value.trim();
+      const price = document.getElementById('modal-place-price').value.trim();
+      const gmapInput = document.getElementById('modal-place-gmap').value.trim();
+
+      if (!name) { alert('장소명을 입력해주세요.'); return; }
+      if (desc.length > 50) { alert('상세 설명은 최대 50자까지 입력 가능합니다.'); return; }
+
+      let gmapQuery = name;
+      if (gmapInput) {
+        if (gmapInput.includes('query=')) gmapQuery = gmapInput.split('query=')[1].split('&')[0];
+        else gmapQuery = encodeURIComponent(gmapInput.replace(/\s/g, '+'));
+      }
+
+      if (currentEditingPlaceId) {
+        // 기존 장소 수정
+        const isCustom = customPlaces.some(p => p.id === currentEditingPlaceId);
+        if (isCustom) {
+          customPlaces = customPlaces.map(p => {
+            if (p.id === currentEditingPlaceId) {
+              return Object.assign({}, p, { name, day, region, cat, desc, price, gmap: gmapQuery });
             }
-          }
-        });
+            return p;
+          });
+          localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+          localStorage.setItem('_mod_custom_places_list', Date.now());
+        } else {
+          // 디폴트 데이터 수정: placeOverrides에 기록
+          placeOverrides[currentEditingPlaceId] = { day, region, cat, desc, price, gmap: gmapQuery };
+          localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
+          localStorage.setItem('_mod_place_overrides', Date.now());
+        }
+      } else {
+        // 신규 장소 등록
+        const newPlace = {
+          id: 'cp_' + Date.now(),
+          name: name,
+          lat: 21.2768 + (Math.random() - 0.5) * 0.1,
+          lng: -157.8246 + (Math.random() - 0.5) * 0.1,
+          region: region,
+          cat: cat,
+          day: day,
+          desc: desc,
+          price: price || '무료',
+          gmap: gmapQuery,
+          isCustom: true
+        };
+        customPlaces.push(newPlace);
+        localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+        localStorage.setItem('_mod_custom_places_list', Date.now());
+      }
+
+      closePlaceModal();
+      renderMasterTable();
+      if (leafletMapInstance) {
+        leafletMapInstance.remove();
+        leafletMapInstance = null;
+        safeInitMap();
+      }
+
+      if (forceSync) {
+        pushStateToGitHub(true);
+      } else {
+        triggerAutoSync();
       }
     }
 
-    function updateStatProgress() {
-      let totalTasks = 16 + 22 + 30;
-      let done = 0;
-
-      OAHU_DATA.reminders.forEach(c => {
-        c.items.forEach(it => { if (localStorage.getItem(it.id) === 'true') done++; });
-      });
-      [...mustDoExtremeItems, ...mustDoWellnessItems, ...mustEatItems, ...mustBuyItems].forEach(it => {
-        if (localStorage.getItem('wish_' + it.id) === 'true') done++;
-      });
-      OAHU_DATA.packingList.forEach(c => {
-        c.items.forEach(it => {
-          if (localStorage.getItem('pack_' + encodeURIComponent(it)) === 'true') done++;
-        });
-      });
-
-      const pct = Math.round((done / totalTasks) * 100);
-      const statEl = document.getElementById('stat-total-progress');
-      if (statEl) statEl.innerText = pct + '%';
+    function deleteCurrentPlace() {
+      if (!currentEditingPlaceId) return;
+      if (!confirm('이 사용자 추가 장소를 삭제하시겠습니까?')) return;
+      customPlaces = customPlaces.filter(p => p.id !== currentEditingPlaceId);
+      localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+      localStorage.setItem('_mod_custom_places_list', Date.now());
+      closePlaceModal();
+      renderMasterTable();
+      pushStateToGitHub(true);
     }
 
-    const ledgerItems = [
-      { id: 'l_kualoa', name: '쿠알로아 랜치 UTV 랩터 2인', defaultUsd: 145 },
-      { id: 'l_sup', name: '카일루아 비치 SUP 패들보드 2인', defaultUsd: 65 },
-      { id: 'l_hanauma', name: '하나우마 베이 입장료 2인', defaultUsd: 50 },
-      { id: 'l_luau', name: '코올리나 파라다이스 루아우 디너 2인', defaultUsd: 160 },
-      { id: 'l_maguro', name: '마구로 스팟 생참치 포케', defaultUsd: 30 },
-      { id: 'l_giovanni', name: '지오반니 새우 트럭 갈릭 스캠피', defaultUsd: 17 },
-      { id: 'l_leonards', name: '레오나즈 베이커리 말라사다 도넛', defaultUsd: 10 },
-      { id: 'l_littlejoes', name: '리틀 조스 프라임 립 스테이크 만찬', defaultUsd: 120 }
-    ];
+    function updateLedgerPayer(id, val) {
+      const key = 'ledger_payer_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+
+      // 만약 주유 기록 항목이면 fuelRecords 배열 내 결제자도 동기화
+      if (id.startsWith('fuel_')) {
+        fuelRecords = fuelRecords.map(f => {
+          if (f.id === id) f.payer = val;
+          return f;
+        });
+        localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+        localStorage.setItem('_mod_fuel_records', Date.now());
+        renderFuelRecords();
+      }
+
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
+    function getPayerBadgeStyle(p) {
+      if (p === 'S') return 'bg-rose-50 border-rose-300 text-rose-700 font-bold';
+      if (p === 'B') return 'bg-blue-50 border-blue-300 text-blue-700 font-bold';
+      return 'bg-surface-muted border-slate-200 text-slate-500 font-medium';
+    }
+
+    function openAddLedgerModal() {
+      document.getElementById('modal-ledger-name').value = '';
+      document.getElementById('modal-ledger-payer').value = '-';
+      document.getElementById('modal-ledger-day').value = 'Day 1';
+      document.getElementById('modal-ledger-cat').value = '미식';
+      document.getElementById('modal-ledger-usd').value = '20';
+      document.getElementById('modal-ledger-tip').value = '0';
+      document.getElementById('ledger-add-modal')?.classList.remove('hidden');
+    }
+
+    function closeAddLedgerModal() {
+      document.getElementById('ledger-add-modal')?.classList.add('hidden');
+    }
+
+    function saveCustomLedgerItem() {
+      const name = document.getElementById('modal-ledger-name').value.trim();
+      const payer = document.getElementById('modal-ledger-payer').value || '-';
+      const day = document.getElementById('modal-ledger-day').value;
+      const cat = document.getElementById('modal-ledger-cat').value;
+      const usd = parseFloat(document.getElementById('modal-ledger-usd').value) || 0;
+      const tip = parseFloat(document.getElementById('modal-ledger-tip').value) || 0;
+
+      if (!name) { alert('지출 항목 또는 장소명을 입력해주세요.'); return; }
+      if (usd <= 0) { alert('금액을 입력해주세요.'); return; }
+
+      const newItem = {
+        id: 'cldgr_' + Date.now(),
+        name: name,
+        day: day,
+        cat: cat,
+        defaultUsd: usd,
+        isCustom: true
+      };
+
+      customLedgerItems.push(newItem);
+      localStorage.setItem('custom_ledger_items', JSON.stringify(customLedgerItems));
+      localStorage.setItem('_mod_custom_ledger_items', Date.now());
+      localStorage.setItem('ledger_usd_' + newItem.id, usd);
+      localStorage.setItem('ledger_tip_' + newItem.id, tip);
+      localStorage.setItem('ledger_payer_' + newItem.id, payer);
+      localStorage.setItem('ledger_y_' + newItem.id, 'true');
+
+      closeAddLedgerModal();
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
+    function deleteCustomLedgerItem(id) {
+      if (!confirm('이 가계부 항목을 삭제하시겠습니까?')) return;
+      customLedgerItems = customLedgerItems.filter(it => it.id !== id);
+      localStorage.setItem('custom_ledger_items', JSON.stringify(customLedgerItems));
+      localStorage.setItem('_mod_custom_ledger_items', Date.now());
+      renderLedgerTable();
+      triggerAutoSync();
+    }
 
     function renderLedgerTable() {
       const tbody = document.getElementById('ledger-table-body');
       const sumBaseEl = document.getElementById('ledger-sum-base');
       const sumKrwEl = document.getElementById('ledger-sum-krw');
+      const sumSEl = document.getElementById('ledger-sum-s');
+      const sumBEl = document.getElementById('ledger-sum-b');
       if (!tbody) return;
+
+      const catFilter = document.getElementById('ledger-filter-category')?.value || 'all';
+      const payerFilter = document.getElementById('ledger-filter-payer')?.value || 'all';
+      const sortOrder = document.getElementById('ledger-sort-order')?.value || 'default';
+
+      // 전체 항목 풀
+      // 주유 실비 기록 트래커 연동 항목 생성
+      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
+        const fid = f.id || ('fuel_' + idx);
+        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
+        return {
+          id: fid,
+          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
+          day: '실비',
+          cat: '주유비',
+          defaultUsd: parseFloat(f.total || 0),
+          isFuel: true,
+          fuelIdx: idx,
+          payer: payer
+        };
+      });
+
+      // 전체 항목 풀 (기본 + 지출추가 + 주유실비 연동)
+      const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
+
+      // 1. 탭 및 필터링
+      let filtered = allLedger.filter(item => {
+        if (ledgerActiveTab === 'days') {
+          if (ledgerActiveDaySub !== 'all' && item.day !== ledgerActiveDaySub) return false;
+        }
+        if (catFilter !== 'all' && item.cat !== catFilter) return false;
+        const currentPayer = localStorage.getItem('ledger_payer_' + item.id) || '-';
+        if (payerFilter !== 'all' && currentPayer !== payerFilter) return false;
+        return true;
+      });
+
+      // 2. 정렬 옵션
+      if (sortOrder === 'doneFirst') {
+        filtered.sort((a, b) => {
+          const aY = localStorage.getItem('ledger_y_' + a.id) === 'true' ? 1 : 0;
+          const bY = localStorage.getItem('ledger_y_' + b.id) === 'true' ? 1 : 0;
+          return bY - aY;
+        });
+      } else if (sortOrder === 'priceDesc') {
+        filtered.sort((a, b) => {
+          const aUsd = parseFloat(localStorage.getItem('ledger_usd_' + a.id) || a.defaultUsd || 0);
+          const bUsd = parseFloat(localStorage.getItem('ledger_usd_' + b.id) || b.defaultUsd || 0);
+          return bUsd - aUsd;
+        });
+      } else if (sortOrder === 'priceAsc') {
+        filtered.sort((a, b) => {
+          const aUsd = parseFloat(localStorage.getItem('ledger_usd_' + a.id) || a.defaultUsd || 0);
+          const bUsd = parseFloat(localStorage.getItem('ledger_usd_' + b.id) || b.defaultUsd || 0);
+          return aUsd - bUsd;
+        });
+      } else if (sortOrder === 'nameAsc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortOrder === 'payerOrder') {
+        const pOrder = { 'S': 1, 'B': 2, '-': 3 };
+        filtered.sort((a, b) => {
+          const pA = pOrder[localStorage.getItem('ledger_payer_' + a.id) || '-'] || 3;
+          const pB = pOrder[localStorage.getItem('ledger_payer_' + b.id) || '-'] || 3;
+          return pA - pB;
+        });
+      }
 
       let totalBase = 0;
       let totalKrw = 0;
+      let totalS = 0;
+      let totalB = 0;
 
-      tbody.innerHTML = ledgerItems.map((item) => {
+      tbody.innerHTML = filtered.map((item) => {
         const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
+        const payer = localStorage.getItem('ledger_payer_' + item.id) || '-';
         const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd);
-        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : 18);
+        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0));
         const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE);
 
         const tax = usd * 0.04712;
@@ -2060,6 +2217,8 @@
         if (isY) {
           totalBase += itemTotalUsd;
           totalKrw += itemTotalKrw;
+          if (payer === 'S') totalS += itemTotalKrw;
+          else if (payer === 'B') totalB += itemTotalKrw;
         }
 
         return `
@@ -2067,7 +2226,22 @@
             <td class="py-3 px-3 text-center">
               <input type="checkbox" ${isY ? 'checked' : ''} onchange="toggleLedgerY('${item.id}', this.checked)" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 cursor-pointer" />
             </td>
-            <td class="py-3 px-4 font-bold text-slate-900">${item.name}</td>
+            <td class="py-3 px-4 font-bold text-slate-900">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-mono">${item.day || '공통'}</span>
+                <span class="px-2 py-0.5 bg-pastel-blue text-pastel-blueText rounded text-[10px] font-bold">${item.cat}</span>
+                <span>${item.name}</span>
+                ${item.isCustom ? `<button onclick="deleteCustomLedgerItem('${item.id}')" class="text-slate-300 hover:text-rose-600 font-bold text-xs ml-1" title="삭제">✕</button>` : ''}
+              </div>
+            </td>
+            <!-- 결제자 선택 (- / S / B) -->
+            <td class="py-3 px-2 text-center whitespace-nowrap">
+              <select onchange="updateLedgerPayer('${item.id}', this.value)" class="p-1 px-1.5 rounded-lg border text-xs font-bold text-center transition cursor-pointer ${getPayerBadgeStyle(payer)}">
+                <option value="-" ${payer === '-' ? 'selected' : ''}>- (없음)</option>
+                <option value="S" ${payer === 'S' ? 'selected' : ''}>🌸 S</option>
+                <option value="B" ${payer === 'B' ? 'selected' : ''}>🚙 B</option>
+              </select>
+            </td>
             <td class="py-3 px-3"><input type="number" step="0.1" value="${usd}" oninput="updateLedgerVal('${item.id}', 'usd', this.value)" class="w-20 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
             <td class="py-3 px-3"><input type="number" step="1" value="${tip}" oninput="updateLedgerVal('${item.id}', 'tip', this.value)" class="w-16 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
             <td class="py-3 px-3"><input type="number" step="1" value="${rate}" oninput="updateLedgerVal('${item.id}', 'rate', this.value)" class="w-24 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
@@ -2078,35 +2252,39 @@
 
       if (sumBaseEl) sumBaseEl.innerText = '$' + totalBase.toFixed(2);
       if (sumKrwEl) sumKrwEl.innerText = '₩' + totalKrw.toLocaleString();
-    }
-
-    function toggleLedgerY(id, checked) {
-      const key = 'ledger_y_' + id;
-      localStorage.setItem(key, checked);
-      localStorage.setItem('_mod_' + key, Date.now());
-      renderLedgerTable();
-      triggerAutoSync();
-    }
-
-    function updateLedgerVal(id, field, val) {
-      const key = 'ledger_' + field + '_' + id;
-      localStorage.setItem(key, val);
-      localStorage.setItem('_mod_' + key, Date.now());
-      renderLedgerTable();
-      triggerAutoSync();
+      if (sumSEl) sumSEl.innerText = '₩' + totalS.toLocaleString();
+      if (sumBEl) sumBEl.innerText = '₩' + totalB.toLocaleString();
     }
 
     function exportLedgerCSV() {
-      let csv = '﻿수행여부,항목명,원가(USD),팁(%),적용환율(KRW),환산총액(KRW)\n';
-      ledgerItems.forEach(item => {
+      let csv = '\ufeff수행여부,항목명,결제자,일정,분류,원가(USD),팁(%),적용환율(KRW),환산총액(KRW)\n';
+      // 주유 실비 기록 트래커 연동 항목 생성
+      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
+        const fid = f.id || ('fuel_' + idx);
+        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
+        return {
+          id: fid,
+          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
+          day: '실비',
+          cat: '주유비',
+          defaultUsd: parseFloat(f.total || 0),
+          isFuel: true,
+          fuelIdx: idx,
+          payer: payer
+        };
+      });
+
+      // 전체 항목 풀 (기본 + 지출추가 + 주유실비 연동)
+      const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
+      allLedger.forEach(item => {
         const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
         if (!isY) return;
+        const payer = localStorage.getItem('ledger_payer_' + item.id) || '-';
         const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd);
-        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : 18);
+        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0));
         const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE);
         const total = Math.round((usd + (usd * 0.04712) + (usd * (tip / 100))) * rate);
-        csv += `Y,"${item.name}",${usd},${tip},${rate},${total}
-`;
+        csv += `Y,"${item.name}","${payer}","${item.day || '공통'}","${item.cat}",${usd},${tip},${rate},${total}\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -2243,6 +2421,11 @@
         timestamps: mergedTimestamps,
         customCosts: mergedCosts,
         fuelRecords: mergedFuel,
+        customVideos: (remote && remote.customVideos ? remote.customVideos : []).concat(customVideos.filter(v => !(remote && remote.customVideos ? remote.customVideos : []).some(rv => rv.id === v.id))),
+        customPlaces: (remote && remote.customPlaces ? remote.customPlaces : []).concat(customPlaces.filter(p => !(remote && remote.customPlaces ? remote.customPlaces : []).some(rp => rp.id === p.id))),
+        customPackingList: (remote && remote.customPackingList ? remote.customPackingList : []).concat(customPackingList.filter(p => !(remote && remote.customPackingList ? remote.customPackingList : []).some(rp => rp.id === p.id))),
+        customLedgerItems: (remote && remote.customLedgerItems ? remote.customLedgerItems : []).concat(customLedgerItems.filter(l => !(remote && remote.customLedgerItems ? remote.customLedgerItems : []).some(rl => rl.id === l.id))),
+        placeOverrides: Object.assign({}, (remote && remote.placeOverrides ? remote.placeOverrides : {}), placeOverrides),
         storage: mergedStorage
       };
     }
@@ -2285,7 +2468,7 @@
       const localKV = {};
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_'))) {
+        if (k && (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_'))) {
           localKV[k] = localStorage.getItem(k);
         }
       }
@@ -2407,10 +2590,33 @@
         localStorage.setItem('cost_etc', e);
       }
 
-      // 3. 체크 상태 및 가계부 복원
+      // 3. 커스텀 데이터 복원 (영상, 장소, 기타준비물, 가계부, 장소수정)
+      if (parsed.customVideos && Array.isArray(parsed.customVideos)) {
+        customVideos = parsed.customVideos;
+        localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
+        renderVideos();
+      }
+      if (parsed.customPlaces && Array.isArray(parsed.customPlaces)) {
+        customPlaces = parsed.customPlaces;
+        localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+      }
+      if (parsed.placeOverrides && typeof parsed.placeOverrides === 'object') {
+        placeOverrides = parsed.placeOverrides;
+        localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
+      }
+      if (parsed.customPackingList && Array.isArray(parsed.customPackingList)) {
+        customPackingList = parsed.customPackingList;
+        localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
+      }
+      if (parsed.customLedgerItems && Array.isArray(parsed.customLedgerItems)) {
+        customLedgerItems = parsed.customLedgerItems;
+        localStorage.setItem('custom_ledger_items', JSON.stringify(customLedgerItems));
+      }
+
+      // 4. 체크 상태 및 메모 복원
       if (parsed.storage && typeof parsed.storage === 'object') {
         for (let k in parsed.storage) {
-          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_')) {
+          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_')) {
             localStorage.setItem(k, parsed.storage[k]);
           }
         }
@@ -2423,6 +2629,8 @@
         renderWishlists();
         renderPackingList();
         renderBudgetChecklist();
+        renderTimeline();
+        renderMasterTable();
         renderLedgerTable();
       }
 
