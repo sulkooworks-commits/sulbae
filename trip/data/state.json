@@ -1,13 +1,31 @@
 {
-  "updatedAt": "2026-09-09T14:31:49.275Z",
-  "fuelRecords": [],
+  "updatedAt": "2026-09-10T04:40:52.121Z",
+  "timestamps": {
+    "pack_1_2": 0,
+    "rem_esta": 0,
+    "rem_insur": 0,
+    "pack_1_0": 0,
+    "rem_license": 0,
+    "cost_etc": 0,
+    "cost_hotel": 0,
+    "rem_kualoa": 0,
+    "cost_car": 0
+  },
   "customCosts": {
     "hotel": "3900",
     "car": "305",
     "etc": "130"
   },
+  "fuelRecords": [],
   "storage": {
     "pack_1_2": "false",
-    "pack_1_0": "false"
+    "pack_1_0": "false",
+    "rem_esta": "false",
+    "rem_insur": "false",
+    "rem_license": "true",
+    "cost_etc": "130",
+    "cost_hotel": "3900",
+    "rem_kualoa": "true",
+    "cost_car": "305"
   }
 }
