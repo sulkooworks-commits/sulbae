@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-09-10T04:41:34.742Z",
+  "updatedAt": "2026-09-10T04:41:49.878Z",
   "timestamps": {
     "pack_1_2": 0,
-    "rem_esta": 1789015292691,
+    "rem_esta": 1789015306565,
     "rem_insur": 0,
     "pack_1_0": 0,
-    "rem_license": 0,
+    "rem_license": 1789015307407,
     "cost_etc": 0,
     "cost_hotel": 0,
-    "rem_kualoa": 0,
+    "rem_kualoa": 1789015307894,
     "cost_car": 0
   },
   "customCosts": {
@@ -20,12 +20,12 @@
   "storage": {
     "pack_1_2": "false",
     "pack_1_0": "false",
-    "rem_esta": "true",
+    "rem_esta": "false",
     "rem_insur": "false",
-    "rem_license": "true",
+    "rem_license": "false",
     "cost_etc": "130",
     "cost_hotel": "3900",
-    "rem_kualoa": "true",
+    "rem_kualoa": "false",
     "cost_car": "305"
   }
 }
