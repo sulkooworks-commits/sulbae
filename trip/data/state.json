@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T06:19:01.957Z",
+  "updatedAt": "2026-09-10T06:19:12.837Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -14,7 +14,7 @@
     "ledger_payer_l_kualoa": 1789019881487,
     "ledger_usd_l_kualoa": 1789020449826,
     "rem_esim": 1789020912157,
-    "wish_do-ex-1": 1789021020343,
+    "wish_do-ex-1": 1789021150527,
     "rem_hanauma": 0,
     "rem_car_deposit": 0,
     "rem_luau": 0,
@@ -45,7 +45,7 @@
     "ledger_payer_l_kualoa": "-",
     "ledger_usd_l_kualoa": "1453.8",
     "rem_esim": "false",
-    "wish_do-ex-1": "false",
+    "wish_do-ex-1": "true",
     "rem_hanauma": "false",
     "rem_car_deposit": "false",
     "rem_luau": "false",
