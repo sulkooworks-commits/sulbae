@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T06:07:17.468Z",
+  "updatedAt": "2026-09-10T06:07:24.596Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -12,7 +12,7 @@
     "cost_car": 0,
     "ledger_y_l_kualoa": 1789019866979,
     "ledger_payer_l_kualoa": 1789019881487,
-    "ledger_usd_l_kualoa": 1789020435469
+    "ledger_usd_l_kualoa": 1789020442539
   },
   "customCosts": {
     "hotel": "3900",
@@ -37,6 +37,6 @@
     "cost_car": "305",
     "ledger_y_l_kualoa": "false",
     "ledger_payer_l_kualoa": "-",
-    "ledger_usd_l_kualoa": "144.9"
+    "ledger_usd_l_kualoa": "144.6"
   }
 }
