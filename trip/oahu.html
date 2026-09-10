@@ -560,15 +560,15 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
               <label class="block text-slate-500 font-bold mb-1">✈️🏨 항공+숙박 패키지 ($)</label>
-              <input type="number" id="cost-hotel" value="3900" oninput="saveCustomCosts()" class="w-full p-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-800">
+              <input type="text" inputmode="decimal" id="cost-hotel" value="3900" oninput="saveCustomCosts()" class="w-full p-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-800">
             </div>
             <div>
               <label class="block text-slate-500 font-bold mb-1">🚗 렌트비 7박 8일 ($)</label>
-              <input type="number" id="cost-car" value="305" oninput="saveCustomCosts()" class="w-full p-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-800">
+              <input type="text" inputmode="decimal" id="cost-car" value="305" oninput="saveCustomCosts()" class="w-full p-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-800">
             </div>
             <div>
               <label class="block text-slate-500 font-bold mb-1">📑 ESTA 비자/보험 ($)</label>
-              <input type="number" id="cost-etc" value="130" oninput="saveCustomCosts()" class="w-full p-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-800">
+              <input type="text" inputmode="decimal" id="cost-etc" value="130" oninput="saveCustomCosts()" class="w-full p-2 bg-white border border-slate-200 rounded-lg font-mono font-bold text-slate-800">
             </div>
           </div>
         </div>
@@ -582,8 +582,8 @@
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs">
             <input type="text" id="fuel-input-loc" placeholder="주유소 (예: 코스트코 Iwilei)" class="p-2 bg-white border border-amber-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500">
-            <input type="number" id="fuel-input-gallons" step="0.1" placeholder="주유량 (갤런)" class="p-2 bg-white border border-amber-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500">
-            <input type="number" id="fuel-input-total" step="0.01" placeholder="총 결제액 ($ USD)" class="p-2 bg-white border border-amber-200 rounded-lg font-bold text-amber-900 focus:outline-none focus:ring-1 focus:ring-amber-500">
+            <input type="text" inputmode="decimal" id="fuel-input-gallons" placeholder="주유량(gal, 예: 10.25)" class="p-2 bg-white border border-amber-200 rounded-lg font-mono focus:outline-none focus:ring-1 focus:ring-amber-500">
+            <input type="text" inputmode="decimal" id="fuel-input-total" placeholder="결제액($ USD, 예: 45.50)" class="p-2 bg-white border border-amber-200 rounded-lg font-mono font-bold text-amber-900 focus:outline-none focus:ring-1 focus:ring-amber-500">
             <select id="fuel-input-payer" class="p-2 bg-white border border-amber-200 rounded-lg font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500">
               <option value="-">결제자: - (미지정)</option>
               <option value="S">결제자: 🌸 S</option>
@@ -867,7 +867,7 @@
       <div class="p-6 space-y-4 text-sm">
         <div>
           <label class="block text-xs font-bold text-slate-400 mb-1">결제 달러 금액 ($ USD)</label>
-          <input type="number" id="calc-usd-input" value="50" oninput="runCalculator()" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-bold text-slate-900 text-base">
+          <input type="text" inputmode="decimal" id="calc-usd-input" value="50.00" oninput="runCalculator()" placeholder="0.00" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-bold text-slate-900 text-base font-mono">
           <div class="grid grid-cols-4 gap-1.5 mt-2 text-xs font-bold">
             <button type="button" onclick="setCalcUsd(30)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">+$30</button>
             <button type="button" onclick="setCalcUsd(60)" class="py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">+$60</button>
@@ -1219,7 +1219,7 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-600 mb-1">원가 ($ USD)</label>
-            <input type="number" step="0.1" id="modal-ledger-usd" value="20" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold">
+            <input type="text" inputmode="decimal" id="modal-ledger-usd" value="20.00" placeholder="0.00" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold text-slate-900">
           </div>
           <div>
             <label class="block font-bold text-slate-600 mb-1">팁 (%)</label>
@@ -1493,7 +1493,7 @@
       const inp = document.getElementById('calc-usd-input');
       if (inp) {
         const current = parseFloat(inp.value || 0);
-        inp.value = (current + val).toFixed(0);
+        inp.value = (current + val).toFixed(2);
         runCalculator();
       }
     }
@@ -3099,7 +3099,7 @@
                 <option value="B" ${payer === 'B' ? 'selected' : ''}>🚙 B</option>
               </select>
             </td>
-            <td class="py-3 px-3"><input type="number" step="0.1" value="${usd}" oninput="updateLedgerVal('${item.id}', 'usd', this.value)" class="w-20 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
+            <td class="py-3 px-3"><input type="text" inputmode="decimal" value="${typeof usd === 'number' ? usd.toFixed(2) : usd}" oninput="updateLedgerVal('${item.id}', 'usd', this.value)" class="w-20 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold text-slate-900 text-center"></td>
             <td class="py-3 px-3"><input type="number" step="1" value="${tip}" oninput="updateLedgerVal('${item.id}', 'tip', this.value)" class="w-16 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
             <td class="py-3 px-3"><input type="number" step="1" value="${rate}" oninput="updateLedgerVal('${item.id}', 'rate', this.value)" class="w-24 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
             <td class="py-3 px-4 text-right font-mono font-bold text-teal-700">₩${itemTotalKrw.toLocaleString()}</td>
