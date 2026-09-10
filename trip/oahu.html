@@ -47,16 +47,13 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
     .video-card-ratio { position: relative; width: 100%; padding-bottom: 56.25%; }
     .video-card-ratio iframe { position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 1rem; }
-    /* 헤더 완벽 스티키 고정 및 스무스 슬라이드 트랜지션 */
-    #main-header {
-      position: -webkit-sticky !important;
+        #main-header {
       position: sticky !important;
       top: 0 !important;
       z-index: 40 !important;
-      will-change: transform;
     }
     #header-top-section {
-      transition: max-height 0.26s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+      transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.2s ease, padding 0.2s ease;
       overflow: hidden;
     }
     .top-collapsed, .mobile-collapsed {
@@ -76,6 +73,13 @@
     /* 메뉴바 무조건 최상단 스티키 밀착 보정 */
     #header-top-section.top-collapsed + #header-nav-bar,
     #header-top-section.mobile-collapsed + #header-nav-bar {
+      border-top: none !important;
+      margin-top: 0 !important;
+      padding-top: 2px !important;
+      padding-bottom: 4px !important;
+    }
+    /* 모바일 헤더 스티키 최적화: 상단 접힘 시 메뉴바 최상단 밀착 */
+    #header-top-section.top-collapsed + #header-nav-bar {
       border-top: none !important;
       margin-top: 0 !important;
       padding-top: 2px !important;
@@ -165,6 +169,7 @@
             <span>✈️ 10/9(금) D-Day 스마트 일정</span>
           </div>
         </div>
+      </div>
       </div>
 
       <nav id="header-nav-bar" class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 pt-1 border-t border-slate-100 text-xs font-semibold">
@@ -492,6 +497,9 @@
             <button type="button" onclick="openPlaceModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
               <span class="text-sm font-black leading-none">+</span> <span>장소 등록</span>
             </button>
+            <button type="button" onclick="pushStateToGitHub(false)" class="px-2.5 py-1.5 bg-surface-muted hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold rounded-xl transition flex items-center gap-1 shrink-0" title="표 및 장소 변경내역 즉시 클라우드 동기화">
+              <span>☁️</span> <span class="hidden sm:inline">즉시 동기화</span>
+            </button>
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-xs">
@@ -727,7 +735,7 @@
               <button type="button" id="ledger-tab-days" onclick="setLedgerTab('days')" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">일정별 (Day 1~8)</button>
             </div>
 
-            <!-- 필터 (분류) & 정렬 옵션 -->
+            <!-- 필터 (분류, 결제자) & 정렬 옵션 -->
             <div class="flex items-center gap-2 flex-wrap text-xs">
               <div class="flex items-center gap-1.5">
                 <span class="text-slate-400 font-bold">🏷️ 분류:</span>
@@ -744,6 +752,15 @@
                 </select>
               </div>
               <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 font-bold">💳 결제자:</span>
+                <select id="ledger-filter-payer" onchange="renderLedgerTable()" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:ring-1 focus:ring-teal-500">
+                  <option value="all">전체 (-/S/B)</option>
+                  <option value="S">🌸 S 결제만</option>
+                  <option value="B">🚙 B 결제만</option>
+                  <option value="-">- (미지정/없음)</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-1.5">
                 <span class="text-slate-400 font-bold">↕️ 정렬:</span>
                 <select id="ledger-sort-order" onchange="renderLedgerTable()" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:ring-1 focus:ring-teal-500">
                   <option value="default">기본 순</option>
@@ -751,12 +768,13 @@
                   <option value="priceDesc">금액 높은 순</option>
                   <option value="priceAsc">금액 낮은 순</option>
                   <option value="nameAsc">장소명 순</option>
+                  <option value="payerOrder">결제자 순 (S ➔ B ➔ -)</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <!-- 일정별 세부 Day 탭 바 (일정별 탭 선택 시 노출) -->
+          <!-- 일정별 세부 Day 탭 바 -->
           <div id="ledger-day-subtabs" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-bold border-t border-slate-200/60 pt-2.5 hidden custom-scrollbar">
             <button type="button" onclick="setLedgerDaySub('all')" class="ledger-sub-btn px-3 py-1 bg-teal-600 text-white rounded-lg transition shrink-0" data-day="all">Day 전체</button>
             <button type="button" onclick="setLedgerDaySub('Day 1')" class="ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0" data-day="Day 1">Day 1</button>
@@ -772,10 +790,27 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 space-y-2">
-            <h3 class="font-bold text-xs text-slate-700">📊 현장 지출 종합 요약</h3>
-            <div class="grid grid-cols-2 gap-2 text-xs pt-1">
-              <div class="bg-white p-3 rounded-xl border border-slate-100"><span class="text-slate-400">총 결제 원가 합계</span><div class="text-lg font-black text-slate-900 mt-0.5" id="ledger-sum-base">$0.00</div></div>
-              <div class="bg-white p-3 rounded-xl border border-slate-100"><span class="text-slate-400">실제 원화 환산 총액</span><div class="text-lg font-black text-teal-600 mt-0.5" id="ledger-sum-krw">₩0</div></div>
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-xs text-slate-700">📊 현장 지출 종합 요약</h3>
+              <span class="text-[10px] text-slate-400 font-bold">결제자: S(신부) / B(신랑)</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
+              <div class="bg-white p-3 rounded-xl border border-slate-100">
+                <span class="text-slate-400">총 결제 원가</span>
+                <div class="text-base sm:text-lg font-black text-slate-900 mt-0.5" id="ledger-sum-base">$0.00</div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-slate-100">
+                <span class="text-slate-400">원화 환산 총액</span>
+                <div class="text-base sm:text-lg font-black text-teal-600 mt-0.5" id="ledger-sum-krw">₩0</div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-rose-100/80 bg-rose-50/20">
+                <span class="text-rose-600 font-bold">🌸 S 결제 합계</span>
+                <div class="text-base sm:text-lg font-black text-rose-700 mt-0.5" id="ledger-sum-s">₩0</div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-blue-100/80 bg-blue-50/20">
+                <span class="text-blue-600 font-bold">🚙 B 결제 합계</span>
+                <div class="text-base sm:text-lg font-black text-blue-700 mt-0.5" id="ledger-sum-b">₩0</div>
+              </div>
             </div>
           </div>
           <div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 space-y-2">
@@ -792,8 +827,9 @@
             <table class="w-full text-left border-collapse text-xs">
               <thead>
                 <tr class="bg-surface-muted border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
-                  <th class="py-3 px-3">수행(Y/N)</th>
+                  <th class="py-3 px-3 text-center">수행(Y/N)</th>
                   <th class="py-3 px-4">항목 및 장소명</th>
+                  <th class="py-3 px-2 text-center">결제자 (-/S/B)</th>
                   <th class="py-3 px-3">원가 ($ USD)</th>
                   <th class="py-3 px-3">팁 (%)</th>
                   <th class="py-3 px-3">결제 환율 (₩)</th>
@@ -892,11 +928,6 @@
         </button>
         <button onclick="fetchStateFromGitHub()" class="flex-1 py-2.5 bg-surface-muted hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition border border-slate-200">
           ⬇️ 깃허브에서 불러오기 (Fetch)
-        </button>
-      </div>
-      <div class="pt-1">
-        <button type="button" onclick="copyMobileSyncLink()" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-2xs">
-          <span>📱</span> 모바일 연동용 링크 복사 (원클릭 토큰 등록)
         </button>
       </div>
       <div id="sync-status" class="text-center text-xs font-bold"></div>
@@ -1002,12 +1033,12 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="block font-bold text-slate-600 mb-1">유튜브 링크 / 영상 URL</label>
-          <input type="text" id="modal-video-url" oninput="previewVideoId(this.value)" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://youtu.be/..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
+          <input type="text" id="modal-video-url" oninput="previewVideoId(this.value)" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://youtu.be/..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-500">
           <p id="video-url-hint" class="text-[10px] text-slate-400 mt-1">유튜브 주소를 입력하면 비디오 ID가 자동으로 추출됩니다.</p>
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">영상 제목</label>
-          <input type="text" id="modal-video-title" placeholder="영상 제목 (예: 하와이 셀프 주유 완벽 가이드)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
+          <input type="text" id="modal-video-title" placeholder="영상 제목 (예: 하와이 셀프 주유 완벽 가이드)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-500">
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">구분 (카테고리)</label>
@@ -1028,7 +1059,7 @@
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">상세 설명</label>
-          <textarea id="modal-video-desc" rows="2" placeholder="영상 요약 및 현장 활용 팁 입력..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl resize-none"></textarea>
+          <textarea id="modal-video-desc" rows="2" placeholder="영상 요약 및 현장 활용 팁 입력..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-1 focus:ring-red-500"></textarea>
         </div>
       </div>
 
@@ -1051,11 +1082,16 @@
       </div>
 
       <div class="space-y-3 text-xs overflow-y-auto custom-scrollbar flex-1 pr-1">
-        <!-- 1. 구글 지도 링크 입력 및 자동 추출 -->
+        <!-- 구글 지도 링크 입력 및 [추가 / 분석] 버튼 -->
         <div class="p-3 bg-brand-50/50 border border-brand-100 rounded-2xl space-y-1.5">
-          <label class="block font-bold text-brand-900">🔗 구글 지도 링크 입력 (장소명·권역 자동 감지)</label>
-          <input type="text" id="modal-place-gmap" oninput="autoParseGoogleMapLink(this.value)" placeholder="구글맵 링크 붙여넣기 (예: https://maps.app.goo.gl/... 또는 검색어)" class="w-full p-2 bg-white border border-brand-200 rounded-xl text-xs">
-          <p class="text-[10px] text-brand-700">구글맵 링크를 넣으면 장소명과 권역이 자동으로 추천되며, 직접 수정도 가능합니다.</p>
+          <label class="block font-bold text-brand-900">🔗 구글 지도 링크 / 검색어 입력</label>
+          <div class="flex gap-1.5">
+            <input type="text" id="modal-place-gmap" oninput="autoParseGoogleMapLink(this.value)" placeholder="구글맵 링크 붙여넣기 (예: https://maps.app.goo.gl/... 또는 장소 검색어)" class="flex-1 p-2 bg-white border border-brand-200 rounded-xl text-xs focus:ring-1 focus:ring-brand-500 focus:outline-none">
+            <button type="button" onclick="manualParseGmap()" class="px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition shrink-0 flex items-center gap-1" title="구글맵 정보 분석하여 장소명·권역 자동 채우기">
+              <span>추가 / 분석</span>
+            </button>
+          </div>
+          <p class="text-[10px] text-brand-700">구글맵 링크를 넣고 <strong>[추가 / 분석]</strong>을 누르면 장소명과 권역이 자동으로 입력되며, 필요시 수동 수정도 가능합니다.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1120,7 +1156,9 @@
       <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
         <button id="modal-place-delete-btn" type="button" onclick="deleteCurrentPlace()" class="py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl text-xs transition hidden">삭제</button>
         <button type="button" onclick="closePlaceModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
-        <button type="button" onclick="savePlaceModal()" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition">저장 완료</button>
+        <button type="button" onclick="savePlaceModal(true)" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5" title="저장 후 GitHub에 즉시 동기화">
+          <span>💾</span> <span>저장 & 즉시 동기화</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1140,6 +1178,14 @@
         <div>
           <label class="block font-bold text-slate-600 mb-1">항목 / 장소명</label>
           <input type="text" id="modal-ledger-name" placeholder="예: ABC마트 간식 & 음료" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-bold text-slate-900">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">결제자 선택 (-/S/B)</label>
+          <select id="modal-ledger-payer" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-bold">
+            <option value="-">- (없음 / 미지정)</option>
+            <option value="S">🌸 S (신부) 결제</option>
+            <option value="B">🚙 B (신랑) 결제</option>
+          </select>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -1164,6 +1210,7 @@
               <option value="액티비티">🏄 액티비티</option>
               <option value="웰니스">🧘 웰니스</option>
               <option value="명소">🏞️ 관광·명소</option>
+              <option value="주유비">⛽ 주유비</option>
               <option value="기타">기타 / 경비</option>
             </select>
           </div>
@@ -1198,9 +1245,8 @@
 
   </div>
 
-  <!-- 대시보드 스크립트 (모든 미구현 함수 완성 및 타이밍 안정화) -->
+  <!-- 대시보드 스크립트: 완벽한 데이터 연동 & 양방향 클라우드 동기화 엔진 -->
   <script>
-
     const SKEY = "ckUnlockSession";
     const SESSION_MS = 30 * 60 * 1000;
     const AUTH_CONFIG = {
@@ -1242,7 +1288,6 @@
         const derivedB64 = btoa(binary);
 
         if (derivedB64 === AUTH_CONFIG.hash) {
-          // 인증 성공 -> 30분 세션 등록
           localStorage.setItem(SKEY, JSON.stringify({ exp: Date.now() + SESSION_MS }));
           unlockDashboardUI();
         } else {
@@ -1282,19 +1327,30 @@
       return false;
     }
 
+    function lockScreen() {
+      localStorage.removeItem(SKEY);
+      location.reload();
+    }
+
+    // 전역 상태 변수군
     let EXCHANGE_RATE = 1385;
     let currentCurrency = 'USD';
     let activeTip = 18;
     let fuelRecords = JSON.parse(localStorage.getItem('fuel_records') || '[]');
+    let customVideos = JSON.parse(localStorage.getItem('custom_videos_list') || '[]');
+    let placeOverrides = JSON.parse(localStorage.getItem('place_overrides') || '{}');
+    let customPlaces = JSON.parse(localStorage.getItem('custom_places_list') || '[]');
+    let customPackingList = JSON.parse(localStorage.getItem('custom_packing_list') || '[]');
+    let customLedgerItems = JSON.parse(localStorage.getItem('custom_ledger_items') || '[]');
+    let currentEditingPlaceId = null;
+
+    let ledgerActiveTab = 'all'; // 'all' 또는 'days'
+    let ledgerActiveDaySub = 'all'; // 'all', 'Day 1' ~ 'Day 8'
+
     let leafletMapInstance = null;
     let mapMarkers = [];
     let regionChartInstance = null;
     let categoryChartInstance = null;
-
-    function lockScreen() {
-      localStorage.removeItem("ckUnlockSession");
-      location.reload();
-    }
 
     function scrollToSec(id) {
       const el = document.getElementById(id);
@@ -1305,7 +1361,7 @@
       }
     }
 
-    
+    // 헤더 및 모달 토글 함수
     function toggleSearchOverlay(show) {
       const overlay = document.getElementById('header-search-overlay');
       const input = document.getElementById('global-search-input');
@@ -1378,6 +1434,23 @@
       else m.classList.add('hidden');
     }
 
+    function toggleRemindersCollapse() {
+      const grid = document.getElementById('reminders-grid');
+      const icon = document.getElementById('remind-toggle-icon');
+      const text = document.getElementById('remind-toggle-text');
+      if (!grid) return;
+      const isHidden = grid.classList.contains('hidden');
+      if (isHidden) {
+        grid.classList.remove('hidden');
+        if (icon) icon.innerText = '▲';
+        if (text) text.innerText = '접기';
+      } else {
+        grid.classList.add('hidden');
+        if (icon) icon.innerText = '▼';
+        if (text) text.innerText = '펼치기';
+      }
+    }
+
     function updateClocks() {
       const now = new Date();
       const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -1440,20 +1513,25 @@
     }
 
     function runCalculator() {
-      const base = parseFloat(document.getElementById('calc-usd-input').value) || 0;
+      const base = parseFloat(document.getElementById('calc-usd-input')?.value || 0);
       const tax = base * 0.04712;
       const tip = base * (activeTip / 100);
       const total = base + tax + tip;
       const krw = Math.round(total * EXCHANGE_RATE);
-      document.getElementById('calc-res-base').innerText = '$' + base.toFixed(2);
-      document.getElementById('calc-res-tax').innerText = '+$' + tax.toFixed(2);
-      document.getElementById('calc-res-tip').innerText = '+$' + tip.toFixed(2);
-      document.getElementById('calc-res-total').innerText = '$' + total.toFixed(2);
-      document.getElementById('calc-res-krw').innerText = krw.toLocaleString();
+      const bEl = document.getElementById('calc-res-base');
+      const txEl = document.getElementById('calc-res-tax');
+      const tpEl = document.getElementById('calc-res-tip');
+      const ttEl = document.getElementById('calc-res-total');
+      const kwEl = document.getElementById('calc-res-krw');
+      if (bEl) bEl.innerText = '$' + base.toFixed(2);
+      if (txEl) txEl.innerText = '+$' + tax.toFixed(2);
+      if (tpEl) tpEl.innerText = '+$' + tip.toFixed(2);
+      if (ttEl) ttEl.innerText = '$' + total.toFixed(2);
+      if (kwEl) kwEl.innerText = krw.toLocaleString();
     }
 
     function globalTextSearch(keyword) {
-      const q = keyword.toLowerCase().trim();
+      const q = (keyword || '').toLowerCase().trim();
       const sections = document.querySelectorAll('main > section');
       let firstMatch = null;
       sections.forEach(sec => {
@@ -1484,14 +1562,14 @@
       }
     }
 
-    // 웹/모바일 헤더 스티키: 하향 스크롤 시 탭 메뉴만 최상단 고정, 상향 스크롤 시 헤더 전체 슬라이드 노출
-    let lastScrollY = window.scrollY;
+    // 웹 & 모바일 헤더 스티키 스크롤 제어
+    let lastScrollY = window.scrollY || 0;
     let isTicking = false;
 
     window.addEventListener('scroll', function() {
       if (!isTicking) {
         window.requestAnimationFrame(function() {
-          const currentScrollY = window.scrollY;
+          const currentScrollY = window.scrollY || 0;
           const topSec = document.getElementById('header-top-section');
           const searchOverlay = document.getElementById('header-search-overlay');
           const isSearchOpen = searchOverlay && !searchOverlay.classList.contains('hidden');
@@ -1503,10 +1581,10 @@
               topSec.classList.add('top-expanded', 'mobile-expanded');
             } else {
               const diff = currentScrollY - lastScrollY;
-              // 미세 스크롤 지터 방지 (6px 이상 유의미한 변위 시에만 반응)
+              // 미세 스크롤 지터 방지 (6px 이상 변위 시에만 반응)
               if (Math.abs(diff) >= 6) {
                 if (diff > 0) {
-                  // 하향 스크롤 (Scroll Down): 상단 영역 접고 탭메뉴만 최상단 무조건 스티키 고정
+                  // 하향 스크롤 (Scroll Down): 상단 바 접고 가로 탭 메뉴만 최상단 고정
                   topSec.classList.remove('top-expanded', 'mobile-expanded');
                   topSec.classList.add('top-collapsed', 'mobile-collapsed');
                 } else {
@@ -1524,6 +1602,7 @@
       }
     }, { passive: true });
 
+    // 기본 여행 데이터 정의
     const OAHU_DATA = {
       variableBudgets: [
         { id: "b_food", title: "🍽️ 2인 7박 8일 식음료 & 카페", usd: 800, checked: true },
@@ -1712,11 +1791,6 @@
       { id: "p43", name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
     ];
 
-    // 사용자 추가 및 수정 저장소
-    let placeOverrides = JSON.parse(localStorage.getItem('place_overrides') || '{}');
-    let customPlaces = JSON.parse(localStorage.getItem('custom_places_list') || '[]');
-    let currentEditingPlaceId = null;
-
     function getAllPlaces() {
       const list = placesData.map(p => {
         const ovr = placeOverrides[p.id] || placeOverrides[p.name];
@@ -1736,27 +1810,73 @@
       { day: "Day 8 (10/16 금)", title: "체크아웃 & 귀국 출국", dist: "15 km", spots: "2개소", items: ["발코니 모닝 스트레칭 & 와이키키 뷰 작별", "11:00 하얏트 리젠시 체크아웃", "코스트코 Iwilei 최저가 Full 주유", "20:30 호놀룰루 공항 렌터카 반납 후 KE8054 탑승"] }
     ];
 
-    
-    function toggleRemindersCollapse() {
+    const baseLedgerItems = [
+      { id: 'l_kualoa', name: '쿠알로아 랜치 UTV 랩터 2인', day: 'Day 4', cat: '액티비티', defaultUsd: 145 },
+      { id: 'l_sup', name: '카일루아 비치 SUP 패들보드 2인', day: 'Day 2', cat: '웰니스', defaultUsd: 65 },
+      { id: 'l_hanauma', name: '하나우마 베이 입장료 2인', day: 'Day 3', cat: '액티비티', defaultUsd: 50 },
+      { id: 'l_luau', name: '코올리나 파라다이스 루아우 디너 2인', day: 'Day 7', cat: '액티비티', defaultUsd: 160 },
+      { id: 'l_maguro', name: '마구로 스팟 생참치 포케', day: 'Day 1', cat: '미식', defaultUsd: 30 },
+      { id: 'l_giovanni', name: '지오반니 새우 트럭 갈릭 스캠피', day: 'Day 5', cat: '미식', defaultUsd: 17 },
+      { id: 'l_leonards', name: '레오나즈 베이커리 말라사다 도넛', day: 'Day 2', cat: '미식', defaultUsd: 10 },
+      { id: 'l_littlejoes', name: '리틀 조스 프라임 립 스테이크 만찬', day: 'Day 3', cat: '미식', defaultUsd: 120 },
+      { id: 'l_cheesecake', name: '치즈케이크 팩토리 테라스 디너', day: 'Day 1', cat: '미식', defaultUsd: 70 },
+      { id: 'l_iyasume', name: '이야스메 무스비 점심 포장', day: 'Day 1', cat: '미식', defaultUsd: 15 },
+      { id: 'l_islandbrew', name: '아일랜드 브루 마리나 뷰 코나 커피', day: 'Day 2', cat: '미식', defaultUsd: 20 },
+      { id: 'l_liliha', name: '릴리하 베이커리 로코모코 & 코코퍼프', day: 'Day 4', cat: '미식', defaultUsd: 35 },
+      { id: 'l_matsumoto', name: '마츠모토 무지개 쉐이브 아이스', day: 'Day 5', cat: '미식', defaultUsd: 12 },
+      { id: 'l_haleiwa_bowls', name: '헤일레바 볼스 유기농 아사이볼', day: 'Day 5', cat: '미식', defaultUsd: 25 },
+      { id: 'l_honolulu_cookie', name: '호놀룰루 쿠키 파인애플 틴 쇼핑', day: 'Day 7', cat: '쇼핑', defaultUsd: 80 },
+      { id: 'l_pataloha', name: '파타고니아 호놀룰루 파탈로하 티셔츠', day: 'Day 7', cat: '쇼핑', defaultUsd: 90 },
+      { id: 'l_donki', name: '돈키호테 호놀룰루 스낵 & 마트', day: 'Day 3', cat: '쇼핑', defaultUsd: 50 },
+      { id: 'l_costco_fuel', name: '코스트코 주유소 반납 전 Full 주유', day: 'Day 8', cat: '기타', defaultUsd: 45 }
+    ];
+
+    // 1. 리마인드 렌더링 & 토글
+    function renderReminders() {
       const grid = document.getElementById('reminders-grid');
-      const icon = document.getElementById('remind-toggle-icon');
-      const text = document.getElementById('remind-toggle-text');
+      const badge = document.getElementById('remind-progress-badge');
       if (!grid) return;
-      const isHidden = grid.classList.contains('hidden');
-      if (isHidden) {
-        grid.classList.remove('hidden');
-        if (icon) icon.innerText = '▲';
-        if (text) text.innerText = '접기';
-      } else {
-        grid.classList.add('hidden');
-        if (icon) icon.innerText = '▼';
-        if (text) text.innerText = '펼치기';
-      }
+
+      let total = 0;
+      let completed = 0;
+
+      grid.innerHTML = OAHU_DATA.reminders.map(cat => {
+        const itemHtml = cat.items.map(item => {
+          total++;
+          const isDone = localStorage.getItem(item.id) === 'true';
+          if (isDone) completed++;
+
+          return `
+            <label class="flex items-start gap-2.5 p-2 bg-surface-muted hover:bg-slate-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleReminder('${item.id}', this.checked)" class="w-4 h-4 mt-0.5 rounded text-amber-600 focus:ring-amber-500 cursor-pointer">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-slate-800 ${isDone ? 'line-through text-slate-400' : ''}">${item.text}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">${item.sub}</div>
+              </div>
+            </label>
+          `;
+        }).join('');
+
+        return `
+          <div class="p-4 bg-amber-50/40 rounded-2xl border border-amber-100 space-y-2">
+            <h3 class="font-bold text-xs text-amber-900 flex items-center gap-1.5">${cat.cat}</h3>
+            <div class="space-y-1.5">${itemHtml}</div>
+          </div>
+        `;
+      }).join('');
+
+      if (badge) badge.innerText = `${completed} / ${total} 완료`;
+      updateStatProgress();
     }
 
+    function toggleReminder(id, checked) {
+      localStorage.setItem(id, checked);
+      localStorage.setItem('_mod_' + id, Date.now());
+      renderReminders();
+      triggerAutoSync();
+    }
 
-    let customVideos = JSON.parse(localStorage.getItem('custom_videos_list') || '[]');
-
+    // 2. 유튜브 영상 세션 로직
     function extractYouTubeId(url) {
       if (!url) return '';
       const u = url.trim();
@@ -1827,7 +1947,7 @@
         id: 'cvid_' + Date.now(),
         title: title,
         cat: cat,
-        desc: desc || '현장 맞춤 여행 꿀팁 영상',
+        desc: desc || '실전 여행 꿀팁 영상',
         ytid: ytid,
         isCustom: true
       };
@@ -1849,7 +1969,180 @@
       triggerAutoSync();
     }
 
+    function renderVideos() {
+      const carousel = document.getElementById('video-cards-carousel');
+      const searchInput = document.getElementById('video-search-input');
+      const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+      if (!carousel) return;
 
+      const allVideos = (OAHU_DATA.videos || []).concat(customVideos || []);
+
+      const filtered = allVideos.filter(v => {
+        if (!query) return true;
+        return v.title.toLowerCase().includes(query) || v.cat.toLowerCase().includes(query) || v.desc.toLowerCase().includes(query);
+      });
+
+      carousel.innerHTML = filtered.map(v => `
+        <div class="w-80 shrink-0 bg-surface-muted rounded-2xl border border-slate-200 overflow-hidden shadow-xs space-y-2 p-3 snap-center relative group">
+          <div class="video-card-ratio">
+            <iframe src="https://www.youtube.com/embed/${v.ytid}" title="${v.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="space-y-1 pt-1">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-md">${v.cat}</span>
+              <div class="flex items-center gap-1.5">
+                ${v.isCustom ? `<button onclick="deleteCustomVideo('${v.id}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold px-1.5 py-0.5 bg-rose-50 rounded">삭제</button>` : ''}
+                <a href="https://www.youtube.com/watch?v=${v.ytid}" target="_blank" class="text-[10px] text-slate-400 hover:text-brand-600">YouTube ↗</a>
+              </div>
+            </div>
+            <h4 class="font-bold text-xs text-slate-900 leading-tight">${v.title}</h4>
+            <p class="text-[11px] text-slate-500 leading-relaxed">${v.desc}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterVideos() {
+      renderVideos();
+    }
+
+    // 3. 일자별 상세 타임라인 및 메모 영역
+    function saveDayMemo(dayKey) {
+      const input = document.getElementById('memo-input-' + dayKey);
+      if (!input) return;
+      const val = input.value;
+      localStorage.setItem('memo_' + dayKey, val);
+      localStorage.setItem('_mod_memo_' + dayKey, Date.now());
+      
+      const msg = document.getElementById('memo-saved-msg-' + dayKey);
+      if (msg) {
+        msg.classList.remove('opacity-0');
+        setTimeout(() => { msg.classList.add('opacity-0'); }, 2000);
+      }
+      triggerAutoSync();
+    }
+
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      if (!container) return;
+
+      container.innerHTML = timelineData.map(d => {
+        const dayKey = d.day.split(' ')[0];
+        const savedMemo = localStorage.getItem('memo_' + dayKey) || '';
+
+        return `
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-soft space-y-3 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 bg-brand-50 text-brand-700 text-xs font-bold rounded-full border border-brand-100">${d.day}</span>
+                <span class="text-[11px] font-mono text-slate-400 font-bold">🚗 ${d.dist}</span>
+              </div>
+              <h3 class="font-bold text-sm text-slate-900">${d.title}</h3>
+              <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed list-disc list-inside pt-1">
+                ${d.items.map(it => `<li>${it}</li>`).join('')}
+              </ul>
+            </div>
+
+            <!-- 각 일자별 박스 내부 하단 메모 영역 (등록/수정/저장) -->
+            <div class="pt-3 border-t border-slate-100 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+                  <span>📝</span> <span>${dayKey} 메모 & 특이사항</span>
+                </span>
+                <span id="memo-saved-msg-${dayKey}" class="text-[10px] text-emerald-600 font-bold transition duration-300 opacity-0">✓ 저장됨</span>
+              </div>
+              <textarea id="memo-input-${dayKey}" rows="2" placeholder="일정 특이사항, 예약번호, 메모 입력..." class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:ring-1 focus:ring-brand-500 focus:outline-none transition resize-none">${savedMemo}</textarea>
+              <div class="flex items-center justify-between pt-0.5">
+                <span class="text-[11px] text-slate-400">주요 동선 ${d.spots}</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="saveDayMemo('${dayKey}')" class="px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold rounded-lg border border-brand-200/80 transition flex items-center gap-1 shadow-2xs">
+                    <span>💾</span> 저장
+                  </button>
+                  <button type="button" onclick="filterTableDay('${dayKey}')" class="text-brand-600 hover:underline font-bold text-xs">일정표 →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterTableDay(dayStr) {
+      const sel = document.getElementById('filter-day');
+      if (sel) {
+        sel.value = dayStr;
+        renderMasterTable();
+        scrollToSec('sec-table');
+      }
+    }
+
+    // 4. 위시리스트 렌더링
+    function renderWishlists() {
+      renderWishlistGroup('must-do-extreme-list', mustDoExtremeItems);
+      renderWishlistGroup('must-do-wellness-list', mustDoWellnessItems);
+      renderWishlistGroup('must-eat-list', mustEatItems);
+      renderWishlistGroup('must-buy-list', mustBuyItems);
+      updateStatProgress();
+    }
+
+    function renderWishlistGroup(containerId, items) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      el.innerHTML = items.map(item => {
+        const isDone = localStorage.getItem('wish_' + item.id) === 'true';
+        return `
+          <div class="flex items-center justify-between p-3 bg-surface-muted hover:bg-slate-100 rounded-2xl border border-slate-100 transition group"
+               onmouseenter="showTooltip(event, '${item.img}', '${item.title.replace(/'/g, "\'")}', '${item.desc.replace(/'/g, "\'")}', '${item.tag}')"
+               onmousemove="moveTooltip(event)"
+               onmouseleave="hideTooltip()">
+            <div class="flex items-center gap-3 min-w-0">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleWishItem('${item.id}', this.checked)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0">
+              <div class="truncate">
+                <div class="font-bold text-xs text-slate-900 group-hover:text-brand-600 transition truncate ${isDone ? 'line-through text-slate-400' : ''}">${item.title}</div>
+                <div class="text-[11px] text-slate-400 truncate">${item.sub}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-lg shrink-0 ml-2 shadow-2xs">${item.tag}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleWishItem(id, checked) {
+      const key = 'wish_' + id;
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
+      renderWishlists();
+      triggerAutoSync();
+    }
+
+    function showTooltip(e, img, title, desc, tag) {
+      const tip = document.getElementById('hover-tooltip');
+      if (!tip) return;
+      document.getElementById('tooltip-img').src = img;
+      document.getElementById('tooltip-badge').innerText = tag;
+      document.getElementById('tooltip-title').innerText = title;
+      document.getElementById('tooltip-desc').innerText = desc;
+      tip.style.display = 'block';
+      moveTooltip(e);
+    }
+
+    function moveTooltip(e) {
+      const tip = document.getElementById('hover-tooltip');
+      if (!tip || tip.style.display === 'none') return;
+      const x = Math.min(window.innerWidth - 275, e.clientX + 15);
+      const y = Math.min(window.innerHeight - 250, e.clientY + 15);
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    }
+
+    function hideTooltip() {
+      const tip = document.getElementById('hover-tooltip');
+      if (tip) tip.style.display = 'none';
+    }
+
+    // 5. 전체 일정 및 장소 종합 표 & 모달 로직
     function autoParseGoogleMapLink(val) {
       if (!val) return;
       let query = '';
@@ -1872,7 +2165,6 @@
           nameInput.value = query;
           nameInput.dataset.autoFilled = 'true';
         }
-        // 권역 자동 추천
         const lower = query.toLowerCase();
         const regSelect = document.getElementById('modal-place-region');
         if (regSelect) {
@@ -1889,7 +2181,6 @@
       }
     }
 
-    // 구글맵 링크 수동 분석/적용 버튼 핸들러
     function manualParseGmap() {
       const gmapInput = document.getElementById('modal-place-gmap');
       const val = gmapInput ? gmapInput.value.trim() : '';
@@ -1979,7 +2270,6 @@
       }
 
       if (currentEditingPlaceId) {
-        // 기존 장소 수정
         const isCustom = customPlaces.some(p => p.id === currentEditingPlaceId);
         if (isCustom) {
           customPlaces = customPlaces.map(p => {
@@ -1991,13 +2281,11 @@
           localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
           localStorage.setItem('_mod_custom_places_list', Date.now());
         } else {
-          // 디폴트 데이터 수정: placeOverrides에 기록
           placeOverrides[currentEditingPlaceId] = { day, region, cat, desc, price, gmap: gmapQuery };
           localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
           localStorage.setItem('_mod_place_overrides', Date.now());
         }
       } else {
-        // 신규 장소 등록
         const newPlace = {
           id: 'cp_' + Date.now(),
           name: name,
@@ -2042,30 +2330,572 @@
       pushStateToGitHub(true);
     }
 
-    function updateLedgerPayer(id, val) {
-      const key = 'ledger_payer_' + id;
-      localStorage.setItem(key, val);
+    function renderMasterTable() {
+      const tbody = document.getElementById('master-table-body');
+      const badge = document.getElementById('table-count-badge');
+      if (!tbody) return;
+
+      const q = (document.getElementById('table-search-input')?.value || '').toLowerCase().trim();
+      const region = document.getElementById('filter-region')?.value || 'all';
+      const category = document.getElementById('filter-category')?.value || 'all';
+      const day = document.getElementById('filter-day')?.value || 'all';
+
+      const all = getAllPlaces();
+      const filtered = all.filter(p => {
+        if (q && !(p.name.toLowerCase().includes(q) || (p.desc && p.desc.toLowerCase().includes(q)))) return false;
+        if (region !== 'all' && p.region !== region) return false;
+        if (category !== 'all' && p.cat !== category) return false;
+        if (day !== 'all' && !(p.day && p.day.includes(day))) return false;
+        return true;
+      });
+
+      if (badge) badge.innerText = `${filtered.length}개 항목`;
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr class="hover:bg-brand-50/30 transition-colors">
+          <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-600 whitespace-nowrap">${p.day}</td>
+          <td class="py-2.5 px-4 font-bold text-slate-900">
+            <div class="flex items-center gap-1.5">
+              <span>${p.name}</span>
+              ${p.isCustom ? '<span class="px-1.5 py-0.2 bg-purple-100 text-purple-700 text-[10px] rounded">추가</span>' : ''}
+            </div>
+          </td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-xs whitespace-nowrap">${p.region}</span></td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-pastel-blue text-pastel-blueText rounded-md text-xs font-bold whitespace-nowrap">${p.cat}</span></td>
+          <td class="py-2.5 px-4 text-xs text-slate-600 max-w-xs truncate" title="${p.desc || ''}">${p.desc || ''}</td>
+          <td class="py-2.5 px-3 text-xs font-mono font-bold text-slate-700 whitespace-nowrap">${p.price || ''}</td>
+          <td class="py-2.5 px-3 text-center whitespace-nowrap">
+            <div class="inline-flex items-center gap-1">
+              <button type="button" onclick="openPlaceEditModal('${p.id || p.name}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg text-xs transition" title="일정/설명/비용 수정">
+                ✏️ 수정
+              </button>
+              <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap || encodeURIComponent(p.name)}" target="_blank" class="px-2 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition inline-flex items-center gap-0.5" title="구글맵 바로가기">
+                📍 맵
+              </a>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 6. 예산 & 변동비 & 고정비 로직
+    function renderBudgetChecklist() {
+      const container = document.getElementById('budget-checklist-container');
+      if (!container) return;
+
+      container.innerHTML = OAHU_DATA.variableBudgets.map(item => {
+        const saved = localStorage.getItem('var_b_' + item.id);
+        const isChecked = saved !== null ? saved === 'true' : item.checked;
+        return `
+          <label class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition cursor-pointer">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleVariableBudget('${item.id}', this.checked)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0">
+              <span class="text-xs font-bold text-slate-800 truncate">${item.title}</span>
+            </div>
+            <span class="text-xs font-mono font-bold text-brand-600 ml-2">$${item.usd}</span>
+          </label>
+        `;
+      }).join('');
+
+      recalculateTotalBudget();
+    }
+
+    function toggleVariableBudget(id, checked) {
+      const key = 'var_b_' + id;
+      localStorage.setItem(key, checked);
       localStorage.setItem('_mod_' + key, Date.now());
+      recalculateTotalBudget();
+      triggerAutoSync();
+    }
 
-      // 만약 주유 기록 항목이면 fuelRecords 배열 내 결제자도 동기화
-      if (id.startsWith('fuel_')) {
-        fuelRecords = fuelRecords.map(f => {
-          if (f.id === id) f.payer = val;
-          return f;
-        });
-        localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-        localStorage.setItem('_mod_fuel_records', Date.now());
-        renderFuelRecords();
+    function saveCustomCosts() {
+      const now = Date.now();
+      localStorage.setItem('cost_hotel', document.getElementById('cost-hotel').value);
+      localStorage.setItem('cost_car', document.getElementById('cost-car').value);
+      localStorage.setItem('cost_etc', document.getElementById('cost-etc').value);
+      localStorage.setItem('_mod_cost_hotel', now);
+      localStorage.setItem('_mod_cost_car', now);
+      localStorage.setItem('_mod_cost_etc', now);
+      recalculateTotalBudget();
+      triggerAutoSync();
+    }
+
+    function recalculateTotalBudget() {
+      const hotel = parseFloat(document.getElementById('cost-hotel')?.value || 3900);
+      const car = parseFloat(document.getElementById('cost-car')?.value || 305);
+      const etc = parseFloat(document.getElementById('cost-etc')?.value || 130);
+      const fixedUsd = hotel + car + etc;
+
+      let variableUsd = 0;
+      OAHU_DATA.variableBudgets.forEach(item => {
+        const saved = localStorage.getItem('var_b_' + item.id);
+        const isChecked = saved !== null ? saved === 'true' : item.checked;
+        if (isChecked) variableUsd += item.usd;
+      });
+
+      let fuelUsd = 0;
+      fuelRecords.forEach(f => { fuelUsd += parseFloat(f.total || 0); });
+
+      const totalUsd = fixedUsd + variableUsd + fuelUsd;
+      const totalKrw = Math.round(totalUsd * EXCHANGE_RATE);
+      const fixedKrw = Math.round(fixedUsd * EXCHANGE_RATE);
+      const varKrw = Math.round((variableUsd + fuelUsd) * EXCHANGE_RATE);
+
+      const totalValEl = document.getElementById('budget-total-val');
+      const totalKrwEl = document.getElementById('budget-total-krw');
+      const fixedValEl = document.getElementById('budget-fixed-val');
+      const varValEl = document.getElementById('budget-variable-val');
+
+      if (currentCurrency === 'USD') {
+        if (totalValEl) totalValEl.innerText = '$' + Math.round(totalUsd).toLocaleString();
+        if (fixedValEl) fixedValEl.innerText = '$' + Math.round(fixedUsd).toLocaleString();
+        if (varValEl) varValEl.innerText = '$' + Math.round(variableUsd + fuelUsd).toLocaleString();
+      } else {
+        if (totalValEl) totalValEl.innerText = '₩' + totalKrw.toLocaleString();
+        if (fixedValEl) fixedValEl.innerText = '₩' + fixedKrw.toLocaleString();
+        if (varValEl) varValEl.innerText = '₩' + varKrw.toLocaleString();
       }
+      if (totalKrwEl) totalKrwEl.innerText = `약 ${(totalKrw / 10000).toFixed(0)}만 원 (환율 ₩${EXCHANGE_RATE.toLocaleString()})`;
+    }
 
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      const usdBtn = document.getElementById('curr-usd-btn');
+      const krwBtn = document.getElementById('curr-krw-btn');
+      if (curr === 'USD') {
+        usdBtn.className = "px-3 py-1 rounded-lg bg-white text-brand-600 shadow-xs";
+        krwBtn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800";
+      } else {
+        krwBtn.className = "px-3 py-1 rounded-lg bg-white text-brand-600 shadow-xs";
+        usdBtn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-800";
+      }
+      recalculateTotalBudget();
+    }
+
+    // 7. 주유비 실비 트래커 & 가계부 연동
+    function renderFuelRecords() {
+      const list = document.getElementById('fuel-log-list');
+      const totalDisplay = document.getElementById('fuel-total-display');
+      if (!list) return;
+
+      let sum = 0;
+      list.innerHTML = fuelRecords.map((r, idx) => {
+        const amt = parseFloat(r.total || 0);
+        sum += amt;
+        const fid = r.id || ('fuel_' + idx);
+        const payer = localStorage.getItem('ledger_payer_' + fid) || r.payer || '-';
+        const payerBadge = payer === 'S' ? '<span class="px-1.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded font-bold text-[10px]">🌸 S</span>' : (payer === 'B' ? '<span class="px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded font-bold text-[10px]">🚙 B</span>' : '<span class="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px]">-</span>');
+
+        return `
+          <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-amber-200/80 text-xs shadow-2xs">
+            <div class="flex items-center gap-2">
+              <span class="p-1 bg-amber-100 text-amber-900 rounded-lg text-xs">⛽</span>
+              <div>
+                <div class="font-bold text-slate-800">${r.loc || '오아후 주유소'} <span class="text-slate-400 font-normal">(${r.gallons || 0} gal)</span></div>
+                <div class="text-[10px] text-amber-700 flex items-center gap-1.5 mt-0.5">
+                  <span>결제자: ${payerBadge}</span>
+                  <span>•</span>
+                  <span class="text-teal-600 font-semibold">가계부 자동 연동됨</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-amber-900 text-sm">$${amt.toFixed(2)}</span>
+              <button onclick="deleteFuelRecord(${idx})" class="text-slate-300 hover:text-rose-600 font-bold px-1.5 py-0.5 text-xs rounded transition" title="주유 기록 삭제">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (totalDisplay) totalDisplay.innerText = '$' + sum.toFixed(2);
+      recalculateTotalBudget();
+    }
+
+    function addFuelRecord() {
+      const loc = document.getElementById('fuel-input-loc').value.trim();
+      const gallons = parseFloat(document.getElementById('fuel-input-gallons').value) || 0;
+      const total = parseFloat(document.getElementById('fuel-input-total').value) || 0;
+      const payer = document.getElementById('fuel-input-payer')?.value || '-';
+
+      if (total <= 0) { alert('주유 결제 금액을 입력해주세요.'); return; }
+
+      const fid = 'fuel_' + Date.now();
+      const rec = { 
+        id: fid, 
+        loc: loc || '오아후 주유소', 
+        gallons, 
+        total, 
+        payer: payer,
+        timestamp: Date.now() 
+      };
+      fuelRecords.push(rec);
+      localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+      localStorage.setItem('_mod_fuel_records', Date.now());
+      
+      // 가계부에 실비 지출 항목으로 즉시 연동
+      localStorage.setItem('ledger_y_' + fid, 'true');
+      localStorage.setItem('ledger_usd_' + fid, total);
+      localStorage.setItem('ledger_tip_' + fid, 0);
+      localStorage.setItem('ledger_payer_' + fid, payer);
+      localStorage.setItem('_mod_ledger_y_' + fid, Date.now());
+      localStorage.setItem('_mod_ledger_payer_' + fid, Date.now());
+
+      document.getElementById('fuel-input-loc').value = '';
+      document.getElementById('fuel-input-gallons').value = '';
+      document.getElementById('fuel-input-total').value = '';
+
+      renderFuelRecords();
       renderLedgerTable();
       triggerAutoSync();
     }
 
-    function getPayerBadgeStyle(p) {
-      if (p === 'S') return 'bg-rose-50 border-rose-300 text-rose-700 font-bold';
-      if (p === 'B') return 'bg-blue-50 border-blue-300 text-blue-700 font-bold';
-      return 'bg-surface-muted border-slate-200 text-slate-500 font-medium';
+    function deleteFuelRecord(idx) {
+      if (!confirm('이 주유 기록을 삭제하시겠습니까? (가계부에서도 함께 삭제됩니다)')) return;
+      const item = fuelRecords[idx];
+      if (item && item.id) {
+        localStorage.removeItem('ledger_y_' + item.id);
+        localStorage.removeItem('ledger_usd_' + item.id);
+        localStorage.removeItem('ledger_tip_' + item.id);
+        localStorage.removeItem('ledger_payer_' + item.id);
+      }
+      fuelRecords.splice(idx, 1);
+      localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+      localStorage.setItem('_mod_fuel_records', Date.now());
+      renderFuelRecords();
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
+    // 8. 짐 꾸리기 30선 & 기타 준비물 신설 박스
+    function addCustomPackingItem() {
+      const input = document.getElementById('new-custom-pack-input');
+      const val = input ? input.value.trim() : '';
+      if (!val) return;
+
+      const newItem = { id: 'cpack_' + Date.now(), name: val, checked: false };
+      customPackingList.push(newItem);
+      localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
+      localStorage.setItem('_mod_custom_packing_list', Date.now());
+      input.value = '';
+      renderPackingList();
+      triggerAutoSync();
+    }
+
+    function toggleCustomPackingItem(id, checked) {
+      customPackingList = customPackingList.map(it => {
+        if (it.id === id) return Object.assign({}, it, { checked });
+        return it;
+      });
+      localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
+      localStorage.setItem('_mod_custom_packing_list', Date.now());
+      renderPackingList();
+      triggerAutoSync();
+    }
+
+    function deleteCustomPackingItem(id) {
+      customPackingList = customPackingList.filter(it => it.id !== id);
+      localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
+      localStorage.setItem('_mod_custom_packing_list', Date.now());
+      renderPackingList();
+      triggerAutoSync();
+    }
+
+    function renderPackingList() {
+      const grid = document.getElementById('packing-grid');
+      const bar = document.getElementById('pack-progress-bar');
+      const text = document.getElementById('pack-progress-text');
+      if (!grid) return;
+
+      let total = 0;
+      let checkedCount = 0;
+
+      // 4대 기본 카테고리 렌더링
+      const defaultHtml = OAHU_DATA.packingList.map(cat => {
+        const itemsHtml = cat.items.map(item => {
+          total++;
+          const safeKey = 'pack_' + encodeURIComponent(item);
+          const isDone = localStorage.getItem(safeKey) === 'true';
+          if (isDone) checkedCount++;
+
+          return `
+            <label class="flex items-center gap-2 text-xs cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 transition">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="togglePackingItem('${safeKey}', this.checked)" class="w-3.5 h-3.5 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0">
+              <span class="${isDone ? 'line-through text-slate-400' : 'text-slate-700'} truncate">${item}</span>
+            </label>
+          `;
+        }).join('');
+
+        return `
+          <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+            <h3 class="font-bold text-xs text-slate-900 flex items-center gap-1.5">${cat.cat}</h3>
+            <div class="space-y-0.5">${itemsHtml}</div>
+          </div>
+        `;
+      }).join('');
+
+      // 5번째 신설 박스: 기타 준비물 (추가/수정/체크)
+      const customItemsHtml = customPackingList.map(it => {
+        total++;
+        if (it.checked) checkedCount++;
+        return `
+          <div class="flex items-center justify-between gap-1 text-xs p-1.5 rounded-lg hover:bg-slate-50 transition group">
+            <label class="flex items-center gap-2 cursor-pointer flex-1 min-w-0">
+              <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="toggleCustomPackingItem('${it.id}', this.checked)" class="w-3.5 h-3.5 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0">
+              <span class="${it.checked ? 'line-through text-slate-400' : 'text-slate-700'} truncate">${it.name}</span>
+            </label>
+            <button onclick="deleteCustomPackingItem('${it.id}')" class="text-slate-300 hover:text-rose-600 p-0.5 text-[11px] shrink-0 font-bold" title="삭제">✕</button>
+          </div>
+        `;
+      }).join('');
+
+      const customBoxHtml = `
+        <div class="p-4 bg-emerald-50/40 rounded-2xl border border-emerald-200/70 space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-xs text-emerald-900 flex items-center gap-1.5"><span>✏️</span> 기타 준비물</h3>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">${customPackingList.length}개 항목</span>
+          </div>
+          
+          <!-- 신규 준비물 추가 인풋 -->
+          <div class="flex items-center gap-1.5 pt-1">
+            <input type="text" id="new-custom-pack-input" onkeydown="if(event.key==='Enter')addCustomPackingItem()" placeholder="새 준비물 입력..." class="flex-1 p-1.5 bg-white border border-emerald-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            <button type="button" onclick="addCustomPackingItem()" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition shrink-0">+</button>
+          </div>
+
+          <div class="space-y-0.5 max-h-48 overflow-y-auto custom-scrollbar pt-1">
+            ${customItemsHtml || '<p class="text-[11px] text-slate-400 py-1 text-center">나만의 준비물을 추가해보세요.</p>'}
+          </div>
+        </div>
+      `;
+
+      grid.innerHTML = defaultHtml + customBoxHtml;
+
+      if (bar) bar.style.width = (total > 0 ? (checkedCount / total * 100) : 0) + '%';
+      if (text) text.innerText = `${checkedCount} / ${total} 완료`;
+      updateStatProgress();
+    }
+
+    function togglePackingItem(key, checked) {
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
+      renderPackingList();
+      triggerAutoSync();
+    }
+
+    function resetPackingChecklist() {
+      if (!confirm('짐 꾸리기 체크리스트를 모두 초기화하시겠습니까?')) return;
+      const now = Date.now();
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('pack_')) {
+          localStorage.setItem(k, 'false');
+          localStorage.setItem('_mod_' + k, now);
+        }
+      }
+      renderPackingList();
+      triggerAutoSync();
+    }
+
+    function renderGuideHub() {
+      const grid = document.getElementById('guide-cards-grid');
+      const q = (document.getElementById('guide-search-input')?.value || '').toLowerCase().trim();
+      if (!grid) return;
+
+      const filtered = OAHU_DATA.safetyGuides.filter(g => {
+        if (!q) return true;
+        return g.title.toLowerCase().includes(q) || g.summary.toLowerCase().includes(q) || g.detail.toLowerCase().includes(q) || g.cat.toLowerCase().includes(q);
+      });
+
+      grid.innerHTML = filtered.map(g => `
+        <div class="p-4 bg-surface-muted rounded-2xl border border-slate-200/70 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold px-2 py-0.5 bg-pastel-rose text-pastel-roseText rounded-md">${g.cat}</span>
+            <span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-100">${g.badge}</span>
+          </div>
+          <h3 class="font-bold text-sm text-slate-900">${g.title}</h3>
+          <p class="text-xs text-slate-600 font-medium bg-white p-2.5 rounded-xl border border-slate-100">${g.summary}</p>
+          <div class="text-xs text-slate-500 leading-relaxed pt-1">${g.detail}</div>
+        </div>
+      `).join('');
+    }
+
+    // 9. 지도 및 차트 통계 연동
+    function safeInitMap() {
+      if (typeof L === 'undefined') return;
+      const mapEl = document.getElementById('leaflet-map');
+      if (!mapEl) return;
+
+      if (!leafletMapInstance) {
+        leafletMapInstance = L.map('leaflet-map', { scrollWheelZoom: false }).setView([21.4645, -157.98], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(leafletMapInstance);
+
+        mapMarkers = [];
+        getAllPlaces().forEach(p => {
+          const marker = L.marker([p.lat, p.lng]).addTo(leafletMapInstance);
+          marker.bindPopup(`
+            <div style="font-family:'Gowun Batang',serif; min-width:180px;">
+              <div style="font-size:10px; color:#6366f1; font-weight:bold;">${p.day} • ${p.cat}</div>
+              <div style="font-size:13px; font-weight:bold; margin-top:2px;">${p.name}</div>
+              <div style="font-size:11px; color:#64748b; margin-top:3px;">${p.desc || ''}</div>
+              <div style="margin-top:6px;"><a href="https://www.google.com/maps/search/?api=1&query=${p.gmap || encodeURIComponent(p.name)}" target="_blank" style="font-size:11px; color:#4f46e5; text-decoration:underline; font-weight:bold;">구글맵 길찾기 ↗</a></div>
+            </div>
+          `);
+          marker.category = p.cat;
+          mapMarkers.push(marker);
+        });
+      }
+    }
+
+    function filterMapMarkers(cat) {
+      document.querySelectorAll('.map-filter-btn').forEach(b => {
+        b.classList.remove('bg-brand-500', 'text-white');
+        b.classList.add('bg-white', 'text-slate-600');
+      });
+      if (event && event.target) {
+        event.target.classList.remove('bg-white', 'text-slate-600');
+        event.target.classList.add('bg-brand-500', 'text-white');
+      }
+
+      if (!leafletMapInstance) return;
+      mapMarkers.forEach(m => {
+        if (cat === 'all' || m.category === cat) {
+          leafletMapInstance.addLayer(m);
+        } else {
+          leafletMapInstance.removeLayer(m);
+        }
+      });
+    }
+
+    function toggleMapType() {
+      const lMap = document.getElementById('leaflet-map');
+      const gMap = document.getElementById('gmap-frame-container');
+      const btn = document.getElementById('toggle-map-btn');
+
+      if (lMap.classList.contains('hidden')) {
+        lMap.classList.remove('hidden');
+        gMap.classList.add('hidden');
+        btn.innerText = '🛰️ 구글맵 전환';
+        if (leafletMapInstance) leafletMapInstance.invalidateSize();
+      } else {
+        lMap.classList.add('hidden');
+        gMap.classList.remove('hidden');
+        btn.innerText = '🗺️ 상세지도 전환';
+      }
+    }
+
+    function safeInitCharts() {
+      if (typeof Chart === 'undefined') return;
+
+      const regionCanvas = document.getElementById('statRegionChart');
+      if (regionCanvas && !regionChartInstance) {
+        const counts = { '와이키키': 0, '동부': 0, '노스쇼어': 0, '진주만': 0 };
+        getAllPlaces().forEach(p => { if (counts[p.region] !== undefined) counts[p.region]++; });
+
+        regionChartInstance = new Chart(regionCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(counts),
+            datasets: [{
+              data: Object.values(counts),
+              backgroundColor: ['#6366f1', '#0284c7', '#059669', '#ea580c'],
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: '"Gowun Batang", serif' } } }
+            }
+          }
+        });
+      }
+
+      const catCanvas = document.getElementById('statCategoryChart');
+      if (catCanvas && !categoryChartInstance) {
+        const cats = { '웰니스': 0, '명소': 0, '미식': 0, '액티비티': 0, '쇼핑': 0, '의료': 0 };
+        getAllPlaces().forEach(p => { if (cats[p.cat] !== undefined) cats[p.cat]++; });
+
+        categoryChartInstance = new Chart(catCanvas, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(cats),
+            datasets: [{
+              label: '방문 수',
+              data: Object.values(cats),
+              backgroundColor: ['#a855f7', '#3b82f6', '#10b981', '#f97316', '#ec4899', '#ef4444'],
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, ticks: { stepSize: 2 } }
+            }
+          }
+        });
+      }
+    }
+
+    function updateStatProgress() {
+      const customPacks = JSON.parse(localStorage.getItem('custom_packing_list') || '[]');
+      let totalTasks = 16 + 22 + 30 + customPacks.length;
+      let done = 0;
+
+      OAHU_DATA.reminders.forEach(c => {
+        c.items.forEach(it => { if (localStorage.getItem(it.id) === 'true') done++; });
+      });
+      [...mustDoExtremeItems, ...mustDoWellnessItems, ...mustEatItems, ...mustBuyItems].forEach(it => {
+        if (localStorage.getItem('wish_' + it.id) === 'true') done++;
+      });
+      OAHU_DATA.packingList.forEach(c => {
+        c.items.forEach(it => {
+          if (localStorage.getItem('pack_' + encodeURIComponent(it)) === 'true') done++;
+        });
+      });
+      customPacks.forEach(it => {
+        if (it.checked) done++;
+      });
+
+      const pct = totalTasks > 0 ? Math.round((done / totalTasks) * 100) : 0;
+      const statEl = document.getElementById('stat-total-progress');
+      if (statEl) statEl.innerText = pct + '%';
+    }
+
+    // 10. 스마트 가계부 & 결제자(-/S/B) & 주유비 연동 로직
+    function setLedgerTab(tab) {
+      ledgerActiveTab = tab;
+      const tabAll = document.getElementById('ledger-tab-all');
+      const tabDays = document.getElementById('ledger-tab-days');
+      const daySubtabs = document.getElementById('ledger-day-subtabs');
+
+      if (tab === 'all') {
+        tabAll.className = 'px-3.5 py-1.5 rounded-lg bg-teal-600 text-white shadow-xs transition';
+        tabDays.className = 'px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+        daySubtabs?.classList.add('hidden');
+      } else {
+        tabDays.className = 'px-3.5 py-1.5 rounded-lg bg-teal-600 text-white shadow-xs transition';
+        tabAll.className = 'px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+        daySubtabs?.classList.remove('hidden');
+      }
+      renderLedgerTable();
+    }
+
+    function setLedgerDaySub(dayVal) {
+      ledgerActiveDaySub = dayVal;
+      document.querySelectorAll('.ledger-sub-btn').forEach(b => {
+        if (b.dataset.day === dayVal) {
+          b.className = 'ledger-sub-btn px-3 py-1 bg-teal-600 text-white rounded-lg transition shrink-0';
+        } else {
+          b.className = 'ledger-sub-btn px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-100 transition shrink-0';
+        }
+      });
+      renderLedgerTable();
     }
 
     function openAddLedgerModal() {
@@ -2109,6 +2939,7 @@
       localStorage.setItem('ledger_tip_' + newItem.id, tip);
       localStorage.setItem('ledger_payer_' + newItem.id, payer);
       localStorage.setItem('ledger_y_' + newItem.id, 'true');
+      localStorage.setItem('_mod_ledger_y_' + newItem.id, Date.now());
 
       closeAddLedgerModal();
       renderLedgerTable();
@@ -2124,6 +2955,32 @@
       triggerAutoSync();
     }
 
+    function updateLedgerPayer(id, val) {
+      const key = 'ledger_payer_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+
+      // 주유 기록 항목이면 주유 트래커 내부 데이터도 동기화
+      if (id.startsWith('fuel_')) {
+        fuelRecords = fuelRecords.map(f => {
+          if (f.id === id) f.payer = val;
+          return f;
+        });
+        localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+        localStorage.setItem('_mod_fuel_records', Date.now());
+        renderFuelRecords();
+      }
+
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
+    function getPayerBadgeStyle(p) {
+      if (p === 'S') return 'bg-rose-50 border-rose-300 text-rose-700 font-bold';
+      if (p === 'B') return 'bg-blue-50 border-blue-300 text-blue-700 font-bold';
+      return 'bg-surface-muted border-slate-200 text-slate-500 font-medium';
+    }
+
     function renderLedgerTable() {
       const tbody = document.getElementById('ledger-table-body');
       const sumBaseEl = document.getElementById('ledger-sum-base');
@@ -2136,8 +2993,7 @@
       const payerFilter = document.getElementById('ledger-filter-payer')?.value || 'all';
       const sortOrder = document.getElementById('ledger-sort-order')?.value || 'default';
 
-      // 전체 항목 풀
-      // 주유 실비 기록 트래커 연동 항목 생성
+      // 1. 주유비 실비 기록을 가계부 라인 아이템으로 변환
       const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
         const fid = f.id || ('fuel_' + idx);
         const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
@@ -2153,21 +3009,21 @@
         };
       });
 
-      // 전체 항목 풀 (기본 + 지출추가 + 주유실비 연동)
+      // 전체 항목 풀 = 기본 항목 + 추가 항목 + 주유 실비 연동 항목
       const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
 
-      // 1. 탭 및 필터링
+      // 필터링 적용
       let filtered = allLedger.filter(item => {
         if (ledgerActiveTab === 'days') {
           if (ledgerActiveDaySub !== 'all' && item.day !== ledgerActiveDaySub) return false;
         }
         if (catFilter !== 'all' && item.cat !== catFilter) return false;
-        const currentPayer = localStorage.getItem('ledger_payer_' + item.id) || '-';
+        const currentPayer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
         if (payerFilter !== 'all' && currentPayer !== payerFilter) return false;
         return true;
       });
 
-      // 2. 정렬 옵션
+      // 정렬 적용
       if (sortOrder === 'doneFirst') {
         filtered.sort((a, b) => {
           const aY = localStorage.getItem('ledger_y_' + a.id) === 'true' ? 1 : 0;
@@ -2191,8 +3047,8 @@
       } else if (sortOrder === 'payerOrder') {
         const pOrder = { 'S': 1, 'B': 2, '-': 3 };
         filtered.sort((a, b) => {
-          const pA = pOrder[localStorage.getItem('ledger_payer_' + a.id) || '-'] || 3;
-          const pB = pOrder[localStorage.getItem('ledger_payer_' + b.id) || '-'] || 3;
+          const pA = pOrder[localStorage.getItem('ledger_payer_' + a.id) || a.payer || '-'] || 3;
+          const pB = pOrder[localStorage.getItem('ledger_payer_' + b.id) || b.payer || '-'] || 3;
           return pA - pB;
         });
       }
@@ -2204,7 +3060,7 @@
 
       tbody.innerHTML = filtered.map((item) => {
         const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
-        const payer = localStorage.getItem('ledger_payer_' + item.id) || '-';
+        const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
         const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd);
         const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0));
         const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE);
@@ -2232,9 +3088,9 @@
                 <span class="px-2 py-0.5 bg-pastel-blue text-pastel-blueText rounded text-[10px] font-bold">${item.cat}</span>
                 <span>${item.name}</span>
                 ${item.isCustom ? `<button onclick="deleteCustomLedgerItem('${item.id}')" class="text-slate-300 hover:text-rose-600 font-bold text-xs ml-1" title="삭제">✕</button>` : ''}
+                ${item.isFuel ? `<button onclick="deleteFuelRecord(${item.fuelIdx})" class="text-slate-300 hover:text-rose-600 font-bold text-xs ml-1" title="주유 기록 삭제">✕</button>` : ''}
               </div>
             </td>
-            <!-- 결제자 선택 (- / S / B) -->
             <td class="py-3 px-2 text-center whitespace-nowrap">
               <select onchange="updateLedgerPayer('${item.id}', this.value)" class="p-1 px-1.5 rounded-lg border text-xs font-bold text-center transition cursor-pointer ${getPayerBadgeStyle(payer)}">
                 <option value="-" ${payer === '-' ? 'selected' : ''}>- (없음)</option>
@@ -2256,30 +3112,38 @@
       if (sumBEl) sumBEl.innerText = '₩' + totalB.toLocaleString();
     }
 
+    function toggleLedgerY(id, checked) {
+      const key = 'ledger_y_' + id;
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
+    function updateLedgerVal(id, field, val) {
+      const key = 'ledger_' + field + '_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
     function exportLedgerCSV() {
       let csv = '\ufeff수행여부,항목명,결제자,일정,분류,원가(USD),팁(%),적용환율(KRW),환산총액(KRW)\n';
-      // 주유 실비 기록 트래커 연동 항목 생성
-      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
-        const fid = f.id || ('fuel_' + idx);
-        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
-        return {
-          id: fid,
-          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
-          day: '실비',
-          cat: '주유비',
-          defaultUsd: parseFloat(f.total || 0),
-          isFuel: true,
-          fuelIdx: idx,
-          payer: payer
-        };
-      });
+      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => ({
+        id: f.id || ('fuel_' + idx),
+        name: `⛽ 주유: ${f.loc} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
+        day: '실비',
+        cat: '주유비',
+        defaultUsd: parseFloat(f.total || 0),
+        payer: f.payer || '-'
+      }));
 
-      // 전체 항목 풀 (기본 + 지출추가 + 주유실비 연동)
       const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
       allLedger.forEach(item => {
         const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
         if (!isY) return;
-        const payer = localStorage.getItem('ledger_payer_' + item.id) || '-';
+        const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
         const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd);
         const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0));
         const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE);
@@ -2294,7 +3158,7 @@
       link.click();
     }
 
-            // UTF-8 안전 Base64 인코딩 / 디코딩 (모든 모바일/PC 브라우저 완벽 호환)
+    // 11. 무결점 클라우드 동기화 엔진 (Local-First + CRDT LWW 스마트 병합)
     function utf8ToBase64(str) {
       const bytes = new TextEncoder().encode(str);
       let binary = '';
@@ -2331,7 +3195,7 @@
       }
     }
 
-    // 모바일 원클릭 토큰 연동 링크 생성 및 클립보드 복사
+    // 모바일 원클릭 토큰 등록 링크 클립보드 복사
     function copyMobileSyncLink() {
       const cfg = getGhConfig();
       const tokenInput = document.getElementById('gh-token-input');
@@ -2347,13 +3211,33 @@
       
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(syncUrl).then(() => {
-          alert('✓ 모바일 연동 링크가 복사되었습니다!\n\n이 링크를 스마트폰(카카오톡, 메모장 등)으로 전송하여 열면 모바일에서도 토큰 입력 없이 즉시 자동 연동됩니다.');
+          alert('✓ 모바일 연동 링크가 복사되었습니다!\n\n이 링크를 스마트폰 카카오톡/메모장 등으로 전송하여 열면 모바일에서도 1초 만에 토큰이 자동 등록되고 동기화가 활성화됩니다.');
         }).catch(() => {
           prompt('아래 링크를 복사하여 모바일에서 접속하세요:', syncUrl);
         });
       } else {
         prompt('아래 링크를 복사하여 모바일에서 접속하세요:', syncUrl);
       }
+    }
+
+    // URL Hash를 통한 토큰 자동 수신 (#token=github_pat_...)
+    function checkHashTokenImport() {
+      try {
+        const h = window.location.hash || '';
+        if (h.includes('token=')) {
+          const m = h.match(/token=([^&]+)/);
+          if (m && m[1]) {
+            const tok = decodeURIComponent(m[1]).trim();
+            if (tok.startsWith('gh') || tok.startsWith('github')) {
+              localStorage.setItem('gh_sync_token', tok);
+              history.replaceState(null, '', window.location.pathname + window.location.search);
+              console.log('✓ Token imported from URL hash successfully!');
+              return true;
+            }
+          }
+        }
+      } catch(e) {}
+      return false;
     }
 
     let autoSyncTimeout = null;
@@ -2363,7 +3247,7 @@
     function triggerAutoSync() {
       const cfg = getGhConfig();
       if (!cfg.token) {
-        updateHeaderSyncStatus('토큰 등록 필요', false);
+        updateHeaderSyncStatus('토큰 미등록', false);
         return;
       }
       updateHeaderSyncStatus('동기화 대기…');
@@ -2373,7 +3257,7 @@
       }, 1500);
     }
 
-    // 양방향 머지 알고리즘 (Last-Write-Wins CRDT)
+    // 양방향 머지 알고리즘 (CRDT Last-Write-Wins: 어떤 기기의 변경도 날아가지 않음)
     function mergeStateData(remote, localKV, localFuel, localCosts) {
       const remoteStorage = remote && remote.storage ? remote.storage : {};
       const remoteTimestamps = remote && remote.timestamps ? remote.timestamps : {};
@@ -2382,7 +3266,7 @@
       const mergedStorage = Object.assign({}, remoteStorage);
       const mergedTimestamps = Object.assign({}, remoteTimestamps);
 
-      // 로컬 키 병합 (수정 타임스탬프 기반 최신 우선)
+      // 로컬 키 병합 (수정 타임스탬프 비교)
       for (let k in localKV) {
         const localTime = parseInt(localStorage.getItem('_mod_' + k) || '0', 10);
         const remoteTime = parseInt(remoteTimestamps[k] || '0', 10);
@@ -2393,7 +3277,7 @@
         }
       }
 
-      // 주유 기록 병합 (고유 ID / 필드 기준 중복 방지)
+      // 주유 기록 병합 (고유 ID / 필드 기준 누적)
       const fuelMap = {};
       remoteFuel.forEach(r => {
         const fid = r.id || `${r.loc}_${r.total}_${r.gallons}`;
@@ -2406,28 +3290,114 @@
       const mergedFuel = Object.values(fuelMap);
 
       // 고정 비용 병합
-      const mergedCosts = Object.assign({ hotel: 3900, car: 305, etc: 130 }, remote.customCosts || {});
+      const mergedCosts = Object.assign({ hotel: 3900, car: 305, etc: 130 }, remote ? (remote.customCosts || {}) : {});
       const hotelMod = parseInt(localStorage.getItem('_mod_cost_hotel') || '0', 10);
       const carMod = parseInt(localStorage.getItem('_mod_cost_car') || '0', 10);
       const etcMod = parseInt(localStorage.getItem('_mod_cost_etc') || '0', 10);
-      const remoteUpd = remote.updatedAt ? new Date(remote.updatedAt).getTime() : 0;
+      const remoteUpd = remote && remote.updatedAt ? new Date(remote.updatedAt).getTime() : 0;
 
       if (hotelMod >= remoteUpd && localCosts.hotel) mergedCosts.hotel = localCosts.hotel;
       if (carMod >= remoteUpd && localCosts.car) mergedCosts.car = localCosts.car;
       if (etcMod >= remoteUpd && localCosts.etc) mergedCosts.etc = localCosts.etc;
+
+      // 커스텀 리스트류 병합 (ID 중복 제거 누적)
+      const remVids = remote && Array.isArray(remote.customVideos) ? remote.customVideos : [];
+      const mergedVideos = remVids.concat(customVideos.filter(v => !remVids.some(rv => rv.id === v.id)));
+
+      const remPlaces = remote && Array.isArray(remote.customPlaces) ? remote.customPlaces : [];
+      const mergedPlaces = remPlaces.concat(customPlaces.filter(p => !remPlaces.some(rp => rp.id === p.id)));
+
+      const remPacks = remote && Array.isArray(remote.customPackingList) ? remote.customPackingList : [];
+      const mergedPacks = remPacks.concat(customPackingList.filter(p => !remPacks.some(rp => rp.id === p.id)));
+
+      const remLedger = remote && Array.isArray(remote.customLedgerItems) ? remote.customLedgerItems : [];
+      const mergedLedger = remLedger.concat(customLedgerItems.filter(l => !remLedger.some(rl => rl.id === l.id)));
+
+      const mergedOverrides = Object.assign({}, (remote && remote.placeOverrides ? remote.placeOverrides : {}), placeOverrides);
 
       return {
         updatedAt: new Date().toISOString(),
         timestamps: mergedTimestamps,
         customCosts: mergedCosts,
         fuelRecords: mergedFuel,
-        customVideos: (remote && remote.customVideos ? remote.customVideos : []).concat(customVideos.filter(v => !(remote && remote.customVideos ? remote.customVideos : []).some(rv => rv.id === v.id))),
-        customPlaces: (remote && remote.customPlaces ? remote.customPlaces : []).concat(customPlaces.filter(p => !(remote && remote.customPlaces ? remote.customPlaces : []).some(rp => rp.id === p.id))),
-        customPackingList: (remote && remote.customPackingList ? remote.customPackingList : []).concat(customPackingList.filter(p => !(remote && remote.customPackingList ? remote.customPackingList : []).some(rp => rp.id === p.id))),
-        customLedgerItems: (remote && remote.customLedgerItems ? remote.customLedgerItems : []).concat(customLedgerItems.filter(l => !(remote && remote.customLedgerItems ? remote.customLedgerItems : []).some(rl => rl.id === l.id))),
-        placeOverrides: Object.assign({}, (remote && remote.placeOverrides ? remote.placeOverrides : {}), placeOverrides),
+        customVideos: mergedVideos,
+        customPlaces: mergedPlaces,
+        customPackingList: mergedPacks,
+        customLedgerItems: mergedLedger,
+        placeOverrides: mergedOverrides,
         storage: mergedStorage
       };
+    }
+
+    // GitHub 상태를 로컬 저장소 및 UI에 완전히 반영하는 헬퍼
+    function applyStateToLocal(parsed) {
+      if (!parsed) return;
+
+      // 1. 주유 기록 복원
+      if (parsed.fuelRecords && Array.isArray(parsed.fuelRecords)) {
+        fuelRecords = parsed.fuelRecords;
+        localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
+        renderFuelRecords();
+      }
+
+      // 2. 고정 비용 복원
+      if (parsed.customCosts) {
+        const h = parsed.customCosts.hotel || 3900;
+        const c = parsed.customCosts.car || 305;
+        const e = parsed.customCosts.etc || 130;
+        if (document.getElementById('cost-hotel')) document.getElementById('cost-hotel').value = h;
+        if (document.getElementById('cost-car')) document.getElementById('cost-car').value = c;
+        if (document.getElementById('cost-etc')) document.getElementById('cost-etc').value = e;
+        localStorage.setItem('cost_hotel', h);
+        localStorage.setItem('cost_car', c);
+        localStorage.setItem('cost_etc', e);
+      }
+
+      // 3. 커스텀 리스트 복원
+      if (parsed.customVideos && Array.isArray(parsed.customVideos)) {
+        customVideos = parsed.customVideos;
+        localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
+        renderVideos();
+      }
+      if (parsed.customPlaces && Array.isArray(parsed.customPlaces)) {
+        customPlaces = parsed.customPlaces;
+        localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+      }
+      if (parsed.placeOverrides && typeof parsed.placeOverrides === 'object') {
+        placeOverrides = parsed.placeOverrides;
+        localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
+      }
+      if (parsed.customPackingList && Array.isArray(parsed.customPackingList)) {
+        customPackingList = parsed.customPackingList;
+        localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
+      }
+      if (parsed.customLedgerItems && Array.isArray(parsed.customLedgerItems)) {
+        customLedgerItems = parsed.customLedgerItems;
+        localStorage.setItem('custom_ledger_items', JSON.stringify(customLedgerItems));
+      }
+
+      // 4. 체크 및 가계부·메모 복원
+      if (parsed.storage && typeof parsed.storage === 'object') {
+        for (let k in parsed.storage) {
+          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_')) {
+            localStorage.setItem(k, parsed.storage[k]);
+          }
+        }
+        if (parsed.timestamps && typeof parsed.timestamps === 'object') {
+          for (let k in parsed.timestamps) {
+            localStorage.setItem('_mod_' + k, parsed.timestamps[k]);
+          }
+        }
+        renderReminders();
+        renderWishlists();
+        renderPackingList();
+        renderBudgetChecklist();
+        renderTimeline();
+        renderMasterTable();
+        renderLedgerTable();
+      }
+
+      recalculateTotalBudget();
     }
 
     async function pushStateToGitHub(isAuto = false, retryCount = 0) {
@@ -2464,7 +3434,7 @@
       }
       updateHeaderSyncStatus('백업 중…');
 
-      // 1. 로컬 저장소 상태 수집
+      // 로컬 데이터 수집
       const localKV = {};
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
@@ -2484,7 +3454,7 @@
         let sha = null;
         let remoteData = null;
 
-        // 원본 원격 파일 조회 (최신 SHA 및 원격 데이터 확인)
+        // 원격 기존 파일 조회 (SHA 및 최신 데이터 취득)
         const getRes = await fetch(`${url}?t=${Date.now()}`, {
           cache: 'no-store',
           headers: {
@@ -2500,20 +3470,20 @@
           try {
             remoteData = JSON.parse(base64ToUtf8(fileInfo.content));
           } catch(e) {
-            console.warn('Remote JSON parse error, overwriting with clean merge', e);
+            console.warn('Remote JSON decode error', e);
           }
         }
 
-        // 2. 스마트 양방향 병합 (다른 기기 변경사항 보존)
+        // 스마트 양방향 병합
         const mergedState = mergeStateData(remoteData, localKV, fuelRecords, localCosts);
 
-        // 3. 로컬 저장소도 병합 결과로 최신 동기화 적용
+        // 병합된 최신 결과를 로컬에도 실시간 갱신
         applyStateToLocal(mergedState);
 
         const jsonString = JSON.stringify(mergedState, null, 2);
         const contentB64 = utf8ToBase64(jsonString);
 
-        // 4. GitHub 저장소에 PUT 커밋
+        // PUT 커밋
         const putRes = await fetch(url, {
           method: 'PUT',
           headers: {
@@ -2537,7 +3507,7 @@
           }
           updateHeaderSyncStatus(`동기화됨 (${nowStr})`);
         } else if (putRes.status === 409 && retryCount < 3) {
-          console.warn('409 Conflict detected, retrying with fresh remote sha...');
+          console.warn('409 Conflict, re-fetching latest sha...');
           isPushInProgress = false;
           await new Promise(r => setTimeout(r, 600));
           return pushStateToGitHub(isAuto, retryCount + 1);
@@ -2566,166 +3536,86 @@
       }
     }
 
-    // 원격 데이터를 로컬스토리지 및 대시보드 화면에 완전히 반영하는 헬퍼 함수
-    function applyStateToLocal(parsed) {
-      if (!parsed) return;
-
-      // 1. 주유 기록 복원
-      if (parsed.fuelRecords && Array.isArray(parsed.fuelRecords)) {
-        fuelRecords = parsed.fuelRecords;
-        localStorage.setItem('fuel_records', JSON.stringify(fuelRecords));
-        renderFuelRecords();
-      }
-
-      // 2. 고정 비용 복원
-      if (parsed.customCosts) {
-        const h = parsed.customCosts.hotel || 3900;
-        const c = parsed.customCosts.car || 305;
-        const e = parsed.customCosts.etc || 130;
-        if (document.getElementById('cost-hotel')) document.getElementById('cost-hotel').value = h;
-        if (document.getElementById('cost-car')) document.getElementById('cost-car').value = c;
-        if (document.getElementById('cost-etc')) document.getElementById('cost-etc').value = e;
-        localStorage.setItem('cost_hotel', h);
-        localStorage.setItem('cost_car', c);
-        localStorage.setItem('cost_etc', e);
-      }
-
-      // 3. 커스텀 데이터 복원 (영상, 장소, 기타준비물, 가계부, 장소수정)
-      if (parsed.customVideos && Array.isArray(parsed.customVideos)) {
-        customVideos = parsed.customVideos;
-        localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
-        renderVideos();
-      }
-      if (parsed.customPlaces && Array.isArray(parsed.customPlaces)) {
-        customPlaces = parsed.customPlaces;
-        localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
-      }
-      if (parsed.placeOverrides && typeof parsed.placeOverrides === 'object') {
-        placeOverrides = parsed.placeOverrides;
-        localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
-      }
-      if (parsed.customPackingList && Array.isArray(parsed.customPackingList)) {
-        customPackingList = parsed.customPackingList;
-        localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
-      }
-      if (parsed.customLedgerItems && Array.isArray(parsed.customLedgerItems)) {
-        customLedgerItems = parsed.customLedgerItems;
-        localStorage.setItem('custom_ledger_items', JSON.stringify(customLedgerItems));
-      }
-
-      // 4. 체크 상태 및 메모 복원
-      if (parsed.storage && typeof parsed.storage === 'object') {
-        for (let k in parsed.storage) {
-          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_')) {
-            localStorage.setItem(k, parsed.storage[k]);
-          }
-        }
-        if (parsed.timestamps && typeof parsed.timestamps === 'object') {
-          for (let k in parsed.timestamps) {
-            localStorage.setItem('_mod_' + k, parsed.timestamps[k]);
-          }
-        }
-        renderReminders();
-        renderWishlists();
-        renderPackingList();
-        renderBudgetChecklist();
-        renderTimeline();
-        renderMasterTable();
-        renderLedgerTable();
-      }
-
-      recalculateTotalBudget();
-    }
-
+    // 3중 안전 폴백 불러오기 (토큰 없어도 무제한/무중단 자동 열람)
     async function fetchStateFromGitHub(isAuto = false) {
       const cfg = getGhConfig();
       const statusEl = document.getElementById('sync-status');
       
-      const tokenInput = document.getElementById('gh-token-input');
-      const ownerInput = document.getElementById('gh-owner-input');
-      const repoInput = document.getElementById('gh-repo-input');
-
-      const token = tokenInput && tokenInput.value.trim() ? tokenInput.value.trim() : cfg.token;
-      const owner = ownerInput && ownerInput.value.trim() ? ownerInput.value.trim() : cfg.owner;
-      const repo = repoInput && repoInput.value.trim() ? repoInput.value.trim() : cfg.repo;
+      const token = (localStorage.getItem('gh_sync_token') || '').trim();
+      const owner = cfg.owner;
+      const repo = cfg.repo;
 
       if (statusEl) {
         statusEl.className = 'text-center text-xs font-bold text-slate-400';
-        statusEl.innerText = '깃허브에서 데이터 가져오는 중…';
+        statusEl.innerText = '데이터 불러오는 중…';
       }
       updateHeaderSyncStatus('불러오는 중…');
 
-      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${cfg.path}?t=${Date.now()}`;
-      const reqHeaders = {
-        'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28'
-      };
-      if (token) reqHeaders['Authorization'] = 'Bearer ' + token;
+      let fetchedData = null;
 
+      // 시도 1: 정적 상대 경로 (동일 저장소 배포 시 레이트 리밋 0, 토큰 불필요)
       try {
-        const res = await fetch(url, {
-          cache: 'no-store',
-          headers: reqHeaders
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          const decodedJson = base64ToUtf8(data.content);
-          const parsed = JSON.parse(decodedJson);
-
-          applyStateToLocal(parsed);
-
-          const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          if (statusEl) {
-            statusEl.className = 'text-center text-xs font-bold text-emerald-600';
-            statusEl.innerText = `✓ 동기화 완료! (${nowStr} 최신 상태)`;
-          }
-          updateHeaderSyncStatus(`동기화됨 (${nowStr})`);
-        } else if (res.status === 404) {
-          if (statusEl) {
-            statusEl.className = 'text-center text-xs font-bold text-amber-600';
-            statusEl.innerText = '저장소에 백업 파일이 없습니다. 먼저 백업(Push)을 실행하세요.';
-          }
-          updateHeaderSyncStatus('백업 없음');
-        } else {
-          if (statusEl) {
-            statusEl.className = 'text-center text-xs font-bold text-rose-600';
-            statusEl.innerText = `✗ 실패 (상태 코드: ${res.status})`;
-          }
-          updateHeaderSyncStatus(token ? '불러오기 실패' : '연동 필요', true);
+        const relRes = await fetch(`trip/data/state.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (relRes.ok) {
+          fetchedData = await relRes.json();
+          console.log('✓ Fetched state from static relative path');
         }
-      } catch (e) {
-        console.error('GitHub Fetch Error:', e);
+      } catch(e) {}
+
+      // 시도 2: GitHub API 호출 (토큰 보유 시 인증, 미보유 시 공개 조회)
+      if (!fetchedData) {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${cfg.path}?t=${Date.now()}`;
+        const reqHeaders = {
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28'
+        };
+        if (token) reqHeaders['Authorization'] = 'Bearer ' + token;
+
+        try {
+          const apiRes = await fetch(apiUrl, { cache: 'no-store', headers: reqHeaders });
+          if (apiRes.ok) {
+            const data = await apiRes.json();
+            const decodedJson = base64ToUtf8(data.content);
+            fetchedData = JSON.parse(decodedJson);
+            console.log('✓ Fetched state from GitHub API');
+          }
+        } catch(e) {}
+      }
+
+      // 시도 3: raw.githubusercontent.com 직접 조회 (API 레이트 리밋 우회)
+      if (!fetchedData) {
+        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${cfg.path}?t=${Date.now()}`;
+        try {
+          const rawRes = await fetch(rawUrl, { cache: 'no-store' });
+          if (rawRes.ok) {
+            fetchedData = await rawRes.json();
+            console.log('✓ Fetched state from raw GitHub URL');
+          }
+        } catch(e) {}
+      }
+
+      if (fetchedData) {
+        applyStateToLocal(fetchedData);
+        const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         if (statusEl) {
-          statusEl.className = 'text-center text-xs font-bold text-rose-600';
-          statusEl.innerText = '✗ 복원 실패: 네트워크를 확인하세요.';
+          statusEl.className = 'text-center text-xs font-bold text-emerald-600';
+          statusEl.innerText = `✓ 동기화 완료! (${nowStr} 최신 상태)`;
         }
-        updateHeaderSyncStatus('네트워크 오류', true);
+        updateHeaderSyncStatus(`동기화됨 (${nowStr})`);
+      } else {
+        if (statusEl) {
+          statusEl.className = 'text-center text-xs font-bold text-amber-600';
+          statusEl.innerText = token ? '원격 저장소에 백업 파일이 없습니다.' : '원격 데이터를 확인하려면 토큰을 등록해주세요.';
+        }
+        updateHeaderSyncStatus(token ? '백업 없음' : '토큰 미등록');
       }
     }
 
-    
-    // URL Hash를 통한 모바일 원클릭 토큰 등록 (#token=github_pat_...)
-    function checkHashTokenImport() {
-      try {
-        const h = window.location.hash || '';
-        if (h.includes('token=')) {
-          const m = h.match(/token=([^&]+)/);
-          if (m && m[1]) {
-            const tok = decodeURIComponent(m[1]).trim();
-            if (tok.startsWith('gh') || tok.startsWith('github')) {
-              localStorage.setItem('gh_sync_token', tok);
-              history.replaceState(null, '', window.location.pathname + window.location.search);
-              console.log('✓ Token imported from URL hash successfully!');
-              return true;
-            }
-          }
-        }
-      } catch(e) {}
-      return false;
-    }
-
     function startDashboardApp() {
+      // 1. URL Hash를 통한 토큰 자동 수신 처리
+      checkHashTokenImport();
+
+      // 2. 기본 UI 렌더링
       updateClocks();
       setInterval(updateClocks, 1000);
       fetchLiveExchangeRate();
@@ -2742,10 +3632,7 @@
       setTimeout(safeInitMap, 300);
       setTimeout(safeInitCharts, 400);
 
-      // 시작 시 URL Hash 토큰 체크 및 최신 데이터 자동 복원
-      checkHashTokenImport();
-      const cfg = getGhConfig();
-      // 토큰이 있거나 공개 저장소인 경우 자동 최신 데이터 불러오기 실행
+      // 3. 최신 데이터 자동 복원 (3중 안전 폴백)
       fetchStateFromGitHub(true);
     }
 
