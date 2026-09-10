@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-09-10T04:40:52.121Z",
+  "updatedAt": "2026-09-10T04:41:34.742Z",
   "timestamps": {
     "pack_1_2": 0,
-    "rem_esta": 0,
+    "rem_esta": 1789015292691,
     "rem_insur": 0,
     "pack_1_0": 0,
     "rem_license": 0,
@@ -20,7 +20,7 @@
   "storage": {
     "pack_1_2": "false",
     "pack_1_0": "false",
-    "rem_esta": "false",
+    "rem_esta": "true",
     "rem_insur": "false",
     "rem_license": "true",
     "cost_etc": "130",
