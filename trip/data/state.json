@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T04:50:30.013Z",
+  "updatedAt": "2026-09-10T05:57:49.092Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -9,7 +9,8 @@
     "cost_etc": 0,
     "cost_hotel": 0,
     "rem_kualoa": 1789015307894,
-    "cost_car": 0
+    "cost_car": 0,
+    "ledger_y_l_kualoa": 1789019866979
   },
   "customCosts": {
     "hotel": "3900",
@@ -17,6 +18,11 @@
     "etc": "130"
   },
   "fuelRecords": [],
+  "customVideos": [],
+  "customPlaces": [],
+  "customPackingList": [],
+  "customLedgerItems": [],
+  "placeOverrides": {},
   "storage": {
     "pack_1_2": "false",
     "pack_1_0": "false",
@@ -26,6 +32,7 @@
     "cost_etc": "130",
     "cost_hotel": "3900",
     "rem_kualoa": "false",
-    "cost_car": "305"
+    "cost_car": "305",
+    "ledger_y_l_kualoa": "false"
   }
 }
