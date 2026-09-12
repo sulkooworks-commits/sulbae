@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-12T12:11:18.983Z",
+  "updatedAt": "2026-09-12T12:11:31.698Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -12,7 +12,7 @@
     "cost_car": 0,
     "ledger_y_l_kualoa": 1789215076821,
     "ledger_payer_l_kualoa": 1789215027123,
-    "ledger_usd_l_kualoa": 1789215071688,
+    "ledger_usd_l_kualoa": 1789215089569,
     "rem_esim": 1789020912157,
     "wish_do-ex-1": 1789021150527,
     "rem_hanauma": 0,
@@ -45,7 +45,7 @@
     "cost_car": "305",
     "ledger_y_l_kualoa": "false",
     "ledger_payer_l_kualoa": "B",
-    "ledger_usd_l_kualoa": "3453.80",
+    "ledger_usd_l_kualoa": "3",
     "rem_esim": "false",
     "wish_do-ex-1": "true",
     "rem_hanauma": "false",
