@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-09-14T11:56:02.049Z",
+  "updatedAt": "2026-09-14T11:56:15.874Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
     "rem_insur": 0,
     "pack_1_0": 1789015827798,
-    "rem_license": 1789090561069,
+    "rem_license": 1789386973710,
     "cost_etc": 0,
     "cost_hotel": 0,
     "rem_kualoa": 1789215006982,
@@ -42,7 +42,7 @@
     "pack_1_0": "false",
     "rem_esta": "false",
     "rem_insur": "false",
-    "rem_license": "false",
+    "rem_license": "true",
     "cost_etc": "130",
     "cost_hotel": "3900",
     "rem_kualoa": "true",
