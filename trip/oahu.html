@@ -2105,7 +2105,18 @@
     }
 
     // 3. 일자별 상세 타임라인 및 메모 영역
-    function saveDayMemo(dayKey) {
+    let memoAutoSyncTimeout = null;
+
+    function autoSaveDayMemo(dayKey, val) {
+      localStorage.setItem('memo_' + dayKey, val);
+      localStorage.setItem('_mod_memo_' + dayKey, Date.now());
+      clearTimeout(memoAutoSyncTimeout);
+      memoAutoSyncTimeout = setTimeout(() => {
+        triggerAutoSync();
+      }, 1500);
+    }
+
+    function saveDayMemo(dayKey, showFeedback = false) {
       const input = document.getElementById('memo-input-' + dayKey);
       if (!input) return;
       const val = input.value;
@@ -2117,16 +2128,41 @@
         msg.classList.remove('opacity-0');
         setTimeout(() => { msg.classList.add('opacity-0'); }, 2000);
       }
-      triggerAutoSync();
+      if (showFeedback) {
+        pushStateToGitHub(true);
+      } else {
+        triggerAutoSync();
+      }
     }
 
     function renderTimeline() {
       const container = document.getElementById('timeline-container');
       if (!container) return;
 
-      container.innerHTML = timelineData.map(d => {
-        const dayKey = d.day.split(' ')[0];
-        const savedMemo = localStorage.getItem('memo_' + dayKey) || '';
+      const activeEl = document.activeElement;
+      const isTypingMemo = activeEl && activeEl.id && activeEl.id.startsWith('memo-input-');
+
+      // 사용자가 모바일/웹에서 메모를 작성 중일 때 DOM 재생성으로 인한 포커스 해제 방지
+      if (isTypingMemo && container.children.length > 0) {
+        timelineData.forEach((d, idx) => {
+          const m = d.day.match(/Day\s*(\d+)/i);
+          const dayNum = m ? m[1] : (idx + 1);
+          const dayKey = 'Day' + dayNum;
+          const input = document.getElementById('memo-input-' + dayKey);
+          if (input && input !== activeEl) {
+            const savedMemo = localStorage.getItem('memo_' + dayKey) || '';
+            if (input.value !== savedMemo) input.value = savedMemo;
+          }
+        });
+        return;
+      }
+
+      container.innerHTML = timelineData.map((d, idx) => {
+        const m = d.day.match(/Day\s*(\d+)/i);
+        const dayNum = m ? m[1] : (idx + 1);
+        const dayKey = 'Day' + dayNum; // 고유 키: Day1, Day2, ... Day8
+        const dayLabel = 'Day ' + dayNum; // 라벨: Day 1, Day 2, ...
+        const savedMemo = localStorage.getItem('memo_' + dayKey) || localStorage.getItem('memo_' + dayLabel) || '';
 
         return `
           <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-soft space-y-3 flex flex-col justify-between">
@@ -2141,22 +2177,22 @@
               </ul>
             </div>
 
-            <!-- 각 일자별 박스 내부 하단 메모 영역 (등록/수정/저장) -->
+            <!-- 각 일자별 박스 내부 하단 독립 메모 영역 (고유 ID & 즉시/자동 저장) -->
             <div class="pt-3 border-t border-slate-100 space-y-1.5">
               <div class="flex items-center justify-between">
-                <span class="text-[11px] font-bold text-slate-500 flex items-center gap-1">
-                  <span>📝</span> <span>${dayKey} 메모 & 특이사항</span>
+                <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1">
+                  <span>📝</span> <span>${dayLabel} 메모 & 특이사항</span>
                 </span>
                 <span id="memo-saved-msg-${dayKey}" class="text-[10px] text-emerald-600 font-bold transition duration-300 opacity-0">✓ 저장됨</span>
               </div>
-              <textarea id="memo-input-${dayKey}" rows="2" placeholder="일정 특이사항, 예약번호, 메모 입력..." class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:ring-1 focus:ring-brand-500 focus:outline-none transition resize-none">${savedMemo}</textarea>
+              <textarea id="memo-input-${dayKey}" rows="2" oninput="autoSaveDayMemo('${dayKey}', this.value)" onblur="saveDayMemo('${dayKey}')" placeholder="${dayLabel} 일정 특이사항, 예약번호, 메모 입력..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:ring-1 focus:ring-brand-500 focus:outline-none transition resize-none text-slate-800">${savedMemo}</textarea>
               <div class="flex items-center justify-between pt-0.5">
                 <span class="text-[11px] text-slate-400">주요 동선 ${d.spots}</span>
                 <div class="flex items-center gap-1.5">
-                  <button type="button" onclick="saveDayMemo('${dayKey}')" class="px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold rounded-lg border border-brand-200/80 transition flex items-center gap-1 shadow-2xs">
+                  <button type="button" onclick="saveDayMemo('${dayKey}', true)" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-lg shadow-xs transition flex items-center gap-1">
                     <span>💾</span> 저장
                   </button>
-                  <button type="button" onclick="filterTableDay('${dayKey}')" class="text-brand-600 hover:underline font-bold text-xs">일정표 →</button>
+                  <button type="button" onclick="filterTableDay('${dayLabel}')" class="text-brand-600 hover:underline font-bold text-xs">일정표 →</button>
                 </div>
               </div>
             </div>
@@ -3895,6 +3931,7 @@
       // 4. 체크 및 가계부·메모 복원
       if (parsed.storage && typeof parsed.storage === 'object') {
         for (let k in parsed.storage) {
+          if (k === 'memo_Day') continue; // 이전 버그로 생성된 일괄 오염 키 무시
           if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_')) {
             localStorage.setItem(k, parsed.storage[k]);
           }
@@ -3991,6 +4028,16 @@
         }
 
         // 스마트 양방향 병합
+        // 이전 버그로 생성된 공통 memo_Day 원격 데이터 영구 제거
+        if (remoteData && remoteData.storage && remoteData.storage['memo_Day']) {
+          delete remoteData.storage['memo_Day'];
+        }
+        if (remoteData && remoteData.timestamps && remoteData.timestamps['memo_Day']) {
+          delete remoteData.timestamps['memo_Day'];
+        }
+        delete localKV['memo_Day'];
+        localStorage.removeItem('memo_Day');
+
         const mergedState = mergeStateData(remoteData, localKV, fuelRecords, localCosts);
 
         // 병합된 최신 결과를 로컬에도 실시간 갱신
@@ -4128,6 +4175,12 @@
     }
 
     function startDashboardApp() {
+      // 구 버전 memo_Day 단일 키 오염 데이터 정리
+      try {
+        if (localStorage.getItem('memo_Day')) {
+          localStorage.removeItem('memo_Day');
+        }
+      } catch(e) {}
       // 1. URL Hash를 통한 토큰 자동 수신 처리
       checkHashTokenImport();
 
