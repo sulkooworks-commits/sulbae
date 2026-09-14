@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T15:06:33.629Z",
+  "updatedAt": "2026-09-14T15:13:35.279Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -71,6 +71,16 @@
       "desc": "호놀룰루 미술 박물관 관람 꼭 하고 싶다!!",
       "url": "https://m.blog.naver.com/PostView.nhn?isHttpsRedirect=true&blogId=moss513&logNo=221075916843",
       "img": "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80",
+      "isCustom": true
+    },
+    {
+      "id": "cblog_1789398813091",
+      "title": "다이아몬드 헤드 예약 꿀팁",
+      "author": "네이버 블로그",
+      "cat": "액티비티",
+      "desc": "하와이 여행 실전 참고 후기",
+      "url": "https://m.blog.naver.com/th_daily/223752896899",
+      "img": "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=600&auto=format&fit=crop&q=80",
       "isCustom": true
     }
   ],
