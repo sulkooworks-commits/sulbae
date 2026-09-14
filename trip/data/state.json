@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T13:24:57.095Z",
+  "updatedAt": "2026-09-14T14:36:22.797Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -35,6 +35,18 @@
   },
   "fuelRecords": [],
   "customVideos": [],
+  "customBlogs": [
+    {
+      "id": "cblog_1789396580717",
+      "title": "호놀룰루 미술관",
+      "author": "네이버 블로그",
+      "cat": "문화",
+      "desc": "호놀룰루 미술 박물관 관람 꼭 하고 싶다!!",
+      "url": "https://m.blog.naver.com/PostView.nhn?isHttpsRedirect=true&blogId=moss513&logNo=221075916843",
+      "img": "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80",
+      "isCustom": true
+    }
+  ],
   "customPlaces": [],
   "customPackingList": [],
   "customLedgerItems": [],
