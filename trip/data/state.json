@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T14:41:28.457Z",
+  "updatedAt": "2026-09-14T14:52:44.981Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -56,6 +56,12 @@
       "isCustom": true
     }
   ],
+  "deletedVideos": [],
+  "videoOverrides": {},
+  "deletedBlogs": [
+    "b2"
+  ],
+  "blogOverrides": {},
   "customPlaces": [],
   "customPackingList": [],
   "customLedgerItems": [],
