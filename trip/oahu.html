@@ -1434,31 +1434,34 @@
   </div>
 
   
-  <!-- 1. 유튜브 영상 등록 모달 -->
+  <!-- 1. 유튜브 영상 등록 & 수정 모달 (쇼츠 및 디폴트 수정/삭제 지원) -->
   <div id="video-add-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2">
           <span class="p-1.5 bg-red-100 text-red-700 rounded-xl text-sm font-bold">🎬</span>
-          <h3 class="font-bold text-sm text-slate-900">새 교육 영상 등록</h3>
+          <h3 id="modal-video-header-title" class="font-bold text-sm text-slate-900">새 교육 영상 등록</h3>
         </div>
         <button onclick="closeVideoAddModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block font-bold text-slate-600 mb-1">유튜브 링크 / 영상 URL</label>
-          <input type="text" id="modal-video-url" oninput="previewVideoId(this.value)" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://youtu.be/..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-500">
-          <p id="video-url-hint" class="text-[10px] text-slate-400 mt-1">유튜브 주소를 입력하면 비디오 ID가 자동으로 추출됩니다.</p>
+          <label class="block font-bold text-slate-600 mb-1">유튜브 링크 / 영상 & 쇼츠(Shorts) URL</label>
+          <input type="text" id="modal-video-url" oninput="previewVideoId(this.value)" placeholder="예: https://www.youtube.com/shorts/... 또는 watch?v=..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-500 font-mono text-[11px]">
+          <p id="video-url-hint" class="text-[10px] text-slate-400 mt-1">유튜브 일반 영상 및 쇼츠(Shorts) 주소를 입력하면 비디오 ID가 자동 추출됩니다.</p>
+          <div id="modal-video-preview-box" class="hidden mt-2 rounded-xl overflow-hidden border border-slate-200 bg-black aspect-video max-h-48">
+            <iframe id="modal-video-preview-iframe" class="w-full h-full" src="" title="영상 미리보기" frameborder="0" allowfullscreen></iframe>
+          </div>
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">영상 제목</label>
-          <input type="text" id="modal-video-title" placeholder="영상 제목 (예: 하와이 셀프 주유 완벽 가이드)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-500">
+          <input type="text" id="modal-video-title" placeholder="영상 제목 (예: 하와이 셀프 주유 완벽 가이드)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-red-500 font-bold text-slate-900">
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">구분 (카테고리)</label>
           <div class="flex gap-2">
-            <select id="modal-video-cat-select" onchange="syncVideoCat(this.value)" class="flex-1 p-2 bg-surface-muted border border-slate-200 rounded-xl">
+            <select id="modal-video-cat-select" onchange="syncVideoCat(this.value)" class="flex-1 p-2 bg-surface-muted border border-slate-200 rounded-xl font-semibold">
               <option value="렌터카">렌터카</option>
               <option value="주유소">주유소</option>
               <option value="금융">금융</option>
@@ -1478,20 +1481,21 @@
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2 border-t border-slate-100">
-        <button onclick="closeVideoAddModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
-        <button onclick="saveCustomVideo()" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-xs transition">영상 등록하기</button>
+      <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+        <button id="modal-video-delete-btn" type="button" onclick="deleteCurrentEditingVideo()" class="py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl text-xs transition hidden">삭제</button>
+        <button type="button" onclick="closeVideoAddModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
+        <button id="modal-video-submit-btn" type="button" onclick="saveVideoModal()" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-xs transition">영상 등록하기</button>
       </div>
     </div>
   </div>
 
-  <!-- 1-1. 블로그 글 등록 모달 (유튜브 등록 모달과 동일 포맷) -->
+  <!-- 1-1. 블로그 글 등록 & 수정 모달 (원문 썸네일 자동 확보 및 디폴트 수정/삭제 지원) -->
   <div id="blog-add-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2">
           <span class="p-1.5 bg-amber-100 text-amber-800 rounded-xl text-sm font-bold">📝</span>
-          <h3 class="font-bold text-sm text-slate-900">새 추천 블로그/아티클 등록</h3>
+          <h3 id="modal-blog-header-title" class="font-bold text-sm text-slate-900">새 추천 블로그/아티클 등록</h3>
         </div>
         <button onclick="closeBlogAddModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
       </div>
@@ -1499,22 +1503,27 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="block font-bold text-slate-600 mb-1">블로그 / 아티클 URL</label>
-          <input type="text" id="modal-blog-url" oninput="autoDetectBlogPlatform(this.value)" placeholder="예: https://brunch.co.kr/@... 또는 https://blog.naver.com/..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500">
-          <p id="blog-url-hint" class="text-[10px] text-slate-400 mt-1">블로그 주소를 입력하면 플랫폼과 작성자가 자동 감지됩니다.</p>
+          <div class="flex gap-1.5">
+            <input type="text" id="modal-blog-url" oninput="handleBlogUrlInput(this.value)" placeholder="예: https://brunch.co.kr/@... 또는 https://blog.naver.com/..." class="flex-1 p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono text-[11px]">
+            <button type="button" onclick="triggerAutoFetchBlog()" class="px-3 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl font-bold text-xs shrink-0 transition flex items-center gap-1 shadow-2xs" title="원문 링크에서 썸네일과 제목 자동 추출">
+              <span>🔍</span> <span>자동 추출</span>
+            </button>
+          </div>
+          <p id="blog-url-hint" class="text-[10px] text-slate-400 mt-1">블로그 링크를 입력하시면 원문 썸네일(og:image)과 제목을 자동으로 가져옵니다.</p>
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">글 제목</label>
-          <input type="text" id="modal-blog-title" placeholder="글 제목 (예: 와이키키씩이나 가서 편의점 도시락 사 먹는 이유)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500">
+          <input type="text" id="modal-blog-title" placeholder="글 제목 (예: 와이키키씩이나 가서 편의점 도시락 사 먹는 이유)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500 font-bold text-slate-900">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-600 mb-1">작성자 / 플랫폼</label>
-            <input type="text" id="modal-blog-author" placeholder="예: 브런치스토리, 네이버" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl">
+            <input type="text" id="modal-blog-author" placeholder="예: 브런치스토리, 네이버" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-semibold">
           </div>
           <div>
             <label class="block font-bold text-slate-600 mb-1">구분 (카테고리)</label>
             <div class="flex gap-2">
-              <select id="modal-blog-cat-select" onchange="syncBlogCat(this.value)" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl">
+              <select id="modal-blog-cat-select" onchange="syncBlogCat(this.value)" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-semibold">
                 <option value="맛집/절약">맛집/절약</option>
                 <option value="드라이브">드라이브</option>
                 <option value="스노클링">스노클링</option>
@@ -1528,8 +1537,17 @@
           </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-600 mb-1">대표 이미지 URL (선택)</label>
-          <input type="text" id="modal-blog-img" placeholder="비워두면 기본 이미지가 자동 적용됩니다." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500">
+          <label class="block font-bold text-slate-600 mb-1">대표 썸네일 이미지</label>
+          <input type="text" id="modal-blog-img" oninput="updateBlogPreviewImg(this.value)" placeholder="자동 추출된 원문 이미지 URL 또는 직접 입력" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono text-[11px]">
+          
+          <!-- 실시간 썸네일 이미지 미리보기 박스 -->
+          <div id="modal-blog-preview-box" class="hidden mt-2 p-2.5 bg-amber-50/50 border border-amber-200/80 rounded-2xl flex items-center gap-3">
+            <img id="modal-blog-preview-img" src="" alt="썸네일 미리보기" class="w-20 h-14 object-cover rounded-xl bg-slate-200 border border-slate-200 shrink-0 shadow-2xs" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80';">
+            <div class="min-w-0 flex-1 text-[11px]">
+              <div class="font-bold text-amber-900 flex items-center gap-1"><span>🖼️</span> <span>원문 썸네일 확보 완료</span></div>
+              <div class="text-slate-500 text-[10px] mt-0.5 leading-tight">포스트 원문에서 추출한 대표 이미지입니다.</div>
+            </div>
+          </div>
         </div>
         <div>
           <label class="block font-bold text-slate-600 mb-1">상세 요약 & 활용 팁</label>
@@ -1537,9 +1555,10 @@
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2 border-t border-slate-100">
-        <button onclick="closeBlogAddModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
-        <button onclick="saveCustomBlog()" class="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs shadow-xs transition">블로그 등록하기</button>
+      <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+        <button id="modal-blog-delete-btn" type="button" onclick="deleteCurrentEditingBlog()" class="py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl text-xs transition hidden">삭제</button>
+        <button type="button" onclick="closeBlogAddModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">취소</button>
+        <button id="modal-blog-submit-btn" type="button" onclick="saveBlogModal()" class="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs shadow-xs transition">블로그 등록하기</button>
       </div>
     </div>
   </div>
@@ -2263,7 +2282,7 @@
       });
 
       // 4. 실전 영상
-      const allVids = (OAHU_DATA.videos || []).concat(customVideos || []);
+      const allVids = getAllVideos();
       allVids.forEach(v => {
         index.push({
           type: 'video',
@@ -2278,7 +2297,7 @@
       });
 
       // 5. 추천 블로그 글
-      const allBlogs = (OAHU_DATA.blogs || []).concat(customBlogs || []);
+      const allBlogs = getAllBlogs();
       allBlogs.forEach(b => {
         index.push({
           type: 'blog',
@@ -2911,30 +2930,96 @@
     }
 
     // 2. 유튜브 영상 세션 로직
+    let currentEditingVideoId = null;
+    let currentEditingBlogId = null;
+    let blogAutoFetchTimeout = null;
+
+    function getAllVideos() {
+      const deleted = JSON.parse(localStorage.getItem('deleted_videos_list') || '[]');
+      const overrides = JSON.parse(localStorage.getItem('video_overrides') || '{}');
+      const defaults = (OAHU_DATA.videos || []).filter(v => !deleted.includes(v.id)).map(v => {
+        return Object.assign({}, v, overrides[v.id] || {});
+      });
+      const customs = (customVideos || []).filter(v => !deleted.includes(v.id)).map(v => {
+        return Object.assign({}, v, overrides[v.id] || {});
+      });
+      return defaults.concat(customs);
+    }
+
+    function getAllBlogs() {
+      const deleted = JSON.parse(localStorage.getItem('deleted_blogs_list') || '[]');
+      const overrides = JSON.parse(localStorage.getItem('blog_overrides') || '{}');
+      const defaults = (OAHU_DATA.blogs || []).filter(b => !deleted.includes(b.id)).map(b => {
+        return Object.assign({}, b, overrides[b.id] || {});
+      });
+      const customs = (customBlogs || []).filter(b => !deleted.includes(b.id)).map(b => {
+        return Object.assign({}, b, overrides[b.id] || {});
+      });
+      return defaults.concat(customs);
+    }
+
     function extractYouTubeId(url) {
       if (!url) return '';
       const u = url.trim();
       if (u.length === 11 && !u.includes('/') && !u.includes('.')) return u;
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+
+      // 1. YouTube Shorts (https://www.youtube.com/shorts/{id})
+      const shortsMatch = u.match(/(?:\/shorts\/)([a-zA-Z0-9_-]{11})/i);
+      if (shortsMatch && shortsMatch[1]) return shortsMatch[1];
+
+      // 2. Standard youtu.be, embed, watch?v=, live/
+      const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|live\/|watch\?v=|watch\?.+&v=))([\w-]{11})/i;
       const match = u.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : '';
+      if (match && match[1]) return match[1];
+
+      // 3. Fallback generic match
+      const genericMatch = u.match(/([a-zA-Z0-9_-]{11})/);
+      if (genericMatch && (u.includes('youtube') || u.includes('youtu.be'))) {
+        return genericMatch[1];
+      }
+      return '';
+    }
+
+    function isYouTubeShortsUrl(url) {
+      if (!url) return false;
+      return url.toLowerCase().includes('/shorts/');
     }
 
     function previewVideoId(val) {
       const id = extractYouTubeId(val);
+      const isShort = isYouTubeShortsUrl(val);
       const hint = document.getElementById('video-url-hint');
+      const box = document.getElementById('modal-video-preview-box');
+      const iframe = document.getElementById('modal-video-preview-iframe');
+
       if (hint) {
         if (id) {
-          hint.innerText = '✓ 감지된 유튜브 ID: ' + id;
-          hint.className = 'text-[10px] text-emerald-600 font-bold mt-1';
+          const typeBadge = isShort ? '⚡ [쇼츠(Shorts) 감지됨]' : '🎬 [일반 영상]';
+          hint.innerHTML = `<span class="text-emerald-600 font-bold">✓ ${typeBadge} 확인된 ID: ${id}</span>`;
+        } else if (val) {
+          hint.innerText = '올바른 유튜브 일반 영상 또는 쇼츠(Shorts) URL을 입력해주세요.';
         } else {
-          hint.innerText = '유튜브 주소를 입력하면 비디오 ID가 자동으로 추출됩니다.';
-          hint.className = 'text-[10px] text-slate-400 mt-1';
+          hint.innerText = '유튜브 일반 영상 및 쇼츠(Shorts) 주소를 입력하면 비디오 ID가 자동 추출됩니다.';
+        }
+      }
+
+      if (box && iframe) {
+        if (id) {
+          iframe.src = `https://www.youtube.com/embed/${id}`;
+          box.classList.remove('hidden');
+        } else {
+          iframe.src = '';
+          box.classList.add('hidden');
         }
       }
     }
 
     function openVideoAddModal() {
+      currentEditingVideoId = null;
+      document.getElementById('modal-video-header-title').innerText = '새 교육 영상 등록';
+      document.getElementById('modal-video-submit-btn').innerText = '영상 등록하기';
+      document.getElementById('modal-video-delete-btn')?.classList.add('hidden');
+
       document.getElementById('modal-video-url').value = '';
       document.getElementById('modal-video-title').value = '';
       document.getElementById('modal-video-desc').value = '';
@@ -2945,7 +3030,40 @@
       document.getElementById('video-add-modal')?.classList.remove('hidden');
     }
 
+    function openVideoEditModal(id) {
+      const all = getAllVideos();
+      const item = all.find(v => v.id === id);
+      if (!item) return;
+
+      currentEditingVideoId = id;
+      document.getElementById('modal-video-header-title').innerText = '영상 정보 수정 (디폴트·커스텀)';
+      document.getElementById('modal-video-submit-btn').innerText = '수정 저장하기';
+      document.getElementById('modal-video-delete-btn')?.classList.remove('hidden');
+
+      const url = item.isShort ? `https://www.youtube.com/shorts/${item.ytid}` : `https://www.youtube.com/watch?v=${item.ytid}`;
+      document.getElementById('modal-video-url').value = url;
+      document.getElementById('modal-video-title').value = item.title || '';
+      document.getElementById('modal-video-desc').value = item.desc || '';
+
+      const catSelect = document.getElementById('modal-video-cat-select');
+      const catCustom = document.getElementById('modal-video-cat-custom');
+      const standardCats = ['렌터카', '주유소', '금융', '내비', '스노클링', '세관', '쇼핑', '꿀팁'];
+      if (standardCats.includes(item.cat)) {
+        catSelect.value = item.cat;
+        catCustom.value = '';
+        catCustom.classList.add('hidden');
+      } else {
+        catSelect.value = 'custom';
+        catCustom.value = item.cat || '';
+        catCustom.classList.remove('hidden');
+      }
+
+      previewVideoId(url);
+      document.getElementById('video-add-modal')?.classList.remove('hidden');
+    }
+
     function closeVideoAddModal() {
+      currentEditingVideoId = null;
       document.getElementById('video-add-modal')?.classList.add('hidden');
     }
 
@@ -2959,7 +3077,7 @@
       }
     }
 
-    function saveCustomVideo() {
+    function saveVideoModal() {
       const url = document.getElementById('modal-video-url').value.trim();
       const title = document.getElementById('modal-video-title').value.trim();
       const desc = document.getElementById('modal-video-desc').value.trim();
@@ -2969,7 +3087,7 @@
 
       const ytid = extractYouTubeId(url);
       if (!ytid) {
-        alert('올바른 유튜브 링크를 입력해주세요.');
+        alert('올바른 유튜브 일반 영상 또는 쇼츠(Shorts) 링크를 입력해주세요.');
         return;
       }
       if (!title) {
@@ -2977,32 +3095,76 @@
         return;
       }
 
-      const newVid = {
-        id: 'cvid_' + Date.now(),
-        title: title,
-        cat: cat,
-        desc: desc || '실전 여행 꿀팁 영상',
-        ytid: ytid,
-        isCustom: true
-      };
+      const isShort = isYouTubeShortsUrl(url);
 
-      customVideos.push(newVid);
-      localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
-      localStorage.setItem('_mod_custom_videos_list', Date.now());
+      if (currentEditingVideoId) {
+        // 기존 영상 수정 (디폴트 및 커스텀 공통 오버라이드)
+        const overrides = JSON.parse(localStorage.getItem('video_overrides') || '{}');
+        overrides[currentEditingVideoId] = { title, cat, desc: desc || '실전 여행 꿀팁 영상', ytid, isShort };
+        localStorage.setItem('video_overrides', JSON.stringify(overrides));
+        localStorage.setItem('_mod_video_overrides', Date.now());
+
+        // 커스텀 영상이면 커스텀 리스트에서도 갱신
+        customVideos = customVideos.map(v => {
+          if (v.id === currentEditingVideoId) {
+            return Object.assign({}, v, { title, cat, desc: desc || '실전 여행 꿀팁 영상', ytid, isShort });
+          }
+          return v;
+        });
+        localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
+        localStorage.setItem('_mod_custom_videos_list', Date.now());
+      } else {
+        // 새 영상 등록
+        const newVid = {
+          id: 'cvid_' + Date.now(),
+          title: title,
+          cat: cat,
+          desc: desc || '실전 여행 꿀팁 영상',
+          ytid: ytid,
+          isShort: isShort,
+          isCustom: true
+        };
+        customVideos.push(newVid);
+        localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
+        localStorage.setItem('_mod_custom_videos_list', Date.now());
+      }
+
       closeVideoAddModal();
       renderVideos();
-      renderBlogs();
       triggerAutoSync();
     }
 
-    function deleteCustomVideo(id) {
-      if (!confirm('이 영상을 삭제하시겠습니까?')) return;
+    function deleteVideo(id) {
+      if (!confirm('이 영상을 삭제하시겠습니까? (디폴트/커스텀 영상 모두 삭제 가능)')) return;
+
+      // 1. 삭제 목록에 ID 추가
+      const deleted = JSON.parse(localStorage.getItem('deleted_videos_list') || '[]');
+      if (!deleted.includes(id)) {
+        deleted.push(id);
+        localStorage.setItem('deleted_videos_list', JSON.stringify(deleted));
+        localStorage.setItem('_mod_deleted_videos_list', Date.now());
+      }
+
+      // 2. 커스텀 리스트에서도 제거
       customVideos = customVideos.filter(v => v.id !== id);
       localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
       localStorage.setItem('_mod_custom_videos_list', Date.now());
+
+      // 3. 오버라이드에서도 정리
+      const overrides = JSON.parse(localStorage.getItem('video_overrides') || '{}');
+      delete overrides[id];
+      localStorage.setItem('video_overrides', JSON.stringify(overrides));
+      localStorage.setItem('_mod_video_overrides', Date.now());
+
+      closeVideoAddModal();
       renderVideos();
-      renderBlogs();
       triggerAutoSync();
+    }
+
+    function deleteCurrentEditingVideo() {
+      if (currentEditingVideoId) {
+        deleteVideo(currentEditingVideoId);
+      }
     }
 
     function renderVideos() {
@@ -3011,40 +3173,68 @@
       const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
       if (!carousel) return;
 
-      const allVideos = (OAHU_DATA.videos || []).concat(customVideos || []);
+      const allVideos = getAllVideos();
 
       const filtered = allVideos.filter(v => {
         if (!query) return true;
-        return v.title.toLowerCase().includes(query) || v.cat.toLowerCase().includes(query) || v.desc.toLowerCase().includes(query);
+        return v.title.toLowerCase().includes(query) || v.cat.toLowerCase().includes(query) || (v.desc && v.desc.toLowerCase().includes(query));
       });
 
-      carousel.innerHTML = filtered.map(v => `
-        <div class="w-80 shrink-0 bg-surface-muted rounded-2xl border border-slate-200 overflow-hidden shadow-xs space-y-2 p-3 snap-center relative group">
-          <div class="video-card-ratio">
-            <iframe src="https://www.youtube.com/embed/${v.ytid}" title="${v.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-          </div>
-          <div class="space-y-1 pt-1">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-md">${v.cat}</span>
-              <div class="flex items-center gap-1.5">
-                ${v.isCustom ? `<button onclick="deleteCustomVideo('${v.id}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold px-1.5 py-0.5 bg-rose-50 rounded">삭제</button>` : ''}
-                <a href="https://www.youtube.com/watch?v=${v.ytid}" target="_blank" class="text-[10px] text-slate-400 hover:text-brand-600">YouTube ↗</a>
+      if (filtered.length === 0) {
+        carousel.innerHTML = '<div class="w-full py-8 text-center text-slate-400 text-xs font-medium">검색 결과와 일치하는 영상이 없습니다.</div>';
+        return;
+      }
+
+      carousel.innerHTML = filtered.map(v => {
+        const linkUrl = v.isShort ? `https://www.youtube.com/shorts/${v.ytid}` : `https://www.youtube.com/watch?v=${v.ytid}`;
+        return `
+          <div class="w-80 shrink-0 bg-surface-muted rounded-2xl border border-slate-200 overflow-hidden shadow-xs space-y-2 p-3 snap-center relative group flex flex-col justify-between">
+            <div>
+              <div class="video-card-ratio rounded-xl overflow-hidden bg-black">
+                <iframe src="https://www.youtube.com/embed/${v.ytid}" title="${escapeHtml(v.title)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+              </div>
+              <div class="space-y-1.5 pt-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1">
+                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-md">${escapeHtml(v.cat)}</span>
+                    ${v.isShort ? '<span class="px-1.5 py-0.5 bg-red-600 text-white text-[9px] font-black rounded flex items-center gap-0.5 shadow-2xs"><span>⚡</span><span>쇼츠</span></span>' : ''}
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button type="button" onclick="openVideoEditModal('${v.id}')" class="text-[10px] text-slate-600 hover:text-slate-900 font-bold px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 rounded transition shadow-2xs">✏️ 수정</button>
+                    <button type="button" onclick="deleteVideo('${v.id}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold px-1.5 py-0.5 bg-rose-50 hover:bg-rose-100 rounded transition shadow-2xs">삭제</button>
+                    <a href="${linkUrl}" target="_blank" class="text-[10px] text-slate-400 hover:text-brand-600 ml-0.5 font-bold">
+                      ${v.isShort ? 'Shorts ↗' : 'YouTube ↗'}
+                    </a>
+                  </div>
+                </div>
+                <h4 class="font-bold text-xs text-slate-900 leading-snug line-clamp-2" title="${escapeHtml(v.title)}">${escapeHtml(v.title)}</h4>
+                <p class="text-[11px] text-slate-500 leading-relaxed line-clamp-2" title="${escapeHtml(v.desc || '')}">${escapeHtml(v.desc || '')}</p>
               </div>
             </div>
-            <h4 class="font-bold text-xs text-slate-900 leading-tight">${v.title}</h4>
-            <p class="text-[11px] text-slate-500 leading-relaxed">${v.desc}</p>
+            <div class="pt-2 border-t border-slate-200/60 mt-2 flex items-center justify-between text-[11px]">
+              <span class="text-slate-400 font-medium">${v.isShort ? '유튜브 쇼츠' : '실전 영상 가이드'}</span>
+              <a href="${linkUrl}" target="_blank" class="px-2.5 py-1 bg-white hover:bg-red-50 text-red-700 border border-red-200/80 rounded-lg font-bold text-[11px] shadow-2xs transition">
+                영상 열기 ↗
+              </a>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function filterVideos() {
       renderVideos();
-      renderBlogs();
     }
 
-    // 블로그 아티클 관리 함수
+    // ========================================================
+    // 블로그 아티클 관리: 원문 썸네일 자동 확보 & 디폴트 수정/삭제 지원
+    // ========================================================
     function openBlogAddModal() {
+      currentEditingBlogId = null;
+      document.getElementById('modal-blog-header-title').innerText = '새 추천 블로그/아티클 등록';
+      document.getElementById('modal-blog-submit-btn').innerText = '블로그 등록하기';
+      document.getElementById('modal-blog-delete-btn')?.classList.add('hidden');
+
       document.getElementById('modal-blog-url').value = '';
       document.getElementById('modal-blog-title').value = '';
       document.getElementById('modal-blog-author').value = '';
@@ -3053,12 +3243,51 @@
       document.getElementById('modal-blog-cat-select').value = '맛집/절약';
       document.getElementById('modal-blog-cat-custom').value = '';
       document.getElementById('modal-blog-cat-custom').classList.add('hidden');
+      
       const hint = document.getElementById('blog-url-hint');
-      if (hint) hint.innerText = '블로그 주소를 입력하면 플랫폼과 작성자가 자동 감지됩니다.';
+      if (hint) hint.innerHTML = '블로그 링크를 입력하시면 원문 썸네일(og:image)과 제목을 자동으로 가져옵니다.';
+      
+      const prevBox = document.getElementById('modal-blog-preview-box');
+      if (prevBox) prevBox.classList.add('hidden');
+
+      document.getElementById('blog-add-modal')?.classList.remove('hidden');
+    }
+
+    function openBlogEditModal(id) {
+      const all = getAllBlogs();
+      const item = all.find(b => b.id === id);
+      if (!item) return;
+
+      currentEditingBlogId = id;
+      document.getElementById('modal-blog-header-title').innerText = '블로그 정보 수정 (디폴트·커스텀)';
+      document.getElementById('modal-blog-submit-btn').innerText = '수정 저장하기';
+      document.getElementById('modal-blog-delete-btn')?.classList.remove('hidden');
+
+      document.getElementById('modal-blog-url').value = item.url || '';
+      document.getElementById('modal-blog-title').value = item.title || '';
+      document.getElementById('modal-blog-author').value = item.author || '';
+      document.getElementById('modal-blog-desc').value = item.desc || '';
+      document.getElementById('modal-blog-img').value = item.img || '';
+
+      const catSelect = document.getElementById('modal-blog-cat-select');
+      const catCustom = document.getElementById('modal-blog-cat-custom');
+      const standardCats = ['맛집/절약', '드라이브', '스노클링', '액티비티', '쇼핑', '꿀팁'];
+      if (standardCats.includes(item.cat)) {
+        catSelect.value = item.cat;
+        catCustom.value = '';
+        catCustom.classList.add('hidden');
+      } else {
+        catSelect.value = 'custom';
+        catCustom.value = item.cat || '';
+        catCustom.classList.remove('hidden');
+      }
+
+      updateBlogPreviewImg(item.img);
       document.getElementById('blog-add-modal')?.classList.remove('hidden');
     }
 
     function closeBlogAddModal() {
+      currentEditingBlogId = null;
       document.getElementById('blog-add-modal')?.classList.add('hidden');
     }
 
@@ -3072,6 +3301,145 @@
       }
     }
 
+    function handleBlogUrlInput(url) {
+      autoDetectBlogPlatform(url);
+      clearTimeout(blogAutoFetchTimeout);
+      if (url && url.startsWith('http')) {
+        blogAutoFetchTimeout = setTimeout(() => {
+          autoFetchBlogThumbnail(url);
+        }, 700);
+      }
+    }
+
+    function triggerAutoFetchBlog() {
+      const url = document.getElementById('modal-blog-url')?.value.trim();
+      if (!url || !url.startsWith('http')) {
+        alert('올바른 블로그 URL(http... 포함)을 먼저 입력해주세요.');
+        return;
+      }
+      autoFetchBlogThumbnail(url);
+    }
+
+    function updateBlogPreviewImg(imgUrl) {
+      const box = document.getElementById('modal-blog-preview-box');
+      const img = document.getElementById('modal-blog-preview-img');
+      if (box && img) {
+        if (imgUrl && imgUrl.trim()) {
+          img.src = imgUrl.trim();
+          box.classList.remove('hidden');
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
+    async function autoFetchBlogThumbnail(url) {
+      if (!url || !url.startsWith('http')) return;
+
+      const hintEl = document.getElementById('blog-url-hint');
+      const imgInput = document.getElementById('modal-blog-img');
+      const titleInput = document.getElementById('modal-blog-title');
+      const descInput = document.getElementById('modal-blog-desc');
+      const authorInput = document.getElementById('modal-blog-author');
+
+      if (hintEl) hintEl.innerHTML = '<span class="text-amber-600 font-bold animate-pulse">⏳ 포스트 원문의 썸네일과 메타데이터 불러오는 중...</span>';
+
+      // 1. YouTube 영상 링크일 경우 고화질 썸네일 직접 추출
+      const ytid = extractYouTubeId(url);
+      if (ytid) {
+        const ytImg = `https://img.youtube.com/vi/${ytid}/hqdefault.jpg`;
+        if (imgInput) imgInput.value = ytImg;
+        updateBlogPreviewImg(ytImg);
+        if (authorInput && !authorInput.value) authorInput.value = '유튜브';
+        if (hintEl) hintEl.innerHTML = '✨ <span class="text-emerald-600 font-bold">유튜브 대표 썸네일이 자동 확보되었습니다.</span>';
+        return;
+      }
+
+      // 2. 무료 고속 OpenGraph 스크래퍼 (Microlink API) 시도
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+        const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const json = await res.json();
+          const data = json.data || {};
+          let ogImg = (data.image && data.image.url) || (data.logo && data.logo.url) || '';
+
+          if (ogImg) {
+            if (imgInput) imgInput.value = ogImg;
+            updateBlogPreviewImg(ogImg);
+          }
+
+          if (data.title && titleInput && !titleInput.value) {
+            titleInput.value = data.title;
+          }
+          if (data.description && descInput && !descInput.value) {
+            descInput.value = data.description.slice(0, 150);
+          }
+          if (authorInput && !authorInput.value) {
+            authorInput.value = data.author || data.publisher || '';
+          }
+
+          if (hintEl) {
+            hintEl.innerHTML = ogImg
+              ? '✨ <span class="text-emerald-600 font-bold">포스트 원문의 썸네일과 제목이 성공적으로 확보되었습니다!</span>'
+              : '⚠️ <span class="text-slate-500">썸네일을 찾지 못했습니다. 직접 이미지 링크를 넣거나 기본 이미지를 사용하세요.</span>';
+          }
+          return;
+        }
+      } catch (err) {
+        console.warn('Microlink fetch error, trying fallback...', err);
+      }
+
+      // 3. Fallback: AllOrigins CORS Proxy로 og:image 태그 직접 파싱
+      try {
+        const controller2 = new AbortController();
+        const timeoutId2 = setTimeout(() => controller2.abort(), 6000);
+
+        const res2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`, {
+          signal: controller2.signal
+        });
+        clearTimeout(timeoutId2);
+
+        if (res2.ok) {
+          const json2 = await res2.json();
+          const doc = new DOMParser().parseFromString(json2.contents || '', 'text/html');
+          const ogImgMeta = doc.querySelector('meta[property="og:image"]') || doc.querySelector('meta[name="twitter:image"]');
+          const ogTitleMeta = doc.querySelector('meta[property="og:title"]') || doc.querySelector('title');
+          const ogDescMeta = doc.querySelector('meta[property="og:description"]');
+
+          const foundImg = ogImgMeta ? ogImgMeta.getAttribute('content') : '';
+          const foundTitle = ogTitleMeta ? (ogTitleMeta.getAttribute('content') || ogTitleMeta.textContent) : '';
+          const foundDesc = ogDescMeta ? ogDescMeta.getAttribute('content') : '';
+
+          if (foundImg) {
+            if (imgInput) imgInput.value = foundImg;
+            updateBlogPreviewImg(foundImg);
+          }
+          if (foundTitle && titleInput && !titleInput.value) titleInput.value = foundTitle.trim();
+          if (foundDesc && descInput && !descInput.value) descInput.value = foundDesc.trim().slice(0, 150);
+
+          if (hintEl) {
+            hintEl.innerHTML = foundImg
+              ? '✨ <span class="text-emerald-600 font-bold">포스트 원문의 썸네일이 성공적으로 확보되었습니다!</span>'
+              : '⚠️ <span class="text-slate-500">썸네일을 찾지 못했습니다. 카테고리 기본 이미지가 적용됩니다.</span>';
+          }
+          return;
+        }
+      } catch (err2) {
+        console.warn('Allorigins fetch error', err2);
+      }
+
+      if (hintEl) {
+        hintEl.innerHTML = '<span class="text-slate-500">자동 추출 실패 시 직접 이미지 링크를 입력하거나 비워두면 기본 이미지가 적용됩니다.</span>';
+      }
+    }
+
     function autoDetectBlogPlatform(url) {
       const authorInput = document.getElementById('modal-blog-author');
       const hint = document.getElementById('blog-url-hint');
@@ -3079,22 +3447,34 @@
       const u = url.toLowerCase();
       if (u.includes('brunch.co.kr')) {
         if (!authorInput.value) authorInput.value = '브런치스토리';
-        if (hint) hint.innerText = '✨ 브런치스토리 글이 감지되었습니다.';
+        if (hint) hint.innerHTML = '✨ <span class="text-amber-700 font-bold">브런치스토리 글 감지됨</span>';
       } else if (u.includes('blog.naver.com') || u.includes('m.blog.naver.com')) {
         if (!authorInput.value) authorInput.value = '네이버 블로그';
-        if (hint) hint.innerText = '✨ 네이버 블로그가 감지되었습니다.';
+        if (hint) hint.innerHTML = '✨ <span class="text-emerald-700 font-bold">네이버 블로그 감지됨</span>';
       } else if (u.includes('tistory.com')) {
         if (!authorInput.value) authorInput.value = '티스토리';
-        if (hint) hint.innerText = '✨ 티스토리 블로그가 감지되었습니다.';
+        if (hint) hint.innerHTML = '✨ <span class="text-orange-700 font-bold">티스토리 블로그 감지됨</span>';
       }
     }
 
-    function saveCustomBlog() {
+    function getCategoryFallbackImage(cat) {
+      const fallbacks = {
+        '맛집/절약': 'https://upload.wikimedia.org/wikipedia/commons/c/c8/SPAM_musubi.jpg',
+        '드라이브': 'https://upload.wikimedia.org/wikipedia/commons/0/05/Interstate_H-3_looking_west_from_Harano_Tunnel_portal.jpg',
+        '스노클링': 'https://upload.wikimedia.org/wikipedia/commons/8/87/Hanauma_Bay_Hawaii.jpg',
+        '노스쇼어': 'https://upload.wikimedia.org/wikipedia/commons/6/64/Leonard%27s_malasadas.jpg',
+        '액티비티': 'https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=600&auto=format&fit=crop&q=80',
+        '쇼핑': 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=600&auto=format&fit=crop&q=80'
+      };
+      return fallbacks[cat] || 'https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80';
+    }
+
+    function saveBlogModal() {
       const url = document.getElementById('modal-blog-url').value.trim();
       const title = document.getElementById('modal-blog-title').value.trim();
       const author = document.getElementById('modal-blog-author').value.trim();
       const desc = document.getElementById('modal-blog-desc').value.trim();
-      const img = document.getElementById('modal-blog-img').value.trim();
+      const imgRaw = document.getElementById('modal-blog-img').value.trim();
       const catSel = document.getElementById('modal-blog-cat-select').value;
       const catCust = document.getElementById('modal-blog-cat-custom').value.trim();
       const cat = catSel === 'custom' ? (catCust || '기타') : catSel;
@@ -3108,32 +3488,76 @@
         return;
       }
 
-      const newBlog = {
-        id: 'cblog_' + Date.now(),
-        title: title,
-        author: author || '블로그',
-        cat: cat,
-        desc: desc || '하와이 여행 실전 참고 후기',
-        url: url,
-        img: img || 'https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80',
-        isCustom: true
-      };
+      const img = imgRaw || getCategoryFallbackImage(cat);
 
-      customBlogs.push(newBlog);
-      localStorage.setItem('custom_blogs_list', JSON.stringify(customBlogs));
-      localStorage.setItem('_mod_custom_blogs_list', Date.now());
+      if (currentEditingBlogId) {
+        // 기존 블로그 글 수정 (디폴트 및 커스텀 공통 오버라이드)
+        const overrides = JSON.parse(localStorage.getItem('blog_overrides') || '{}');
+        overrides[currentEditingBlogId] = { title, author: author || '블로그', cat, desc: desc || '하와이 여행 실전 참고 후기', url, img };
+        localStorage.setItem('blog_overrides', JSON.stringify(overrides));
+        localStorage.setItem('_mod_blog_overrides', Date.now());
+
+        customBlogs = customBlogs.map(b => {
+          if (b.id === currentEditingBlogId) {
+            return Object.assign({}, b, { title, author: author || '블로그', cat, desc: desc || '하와이 여행 실전 참고 후기', url, img });
+          }
+          return b;
+        });
+        localStorage.setItem('custom_blogs_list', JSON.stringify(customBlogs));
+        localStorage.setItem('_mod_custom_blogs_list', Date.now());
+      } else {
+        // 새 블로그 글 등록
+        const newBlog = {
+          id: 'cblog_' + Date.now(),
+          title: title,
+          author: author || '블로그',
+          cat: cat,
+          desc: desc || '하와이 여행 실전 참고 후기',
+          url: url,
+          img: img,
+          isCustom: true
+        };
+        customBlogs.push(newBlog);
+        localStorage.setItem('custom_blogs_list', JSON.stringify(customBlogs));
+        localStorage.setItem('_mod_custom_blogs_list', Date.now());
+      }
+
       closeBlogAddModal();
       renderBlogs();
       triggerAutoSync();
     }
 
-    function deleteCustomBlog(id) {
-      if (!confirm('이 블로그 글을 목록에서 삭제하시겠습니까?')) return;
+    function deleteBlog(id) {
+      if (!confirm('이 블로그 글을 목록에서 삭제하시겠습니까? (디폴트/커스텀 글 모두 삭제 가능)')) return;
+
+      // 1. 삭제 목록에 추가
+      const deleted = JSON.parse(localStorage.getItem('deleted_blogs_list') || '[]');
+      if (!deleted.includes(id)) {
+        deleted.push(id);
+        localStorage.setItem('deleted_blogs_list', JSON.stringify(deleted));
+        localStorage.setItem('_mod_deleted_blogs_list', Date.now());
+      }
+
+      // 2. 커스텀 리스트에서도 제거
       customBlogs = customBlogs.filter(b => b.id !== id);
       localStorage.setItem('custom_blogs_list', JSON.stringify(customBlogs));
       localStorage.setItem('_mod_custom_blogs_list', Date.now());
+
+      // 3. 오버라이드에서도 정리
+      const overrides = JSON.parse(localStorage.getItem('blog_overrides') || '{}');
+      delete overrides[id];
+      localStorage.setItem('blog_overrides', JSON.stringify(overrides));
+      localStorage.setItem('_mod_blog_overrides', Date.now());
+
+      closeBlogAddModal();
       renderBlogs();
       triggerAutoSync();
+    }
+
+    function deleteCurrentEditingBlog() {
+      if (currentEditingBlogId) {
+        deleteBlog(currentEditingBlogId);
+      }
     }
 
     function renderBlogs() {
@@ -3142,7 +3566,7 @@
       const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
       if (!carousel) return;
 
-      const allBlogs = (OAHU_DATA.blogs || []).concat(customBlogs || []);
+      const allBlogs = getAllBlogs();
 
       const filtered = allBlogs.filter(b => {
         if (!query) return true;
@@ -3163,27 +3587,28 @@
         <div class="w-80 shrink-0 bg-surface-muted rounded-2xl border border-slate-200 overflow-hidden shadow-xs space-y-2 p-3 snap-center relative group flex flex-col justify-between">
           <div>
             <div class="relative h-40 w-full rounded-xl overflow-hidden bg-slate-200">
-              <img src="${b.img || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80'}" alt="${b.title}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80';">
-              <div class="absolute top-2 left-2 px-2 py-0.5 bg-slate-900/75 backdrop-blur-xs text-white text-[10px] font-bold rounded-md flex items-center gap-1">
-                <span>📖</span> <span>${b.author || '블로그'}</span>
+              <img src="${b.img || getCategoryFallbackImage(b.cat)}" alt="${escapeHtml(b.title)}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542259009477-d625272157b7?w=600&auto=format&fit=crop&q=80';">
+              <div class="absolute top-2 left-2 px-2 py-0.5 bg-slate-900/75 backdrop-blur-xs text-white text-[10px] font-bold rounded-md flex items-center gap-1 shadow-xs">
+                <span>📖</span> <span>${escapeHtml(b.author || '블로그')}</span>
               </div>
             </div>
             <div class="space-y-1.5 pt-2">
               <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-md">${b.cat}</span>
-                <div class="flex items-center gap-1.5">
-                  ${b.isCustom ? `<button onclick="deleteCustomBlog('${b.id}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold px-1.5 py-0.5 bg-rose-50 rounded">삭제</button>` : ''}
-                  <a href="${b.url}" target="_blank" class="text-[10px] font-bold text-amber-600 hover:text-amber-700 inline-flex items-center gap-0.5">원문 ↗</a>
+                <span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-md">${escapeHtml(b.cat)}</span>
+                <div class="flex items-center gap-1">
+                  <button type="button" onclick="openBlogEditModal('${b.id}')" class="text-[10px] text-slate-600 hover:text-slate-900 font-bold px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 rounded transition shadow-2xs">✏️ 수정</button>
+                  <button type="button" onclick="deleteBlog('${b.id}')" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold px-1.5 py-0.5 bg-rose-50 hover:bg-rose-100 rounded transition shadow-2xs">삭제</button>
+                  <a href="${b.url}" target="_blank" class="text-[10px] font-bold text-amber-600 hover:text-amber-700 inline-flex items-center gap-0.5 ml-0.5">원문 ↗</a>
                 </div>
               </div>
               <a href="${b.url}" target="_blank" class="block">
-                <h4 class="font-bold text-xs text-slate-900 leading-snug line-clamp-2 hover:text-amber-600 transition" title="${b.title}">${b.title}</h4>
+                <h4 class="font-bold text-xs text-slate-900 leading-snug line-clamp-2 hover:text-amber-600 transition" title="${escapeHtml(b.title)}">${escapeHtml(b.title)}</h4>
               </a>
-              <p class="text-[11px] text-slate-500 leading-relaxed line-clamp-2" title="${b.desc}">${b.desc}</p>
+              <p class="text-[11px] text-slate-500 leading-relaxed line-clamp-2" title="${escapeHtml(b.desc || '')}">${escapeHtml(b.desc || '')}</p>
             </div>
           </div>
           <div class="pt-2 border-t border-slate-200/60 mt-2 flex items-center justify-between text-[11px]">
-            <span class="text-slate-400 font-medium">실전 후기</span>
+            <span class="text-slate-400 font-medium">원문 후기</span>
             <a href="${b.url}" target="_blank" class="px-2.5 py-1 bg-white hover:bg-amber-50 text-amber-700 border border-amber-200/80 rounded-lg font-bold text-[11px] shadow-2xs transition">
               블로그 열기 ↗
             </a>
@@ -5122,6 +5547,23 @@
       const remBlogs = remote && Array.isArray(remote.customBlogs) ? remote.customBlogs : [];
       const mergedBlogs = remBlogs.concat(customBlogs.filter(b => !remBlogs.some(rb => rb.id === b.id)));
 
+      // 비디오/블로그 삭제 및 오버라이드 병합
+      const remDelVids = remote && Array.isArray(remote.deletedVideos) ? remote.deletedVideos : [];
+      const localDelVids = JSON.parse(localStorage.getItem('deleted_videos_list') || '[]');
+      const mergedDeletedVideos = Array.from(new Set(remDelVids.concat(localDelVids)));
+
+      const remVidOvr = remote && remote.videoOverrides ? remote.videoOverrides : {};
+      const localVidOvr = JSON.parse(localStorage.getItem('video_overrides') || '{}');
+      const mergedVideoOverrides = Object.assign({}, remVidOvr, localVidOvr);
+
+      const remDelBlogs = remote && Array.isArray(remote.deletedBlogs) ? remote.deletedBlogs : [];
+      const localDelBlogs = JSON.parse(localStorage.getItem('deleted_blogs_list') || '[]');
+      const mergedDeletedBlogs = Array.from(new Set(remDelBlogs.concat(localDelBlogs)));
+
+      const remBlogOvr = remote && remote.blogOverrides ? remote.blogOverrides : {};
+      const localBlogOvr = JSON.parse(localStorage.getItem('blog_overrides') || '{}');
+      const mergedBlogOverrides = Object.assign({}, remBlogOvr, localBlogOvr);
+
       const remPlaces = remote && Array.isArray(remote.customPlaces) ? remote.customPlaces : [];
       const mergedPlaces = remPlaces.concat(customPlaces.filter(p => !remPlaces.some(rp => rp.id === p.id)));
 
@@ -5140,6 +5582,10 @@
         fuelRecords: mergedFuel,
         customVideos: mergedVideos,
         customBlogs: mergedBlogs,
+        deletedVideos: mergedDeletedVideos,
+        videoOverrides: mergedVideoOverrides,
+        deletedBlogs: mergedDeletedBlogs,
+        blogOverrides: mergedBlogOverrides,
         customPlaces: mergedPlaces,
         customPackingList: mergedPacks,
         customLedgerItems: mergedLedger,
@@ -5176,15 +5622,26 @@
       if (parsed.customVideos && Array.isArray(parsed.customVideos)) {
         customVideos = parsed.customVideos;
         localStorage.setItem('custom_videos_list', JSON.stringify(customVideos));
-        renderVideos();
-      renderBlogs();
       }
-
       if (parsed.customBlogs && Array.isArray(parsed.customBlogs)) {
         customBlogs = parsed.customBlogs;
         localStorage.setItem('custom_blogs_list', JSON.stringify(customBlogs));
-        renderBlogs();
       }
+      if (parsed.deletedVideos && Array.isArray(parsed.deletedVideos)) {
+        localStorage.setItem('deleted_videos_list', JSON.stringify(parsed.deletedVideos));
+      }
+      if (parsed.videoOverrides && typeof parsed.videoOverrides === 'object') {
+        localStorage.setItem('video_overrides', JSON.stringify(parsed.videoOverrides));
+      }
+      if (parsed.deletedBlogs && Array.isArray(parsed.deletedBlogs)) {
+        localStorage.setItem('deleted_blogs_list', JSON.stringify(parsed.deletedBlogs));
+      }
+      if (parsed.blogOverrides && typeof parsed.blogOverrides === 'object') {
+        localStorage.setItem('blog_overrides', JSON.stringify(parsed.blogOverrides));
+      }
+      renderVideos();
+      renderBlogs();
+
       if (parsed.customPlaces && Array.isArray(parsed.customPlaces)) {
         customPlaces = parsed.customPlaces;
         localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
