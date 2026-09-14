@@ -495,6 +495,9 @@
           </div>
           <div class="flex items-center gap-2">
             <span id="table-count-badge" class="bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">40개 항목</span>
+            <button type="button" onclick="downloadAllIcs()" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 text-xs font-bold rounded-xl transition flex items-center gap-1 shrink-0" title="전체 일정 캘린더 일괄 다운로드">
+              <span>📅</span> <span class="hidden sm:inline">전체 캘린더 다운</span>
+            </button>
             <button type="button" onclick="openPlaceModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
               <span class="text-sm font-black leading-none">+</span> <span>장소 등록</span>
             </button>
@@ -503,11 +506,21 @@
             </button>
           </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-xs">
           <div><label class="block font-bold text-slate-400 mb-1">🔍 검색</label><input type="text" id="table-search-input" oninput="renderMasterTable()" placeholder="장소명, 메뉴 검색..." class="w-full p-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none"></div>
           <div><label class="block font-bold text-slate-400 mb-1">📍 권역</label><select id="filter-region" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium"><option value="all">전체 권역</option><option value="와이키키">와이키키 & 다운타운</option><option value="동부">동부 해안</option><option value="노스쇼어">북부 노스쇼어</option><option value="진주만">진주만·서부</option></select></div>
           <div><label class="block font-bold text-slate-400 mb-1">🏷️ 분류</label><select id="filter-category" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium"><option value="all">전체 분류</option><option value="웰니스">🧘 웰니스</option><option value="명소">🏞️ 관광·명소</option><option value="미식">🍽️ 식당·카페</option><option value="액티비티">🏄 액티비티</option><option value="쇼핑">🛍️ 쇼핑</option><option value="의료">🏥 의료</option></select></div>
           <div><label class="block font-bold text-slate-400 mb-1">🗓️ 일정</label><select id="filter-day" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium"><option value="all">전체 일자</option><option value="Day 1">Day 1</option><option value="Day 2">Day 2</option><option value="Day 3">Day 3</option><option value="Day 4">Day 4</option><option value="Day 5">Day 5</option><option value="Day 6">Day 6</option><option value="Day 7">Day 7</option><option value="Day 8">Day 8</option></select></div>
+          <div>
+            <label class="block font-bold text-slate-400 mb-1">↕️ 일정 정렬</label>
+            <select id="table-sort-order" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-bold focus:ring-2 focus:ring-brand-500 focus:outline-none">
+              <option value="dayAsc" selected>🗓️ 일정 오름차순 (Day 1 ➔ 8)</option>
+              <option value="dayDesc">🗓️ 일정 내림차순 (Day 8 ➔ 1)</option>
+              <option value="timeAsc">⏰ 시간 빠른순 (06:00 ➔ 21:00)</option>
+              <option value="nameAsc">장소명 가나다순</option>
+              <option value="regionAsc">📍 권역순</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="bg-white rounded-3xl border border-slate-200/80 shadow-soft overflow-hidden">
@@ -763,13 +776,15 @@
               </div>
               <div class="flex items-center gap-1.5">
                 <span class="text-slate-400 font-bold">↕️ 정렬:</span>
-                <select id="ledger-sort-order" onchange="renderLedgerTable()" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 font-medium focus:ring-1 focus:ring-teal-500">
-                  <option value="default">기본 순</option>
+                <select id="ledger-sort-order" onchange="renderLedgerTable()" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 font-bold focus:ring-1 focus:ring-teal-500">
+                  <option value="dayAsc" selected>🗓️ 일정 오름차순 (Day 1 ➔ 8)</option>
+                  <option value="dayDesc">🗓️ 일정 내림차순 (Day 8 ➔ 1)</option>
                   <option value="doneFirst">수행(Y) 우선</option>
                   <option value="priceDesc">금액 높은 순</option>
                   <option value="priceAsc">금액 낮은 순</option>
                   <option value="nameAsc">장소명 순</option>
                   <option value="payerOrder">결제자 순 (S ➔ B ➔ -)</option>
+                  <option value="default">기본 순</option>
                 </select>
               </div>
             </div>
@@ -831,10 +846,11 @@
                   <th class="py-3 px-3 text-center">수행(Y/N)</th>
                   <th class="py-3 px-4">항목 및 장소명</th>
                   <th class="py-3 px-2 text-center">결제자 (-/S/B)</th>
-                  <th class="py-3 px-3">원가 ($ USD)</th>
-                  <th class="py-3 px-3">팁 (%)</th>
-                  <th class="py-3 px-3">결제 환율 (₩)</th>
-                  <th class="py-3 px-4 text-right">최종 환산 총액 (원화)</th>
+                  <th class="py-3 px-2 text-center">원가 ($ USD)</th>
+                  <th class="py-3 px-2 text-center">팁 (%)</th>
+                  <th class="py-3 px-2 text-center">결제 환율 (₩)</th>
+                  <th class="py-3 px-3 text-right text-teal-700">최종 환산 총액 (원화 ₩)</th>
+                  <th class="py-3 px-3 text-slate-600">비고 (메모)</th>
                 </tr>
               </thead>
               <tbody id="ledger-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
@@ -847,11 +863,15 @@
 
   <!-- 플로팅 버튼군 -->
   <div class="fixed bottom-6 right-6 z-30 flex flex-col items-end gap-2.5">
-    <button onclick="scrollToSec('sec-videos')" class="px-4 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-float hover:scale-105 transition flex items-center gap-2">
-      <span class="text-lg">🎬</span>
-      <span class="font-bold text-xs hidden sm:inline">여행 꿀팁 영상</span>
+    <button type="button" onclick="scrollToSec('sec-timeline')" class="px-4 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-float hover:scale-105 transition flex items-center gap-2" title="7박8일 일정 보기">
+      <span class="text-lg">🗓️</span>
+      <span class="font-bold text-xs">일정 보기</span>
     </button>
-    <button onclick="toggleCalcModal()" class="p-4 rounded-full bg-brand-600 hover:bg-brand-700 text-white shadow-float hover:scale-105 transition flex items-center gap-2">
+    <button type="button" onclick="scrollToSec('sec-videos')" class="px-4 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-float hover:scale-105 transition flex items-center gap-2" title="실전 여행 꿀팁 영상">
+      <span class="text-lg">🎬</span>
+      <span class="font-bold text-xs hidden sm:inline">꿀팁 영상</span>
+    </button>
+    <button type="button" onclick="toggleCalcModal()" class="p-4 rounded-full bg-brand-600 hover:bg-brand-700 text-white shadow-float hover:scale-105 transition flex items-center gap-2" title="환율·팁 계산기">
       <span class="text-xl">💵</span>
       <span class="font-bold text-xs hidden sm:inline">환율·팁 계산기</span>
     </button>
@@ -1115,6 +1135,10 @@
               <option value="상시">상시</option>
             </select>
           </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">예정 시간 (Time)</label>
+            <input type="text" id="modal-place-time" placeholder="예: 10:00 또는 09:30~11:00" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-mono text-slate-900 font-bold">
+          </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1160,6 +1184,69 @@
         <button type="button" onclick="savePlaceModal(true)" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5" title="저장 후 GitHub에 즉시 동기화">
           <span>💾</span> <span>저장 & 즉시 동기화</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 캘린더 등록 & 푸시 알림 모달 -->
+  <div id="calendar-sync-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden space-y-4 p-5 sm:p-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-emerald-100 text-emerald-800 rounded-xl text-sm font-bold">📅</span>
+          <h3 class="font-bold text-sm text-slate-900">캘린더 등록 & 푸시 알림</h3>
+        </div>
+        <button type="button" onclick="closeCalendarModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <!-- 선택된 일정 정보 표시 -->
+      <div class="p-3.5 bg-emerald-50/50 border border-emerald-100 rounded-2xl space-y-1.5 text-xs">
+        <div class="flex items-center justify-between">
+          <span id="cal-modal-day-badge" class="px-2 py-0.5 bg-emerald-600 text-white font-bold rounded text-[10px]">Day 1</span>
+          <span id="cal-modal-time-badge" class="font-mono font-bold text-emerald-800 flex items-center gap-1"><span>⏰</span> <span id="cal-modal-time">10:00</span></span>
+        </div>
+        <h4 id="cal-modal-title" class="font-bold text-sm text-slate-900">장소명</h4>
+        <p id="cal-modal-desc" class="text-slate-600 text-[11px] leading-relaxed">상세 설명</p>
+        <div id="cal-modal-loc" class="text-[10px] text-slate-400">📍 와이키키, Oahu, Hawaii</div>
+      </div>
+
+      <!-- 옵션 버튼 목록 -->
+      <div class="space-y-2 text-xs">
+        <!-- 1) 구글 캘린더 원클릭 -->
+        <a id="cal-modal-gcal-btn" href="#" target="_blank" class="w-full py-2.5 px-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-xs transition flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">📅</span>
+            <span>구글 캘린더에 바로 등록 (앱/웹 1초)</span>
+          </div>
+          <span class="text-xs">↗</span>
+        </a>
+
+        <!-- 2) 애플/기본 캘린더 (.ics) -->
+        <button type="button" onclick="downloadSingleIcs()" class="w-full py-2.5 px-3.5 bg-surface-muted hover:bg-slate-200 text-slate-700 border border-slate-200 font-bold rounded-xl transition flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🍏</span>
+            <span>애플/기본 캘린더 등록 (30분 전 알림 .ics)</span>
+          </div>
+          <span>📥</span>
+        </button>
+
+        <!-- 3) 브라우저 푸시 알림 -->
+        <button type="button" onclick="triggerWebNotification()" class="w-full py-2.5 px-3.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 font-bold rounded-xl transition flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🔔</span>
+            <span>브라우저 푸시 알림 받기 (테스트/활성화)</span>
+          </div>
+          <span class="text-xs">설정</span>
+        </button>
+
+        <!-- 4) 전체 8일 일정 일괄 캘린더 다운로드 -->
+        <button type="button" onclick="downloadAllIcs()" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 pt-2 border-t border-slate-100">
+          <span>📦</span> <span>7박 8일 전체 43개 일정 한 번에 등록 (.ics 일괄 다운로드)</span>
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 text-center">
+        <button type="button" onclick="closeCalendarModal()" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">닫기</button>
       </div>
     </div>
   </div>
@@ -1218,12 +1305,22 @@
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-slate-600 mb-1">원가 ($ USD)</label>
-            <input type="text" inputmode="decimal" id="modal-ledger-usd" value="20.00" placeholder="0.00" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold text-slate-900">
+            <label class="block font-bold text-slate-600 mb-1">원가 ($ USD) <span class="text-teal-600">양방향</span></label>
+            <input type="text" inputmode="decimal" id="modal-ledger-usd" value="20.00" oninput="syncModalLedger('usd')" placeholder="0.00" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold text-slate-900">
           </div>
           <div>
+            <label class="block font-bold text-slate-600 mb-1">환산액 (₩ KRW) <span class="text-teal-600">양방향</span></label>
+            <input type="text" inputmode="numeric" id="modal-ledger-krw" value="" oninput="syncModalLedger('krw')" placeholder="원화 입력 시 달러 자동계산" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold text-teal-700">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
             <label class="block font-bold text-slate-600 mb-1">팁 (%)</label>
-            <input type="number" step="1" id="modal-ledger-tip" value="0" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold">
+            <input type="number" step="1" id="modal-ledger-tip" value="0" oninput="syncModalLedger('tip')" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl font-mono font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">비고 (메모)</label>
+            <input type="text" id="modal-ledger-memo" placeholder="예: 신랑카드, 현금결제" class="w-full p-2 bg-surface-muted border border-slate-200 rounded-xl text-slate-900">
           </div>
         </div>
       </div>
@@ -1747,49 +1844,49 @@
 
     // 40개 기본 장소 데이터 (디폴트 유지 + 일정/설명/비용 사용자 수정 지원)
     const placesData = [
-      { id: "p1", name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
-      { id: "p2", name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
-      { id: "p3", name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
-      { id: "p4", name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
-      { id: "p5", name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
-      { id: "p6", name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
-      { id: "p7", name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
-      { id: "p8", name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
-      { id: "p9", name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
-      { id: "p10", name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
-      { id: "p11", name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
-      { id: "p12", name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
-      { id: "p13", name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
-      { id: "p14", name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
-      { id: "p15", name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
-      { id: "p16", name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
-      { id: "p17", name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
-      { id: "p18", name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
-      { id: "p19", name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
-      { id: "p20", name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", desc: "프리미엄 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
-      { id: "p21", name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
-      { id: "p22", name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
-      { id: "p23", name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
-      { id: "p24", name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
-      { id: "p25", name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
-      { id: "p26", name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
-      { id: "p27", name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
-      { id: "p28", name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
-      { id: "p29", name: "라니카이 필박스 트레일", lat: 21.3895, lng: -157.7125, region: "동부", cat: "액티비티", day: "Day 2", desc: "능선 군사관측소 파노라마 하이킹", price: "무료", gmap: "Lanikai+Pillbox+Trail" },
-      { id: "p30", name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
-      { id: "p31", name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
-      { id: "p32", name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
-      { id: "p33", name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
-      { id: "p34", name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
-      { id: "p35", name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
-      { id: "p36", name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
-      { id: "p37", name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
-      { id: "p38", name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
-      { id: "p39", name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
-      { id: "p40", name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
-      { id: "p41", name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
-      { id: "p42", name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
-      { id: "p43", name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
+      { id: "p1", name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", time: "07:00", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
+      { id: "p2", name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", time: "15:30", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
+      { id: "p3", name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", time: "06:30", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
+      { id: "p4", name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", time: "14:00", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
+      { id: "p5", name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", time: "15:00", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
+      { id: "p6", name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", time: "11:30", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
+      { id: "p7", name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", time: "18:00", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
+      { id: "p8", name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", time: "19:30", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
+      { id: "p9", name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", time: "21:00", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
+      { id: "p10", name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", time: "21:30", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
+      { id: "p11", name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", time: "상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
+      { id: "p12", name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "10:30", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
+      { id: "p13", name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "11:30", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
+      { id: "p14", name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "12:30", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
+      { id: "p15", name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", time: "15:00", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
+      { id: "p16", name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", time: "15:30", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
+      { id: "p17", name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", time: "18:00", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
+      { id: "p18", name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", time: "17:00", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
+      { id: "p19", name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", time: "16:30", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
+      { id: "p20", name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", time: "18:30", desc: "프리미엄 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
+      { id: "p21", name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "14:00", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
+      { id: "p22", name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", time: "08:30", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
+      { id: "p23", name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", time: "06:30", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
+      { id: "p24", name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", time: "10:30", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
+      { id: "p25", name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", time: "07:30", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
+      { id: "p26", name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", time: "10:00", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
+      { id: "p27", name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", time: "11:30", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
+      { id: "p28", name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", time: "13:00", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
+      { id: "p29", name: "라니카이 필박스 트레일", lat: 21.3895, lng: -157.7125, region: "동부", cat: "액티비티", day: "Day 2", time: "16:30", desc: "능선 군사관측소 파노라마 하이킹", price: "무료", gmap: "Lanikai+Pillbox+Trail" },
+      { id: "p30", name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", time: "13:30", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
+      { id: "p31", name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", time: "09:30", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
+      { id: "p32", name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", time: "13:30", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
+      { id: "p33", name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", time: "09:30", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
+      { id: "p34", name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", time: "11:00", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
+      { id: "p35", name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", time: "12:00", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
+      { id: "p36", name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", time: "13:30", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
+      { id: "p37", name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", time: "14:00", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
+      { id: "p38", name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", time: "15:00", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
+      { id: "p39", name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", time: "18:00", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
+      { id: "p40", name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", time: "09:30", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
+      { id: "p41", name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", time: "13:00", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
+      { id: "p42", name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", time: "15:00", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
+      { id: "p43", name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", time: "16:30", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" }
     ];
 
     function getAllPlaces() {
@@ -2210,6 +2307,7 @@
       document.getElementById('modal-place-name').disabled = false;
       document.getElementById('modal-place-name').dataset.autoFilled = 'false';
       document.getElementById('modal-place-day').value = 'Day 1';
+      document.getElementById('modal-place-time').value = '10:00';
       document.getElementById('modal-place-region').value = '와이키키';
       document.getElementById('modal-place-cat').value = '명소';
       document.getElementById('modal-place-desc').value = '';
@@ -2232,6 +2330,7 @@
       document.getElementById('modal-place-name').disabled = !p.isCustom;
       
       document.getElementById('modal-place-day').value = p.day ? p.day.split(',')[0].trim() : 'Day 1';
+      document.getElementById('modal-place-time').value = p.time || '10:00';
       document.getElementById('modal-place-region').value = p.region || '와이키키';
       document.getElementById('modal-place-cat').value = p.cat || '명소';
       document.getElementById('modal-place-desc').value = p.desc || '';
@@ -2255,6 +2354,7 @@
     function savePlaceModal(forceSync = true) {
       const name = document.getElementById('modal-place-name').value.trim();
       const day = document.getElementById('modal-place-day').value;
+      const time = document.getElementById('modal-place-time').value.trim() || '10:00';
       const region = document.getElementById('modal-place-region').value;
       const cat = document.getElementById('modal-place-cat').value;
       const desc = document.getElementById('modal-place-desc').value.trim();
@@ -2275,14 +2375,14 @@
         if (isCustom) {
           customPlaces = customPlaces.map(p => {
             if (p.id === currentEditingPlaceId) {
-              return Object.assign({}, p, { name, day, region, cat, desc, price, gmap: gmapQuery });
+              return Object.assign({}, p, { name, day, time, region, cat, desc, price, gmap: gmapQuery });
             }
             return p;
           });
           localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
           localStorage.setItem('_mod_custom_places_list', Date.now());
         } else {
-          placeOverrides[currentEditingPlaceId] = { day, region, cat, desc, price, gmap: gmapQuery };
+          placeOverrides[currentEditingPlaceId] = { day, time, region, cat, desc, price, gmap: gmapQuery };
           localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
           localStorage.setItem('_mod_place_overrides', Date.now());
         }
@@ -2295,6 +2395,7 @@
           region: region,
           cat: cat,
           day: day,
+          time: time,
           desc: desc,
           price: price || '무료',
           gmap: gmapQuery,
@@ -2331,6 +2432,181 @@
       pushStateToGitHub(true);
     }
 
+    // 일정 순서 랭킹 헬퍼 (Day 1 ~ Day 8 오름차순/내림차순 정렬)
+    function getDayRank(dayStr) {
+      if (!dayStr) return 99;
+      const m = dayStr.match(/Day\s*(\d+)/i);
+      if (m) return parseInt(m[1], 10);
+      if (dayStr.includes('실비')) return 90;
+      if (dayStr.includes('상시') || dayStr.includes('공통')) return 91;
+      if (dayStr.includes('비상')) return 92;
+      return 99;
+    }
+
+    // 하와이 일정 일자 ➔ 실제 날짜 변환 헬퍼 (2026-10-09 ~ 2026-10-16)
+    function getEventDateIso(dayStr) {
+      const dayMap = {
+        'Day 1': '20261009',
+        'Day 2': '20261010',
+        'Day 3': '20261011',
+        'Day 4': '20261012',
+        'Day 5': '20261013',
+        'Day 6': '20261014',
+        'Day 7': '20261015',
+        'Day 8': '20261016'
+      };
+      for (let k in dayMap) {
+        if (dayStr && dayStr.includes(k)) return dayMap[k];
+      }
+      return '20261009'; // 기본 Day 1
+    }
+
+    // 캘린더 등록 모달 상태 및 이벤트 제어
+    let activeCalPlace = null;
+
+    function openCalendarModal(placeId) {
+      const all = getAllPlaces();
+      const p = all.find(x => x.id === placeId || x.name === placeId);
+      if (!p) return;
+      activeCalPlace = p;
+
+      document.getElementById('cal-modal-day-badge').innerText = p.day;
+      document.getElementById('cal-modal-time').innerText = p.time || '10:00';
+      document.getElementById('cal-modal-title').innerText = p.name;
+      document.getElementById('cal-modal-desc').innerText = `${p.desc || ''} | 분류: ${p.cat} | 예상비용: ${p.price || '무료'}`;
+      document.getElementById('cal-modal-loc').innerText = `📍 ${p.region} (${p.name}, Oahu, Hawaii)`;
+
+      // 구글 캘린더 바로가기 URL 생성
+      const datePart = getEventDateIso(p.day);
+      const timeClean = (p.time || '10:00').replace(/[^0-9]/g, '').padEnd(4, '0').substring(0, 4);
+      const startH = parseInt(timeClean.substring(0, 2), 10) || 10;
+      const startM = parseInt(timeClean.substring(2, 4), 10) || 0;
+      const endH = (startH + 1) < 24 ? (startH + 1) : 23;
+      const startIso = `${datePart}T${String(startH).padStart(2,'0')}${String(startM).padStart(2,'0')}00`;
+      const endIso = `${datePart}T${String(endH).padStart(2,'0')}${String(startM).padStart(2,'0')}00`;
+
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('[하와이] ' + p.name)}&dates=${startIso}/${endIso}&ctz=Pacific/Honolulu&details=${encodeURIComponent(p.desc || '')}&location=${encodeURIComponent(p.name + ', Oahu, Hawaii')}`;
+      const gcalBtn = document.getElementById('cal-modal-gcal-btn');
+      if (gcalBtn) gcalBtn.href = gcalUrl;
+
+      document.getElementById('calendar-sync-modal')?.classList.remove('hidden');
+    }
+
+    function closeCalendarModal() {
+      document.getElementById('calendar-sync-modal')?.classList.add('hidden');
+      activeCalPlace = null;
+    }
+
+    // 단일 일정 .ics 파일 다운로드 (알림 30분 전 포함)
+    function downloadSingleIcs() {
+      if (!activeCalPlace) return;
+      const p = activeCalPlace;
+      const datePart = getEventDateIso(p.day);
+      const timeClean = (p.time || '10:00').replace(/[^0-9]/g, '').padEnd(4, '0').substring(0, 4);
+      const startH = String(parseInt(timeClean.substring(0, 2), 10) || 10).padStart(2, '0');
+      const startM = String(parseInt(timeClean.substring(2, 4), 10) || 0).padStart(2, '0');
+      const endH = String(Math.min(23, (parseInt(startH, 10) + 1))).padStart(2, '0');
+
+      const ics = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Hawaii Oahu Trip//KO",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        `UID:oahu-${p.id || Date.now()}@hawaii`,
+        `SUMMARY:[하와이] ${p.name}`,
+        `DESCRIPTION:${(p.desc || '').replace(/\n/g, ' ')}`,
+        `LOCATION:${p.name}, Oahu, Hawaii`,
+        `DTSTART;TZID=Pacific/Honolulu:${datePart}T${startH}${startM}00`,
+        `DTEND;TZID=Pacific/Honolulu:${datePart}T${endH}${startM}00`,
+        "BEGIN:VALARM",
+        "TRIGGER:-PT30M",
+        "ACTION:DISPLAY",
+        `DESCRIPTION:[하와이] ${p.name} 30분 전 알림`,
+        "END:VALARM",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `oahu_${p.name.replace(/\s+/g, '_')}.ics`;
+      link.click();
+    }
+
+    // 7박 8일 전체 43개 일정 .ics 일괄 다운로드
+    function downloadAllIcs() {
+      const all = getAllPlaces();
+      let ics = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Hawaii Oahu Full Trip//KO",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH"
+      ];
+
+      all.forEach(p => {
+        const datePart = getEventDateIso(p.day);
+        const timeClean = (p.time || '10:00').replace(/[^0-9]/g, '').padEnd(4, '0').substring(0, 4);
+        const startH = String(parseInt(timeClean.substring(0, 2), 10) || 10).padStart(2, '0');
+        const startM = String(parseInt(timeClean.substring(2, 4), 10) || 0).padStart(2, '0');
+        const endH = String(Math.min(23, (parseInt(startH, 10) + 1))).padStart(2, '0');
+
+        ics.push("BEGIN:VEVENT");
+        ics.push(`UID:oahu-full-${p.id || Math.random()}@hawaii`);
+        ics.push(`SUMMARY:[하와이 ${p.day}] ${p.name}`);
+        ics.push(`DESCRIPTION:${(p.desc || '').replace(/\n/g, ' ')} | 분류: ${p.cat} | 비용: ${p.price || '무료'}`);
+        ics.push(`LOCATION:${p.name}, Oahu, Hawaii`);
+        ics.push(`DTSTART;TZID=Pacific/Honolulu:${datePart}T${startH}${startM}00`);
+        ics.push(`DTEND;TZID=Pacific/Honolulu:${datePart}T${endH}${startM}00`);
+        ics.push("BEGIN:VALARM");
+        ics.push("TRIGGER:-PT30M");
+        ics.push("ACTION:DISPLAY");
+        ics.push(`DESCRIPTION:[하와이] ${p.name} 30분 전 알림`);
+        ics.push("END:VALARM");
+        ics.push("END:VEVENT");
+      });
+
+      ics.push("END:VCALENDAR");
+
+      const blob = new Blob([ics.join("\r\n")], { type: 'text/calendar;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "oahu_full_trip_schedule.ics";
+      link.click();
+    }
+
+    // 웹 브라우저 푸시 알림 트리거 및 권한 요청
+    function triggerWebNotification() {
+      if (!("Notification" in window)) {
+        alert("현재 사용하시는 브라우저는 웹 푸시 알림을 지원하지 않습니다. 구글/애플 캘린더 등록을 이용해주세요.");
+        return;
+      }
+      if (Notification.permission === "granted") {
+        if (activeCalPlace) {
+          new Notification(`[하와이 여행 알림] ${activeCalPlace.name}`, {
+            body: `${activeCalPlace.day} ${activeCalPlace.time || '10:00'} - ${activeCalPlace.desc || ''}`,
+            icon: "https://images.unsplash.com/photo-1542259009-559971a0d02a?w=128"
+          });
+        }
+        alert("✓ 브라우저 알림이 정상 활성화되어 있습니다!");
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            new Notification("하와이 오아후 여행 일정 알림 활성화", {
+              body: "일정 푸시 알림이 성공적으로 설정되었습니다.",
+              icon: "https://images.unsplash.com/photo-1542259009-559971a0d02a?w=128"
+            });
+            alert("✓ 브라우저 알림 권한이 허용되었습니다!");
+          }
+        });
+      } else {
+        alert("브라우저 알림 권한이 차단되어 있습니다. 브라우저 주소창 좌측 설정 아이콘을 눌러 알림을 '허용'으로 변경해주세요.");
+      }
+    }
+
     function renderMasterTable() {
       const tbody = document.getElementById('master-table-body');
       const badge = document.getElementById('table-count-badge');
@@ -2340,9 +2616,10 @@
       const region = document.getElementById('filter-region')?.value || 'all';
       const category = document.getElementById('filter-category')?.value || 'all';
       const day = document.getElementById('filter-day')?.value || 'all';
+      const sortOrder = document.getElementById('table-sort-order')?.value || 'dayAsc';
 
       const all = getAllPlaces();
-      const filtered = all.filter(p => {
+      let filtered = all.filter(p => {
         if (q && !(p.name.toLowerCase().includes(q) || (p.desc && p.desc.toLowerCase().includes(q)))) return false;
         if (region !== 'all' && p.region !== region) return false;
         if (category !== 'all' && p.cat !== category) return false;
@@ -2350,11 +2627,47 @@
         return true;
       });
 
+      // 정렬 처리 (일정 오름차순, 내림차순, 시간 빠른순, 이름순, 권역순)
+      if (sortOrder === 'dayAsc') {
+        filtered.sort((a, b) => {
+          const rankA = getDayRank(a.day);
+          const rankB = getDayRank(b.day);
+          if (rankA !== rankB) return rankA - rankB;
+          const timeA = a.time || '99:99';
+          const timeB = b.time || '99:99';
+          return timeA.localeCompare(timeB);
+        });
+      } else if (sortOrder === 'dayDesc') {
+        filtered.sort((a, b) => {
+          const rankA = getDayRank(a.day);
+          const rankB = getDayRank(b.day);
+          if (rankA !== rankB) return rankB - rankA;
+          const timeA = a.time || '99:99';
+          const timeB = b.time || '99:99';
+          return timeA.localeCompare(timeB);
+        });
+      } else if (sortOrder === 'timeAsc') {
+        filtered.sort((a, b) => {
+          const timeA = a.time || '99:99';
+          const timeB = b.time || '99:99';
+          return timeA.localeCompare(timeB);
+        });
+      } else if (sortOrder === 'nameAsc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortOrder === 'regionAsc') {
+        filtered.sort((a, b) => a.region.localeCompare(b.region));
+      }
+
       if (badge) badge.innerText = `${filtered.length}개 항목`;
 
       tbody.innerHTML = filtered.map(p => `
         <tr class="hover:bg-brand-50/30 transition-colors">
-          <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-600 whitespace-nowrap">${p.day}</td>
+          <td class="py-2.5 px-3 whitespace-nowrap">
+            <div class="font-mono font-bold text-xs text-brand-600">${p.day}</div>
+            <div class="text-[11px] font-mono text-slate-500 font-semibold flex items-center gap-1 mt-0.5">
+              <span class="text-amber-500">⏰</span> <span>${p.time || '-'}</span>
+            </div>
+          </td>
           <td class="py-2.5 px-4 font-bold text-slate-900">
             <div class="flex items-center gap-1.5">
               <span>${p.name}</span>
@@ -2367,8 +2680,11 @@
           <td class="py-2.5 px-3 text-xs font-mono font-bold text-slate-700 whitespace-nowrap">${p.price || ''}</td>
           <td class="py-2.5 px-3 text-center whitespace-nowrap">
             <div class="inline-flex items-center gap-1">
-              <button type="button" onclick="openPlaceEditModal('${p.id || p.name}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg text-xs transition" title="일정/설명/비용 수정">
+              <button type="button" onclick="openPlaceEditModal('${p.id || p.name}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg text-xs transition" title="일정/시간/설명/비용 수정">
                 ✏️ 수정
+              </button>
+              <button type="button" onclick="openCalendarModal('${p.id || p.name}')" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-lg text-xs transition inline-flex items-center gap-0.5 shadow-2xs" title="캘린더 등록 및 알림">
+                <span>📅</span> <span>캘린더</span>
               </button>
               <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap || encodeURIComponent(p.name)}" target="_blank" class="px-2 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition inline-flex items-center gap-0.5" title="구글맵 바로가기">
                 📍 맵
@@ -2956,12 +3272,64 @@
       triggerAutoSync();
     }
 
+        // 가계부 상단 4대 요약 카드 실시간 연산 헬퍼 (입력 중 DOM 깜빡임/포커스 해제 완전 방지)
+    function updateLedgerSummaryCards() {
+      const sumBaseEl = document.getElementById('ledger-sum-base');
+      const sumKrwEl = document.getElementById('ledger-sum-krw');
+      const sumSEl = document.getElementById('ledger-sum-s');
+      const sumBEl = document.getElementById('ledger-sum-b');
+
+      let totalBase = 0;
+      let totalKrw = 0;
+      let totalS = 0;
+      let totalB = 0;
+
+      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
+        const fid = f.id || ('fuel_' + idx);
+        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
+        return {
+          id: fid,
+          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
+          day: '실비',
+          cat: '주유비',
+          defaultUsd: parseFloat(f.total || 0),
+          payer: payer
+        };
+      });
+
+      const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
+
+      allLedger.forEach(item => {
+        const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
+        if (!isY) return;
+
+        const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
+        const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd) || 0;
+        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0)) || 0;
+        const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE) || EXCHANGE_RATE;
+
+        const tax = usd * 0.04712;
+        const tipAmt = usd * (tip / 100);
+        const itemTotalUsd = usd + tax + tipAmt;
+        const itemTotalKrw = Math.round(itemTotalUsd * rate);
+
+        totalBase += itemTotalUsd;
+        totalKrw += itemTotalKrw;
+        if (payer === 'S') totalS += itemTotalKrw;
+        else if (payer === 'B') totalB += itemTotalKrw;
+      });
+
+      if (sumBaseEl) sumBaseEl.innerText = '$' + totalBase.toFixed(2);
+      if (sumKrwEl) sumKrwEl.innerText = '₩' + totalKrw.toLocaleString();
+      if (sumSEl) sumSEl.innerText = '₩' + totalS.toLocaleString();
+      if (sumBEl) sumBEl.innerText = '₩' + totalB.toLocaleString();
+    }
+
     function updateLedgerPayer(id, val) {
       const key = 'ledger_payer_' + id;
       localStorage.setItem(key, val);
       localStorage.setItem('_mod_' + key, Date.now());
 
-      // 주유 기록 항목이면 주유 트래커 내부 데이터도 동기화
       if (id.startsWith('fuel_')) {
         fuelRecords = fuelRecords.map(f => {
           if (f.id === id) f.payer = val;
@@ -2972,7 +3340,7 @@
         renderFuelRecords();
       }
 
-      renderLedgerTable();
+      updateLedgerSummaryCards();
       triggerAutoSync();
     }
 
@@ -2982,17 +3350,145 @@
       return 'bg-surface-muted border-slate-200 text-slate-500 font-medium';
     }
 
+    // 모바일 달러 입력 오류 해결 및 한화 ➔ 달러 양방향 실시간 환산 핸들러군
+    function handleLedgerUsdInput(id, val) {
+      const key = 'ledger_usd_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+
+      const usd = parseFloat(val) || 0;
+      const tip = parseFloat(document.getElementById('ledger-tip-' + id)?.value || 0);
+      const rate = parseFloat(document.getElementById('ledger-rate-' + id)?.value || EXCHANGE_RATE);
+      const tax = usd * 0.04712;
+      const tipAmt = usd * (tip / 100);
+      const totalUsd = usd + tax + tipAmt;
+      const totalKrw = Math.round(totalUsd * rate);
+
+      const krwInp = document.getElementById('ledger-krw-' + id);
+      if (krwInp) krwInp.value = totalKrw > 0 ? totalKrw.toLocaleString() : '';
+
+      updateLedgerSummaryCards();
+      triggerAutoSync();
+    }
+
+    function handleLedgerKrwInput(id, val) {
+      const raw = val.replace(/[^0-9]/g, '');
+      const krw = parseFloat(raw) || 0;
+      const tip = parseFloat(document.getElementById('ledger-tip-' + id)?.value || 0);
+      const rate = parseFloat(document.getElementById('ledger-rate-' + id)?.value || EXCHANGE_RATE);
+
+      const totalUsd = rate > 0 ? (krw / rate) : 0;
+      const multiplier = 1 + 0.04712 + (tip / 100);
+      const baseUsd = multiplier > 0 ? Math.round((totalUsd / multiplier) * 100) / 100 : 0;
+      const usdStr = baseUsd > 0 ? baseUsd.toFixed(2) : '';
+
+      const usdInp = document.getElementById('ledger-usd-' + id);
+      if (usdInp) usdInp.value = usdStr;
+
+      const key = 'ledger_usd_' + id;
+      localStorage.setItem(key, usdStr);
+      localStorage.setItem('_mod_' + key, Date.now());
+
+      updateLedgerSummaryCards();
+      triggerAutoSync();
+    }
+
+    function formatLedgerKrwBlur(el) {
+      const raw = el.value.replace(/[^0-9]/g, '');
+      const num = parseFloat(raw) || 0;
+      el.value = num > 0 ? num.toLocaleString() : '';
+    }
+
+    function handleLedgerTipInput(id, val) {
+      const key = 'ledger_tip_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+      const usdVal = document.getElementById('ledger-usd-' + id)?.value || '0';
+      handleLedgerUsdInput(id, usdVal);
+    }
+
+    function handleLedgerRateInput(id, val) {
+      const key = 'ledger_rate_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+      const usdVal = document.getElementById('ledger-usd-' + id)?.value || '0';
+      handleLedgerUsdInput(id, usdVal);
+    }
+
+    function handleLedgerMemoInput(id, val) {
+      const key = 'ledger_memo_' + id;
+      localStorage.setItem(key, val);
+      localStorage.setItem('_mod_' + key, Date.now());
+      triggerAutoSync();
+    }
+
+    // 가계부 지출 항목 등록 모달 양방향 실시간 연산
+    function syncModalLedger(source) {
+      const usdInp = document.getElementById('modal-ledger-usd');
+      const krwInp = document.getElementById('modal-ledger-krw');
+      const tipInp = document.getElementById('modal-ledger-tip');
+      const tip = parseFloat(tipInp ? tipInp.value : 0) || 0;
+
+      if (source === 'usd' || source === 'tip') {
+        const usd = parseFloat(usdInp.value || 0);
+        const tax = usd * 0.04712;
+        const tipAmt = usd * (tip / 100);
+        const totalKrw = Math.round((usd + tax + tipAmt) * EXCHANGE_RATE);
+        if (krwInp) krwInp.value = totalKrw > 0 ? totalKrw.toLocaleString() : '';
+      } else if (source === 'krw') {
+        const raw = krwInp.value.replace(/[^0-9]/g, '');
+        const krw = parseFloat(raw || 0);
+        const totalUsd = krw / EXCHANGE_RATE;
+        const multiplier = 1 + 0.04712 + (tip / 100);
+        const baseUsd = multiplier > 0 ? Math.round((totalUsd / multiplier) * 100) / 100 : 0;
+        if (usdInp) usdInp.value = baseUsd > 0 ? baseUsd.toFixed(2) : '';
+      }
+    }
+
+    function saveCustomLedgerItem() {
+      const name = document.getElementById('modal-ledger-name').value.trim();
+      const payer = document.getElementById('modal-ledger-payer').value || '-';
+      const day = document.getElementById('modal-ledger-day').value;
+      const cat = document.getElementById('modal-ledger-cat').value;
+      const usd = parseFloat(document.getElementById('modal-ledger-usd').value) || 0;
+      const tip = parseFloat(document.getElementById('modal-ledger-tip').value) || 0;
+      const memo = document.getElementById('modal-ledger-memo').value.trim();
+
+      if (!name) { alert('지출 항목 또는 장소명을 입력해주세요.'); return; }
+      if (usd <= 0) { alert('금액을 입력해주세요.'); return; }
+
+      const newItem = {
+        id: 'cldgr_' + Date.now(),
+        name: name,
+        day: day,
+        cat: cat,
+        defaultUsd: usd,
+        isCustom: true
+      };
+
+      customLedgerItems.push(newItem);
+      localStorage.setItem('custom_ledger_items', JSON.stringify(customLedgerItems));
+      localStorage.setItem('_mod_custom_ledger_items', Date.now());
+      localStorage.setItem('ledger_usd_' + newItem.id, usd);
+      localStorage.setItem('ledger_tip_' + newItem.id, tip);
+      localStorage.setItem('ledger_payer_' + newItem.id, payer);
+      localStorage.setItem('ledger_memo_' + newItem.id, memo);
+      localStorage.setItem('ledger_y_' + newItem.id, 'true');
+      localStorage.setItem('_mod_ledger_y_' + newItem.id, Date.now());
+      localStorage.setItem('_mod_ledger_memo_' + newItem.id, Date.now());
+
+      closeAddLedgerModal();
+      renderLedgerTable();
+      triggerAutoSync();
+    }
+
     function renderLedgerTable() {
       const tbody = document.getElementById('ledger-table-body');
-      const sumBaseEl = document.getElementById('ledger-sum-base');
-      const sumKrwEl = document.getElementById('ledger-sum-krw');
-      const sumSEl = document.getElementById('ledger-sum-s');
-      const sumBEl = document.getElementById('ledger-sum-b');
       if (!tbody) return;
 
       const catFilter = document.getElementById('ledger-filter-category')?.value || 'all';
       const payerFilter = document.getElementById('ledger-filter-payer')?.value || 'all';
-      const sortOrder = document.getElementById('ledger-sort-order')?.value || 'default';
+      const sortOrder = document.getElementById('ledger-sort-order')?.value || 'dayAsc';
 
       // 1. 주유비 실비 기록을 가계부 라인 아이템으로 변환
       const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
@@ -3010,7 +3506,6 @@
         };
       });
 
-      // 전체 항목 풀 = 기본 항목 + 추가 항목 + 주유 실비 연동 항목
       const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
 
       // 필터링 적용
@@ -3024,8 +3519,22 @@
         return true;
       });
 
-      // 정렬 적용
-      if (sortOrder === 'doneFirst') {
+      // 정렬 적용 (일정 오름차순, 내림차순, 수행순, 금액순, 이름순, 결제자순)
+      if (sortOrder === 'dayAsc') {
+        filtered.sort((a, b) => {
+          const rankA = getDayRank(a.day);
+          const rankB = getDayRank(b.day);
+          if (rankA !== rankB) return rankA - rankB;
+          return a.name.localeCompare(b.name);
+        });
+      } else if (sortOrder === 'dayDesc') {
+        filtered.sort((a, b) => {
+          const rankA = getDayRank(a.day);
+          const rankB = getDayRank(b.day);
+          if (rankA !== rankB) return rankB - rankA;
+          return a.name.localeCompare(b.name);
+        });
+      } else if (sortOrder === 'doneFirst') {
         filtered.sort((a, b) => {
           const aY = localStorage.getItem('ledger_y_' + a.id) === 'true' ? 1 : 0;
           const bY = localStorage.getItem('ledger_y_' + b.id) === 'true' ? 1 : 0;
@@ -3054,29 +3563,21 @@
         });
       }
 
-      let totalBase = 0;
-      let totalKrw = 0;
-      let totalS = 0;
-      let totalB = 0;
-
       tbody.innerHTML = filtered.map((item) => {
         const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
         const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
-        const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd);
+        const rawUsd = localStorage.getItem('ledger_usd_' + item.id);
+        const usd = rawUsd !== null ? parseFloat(rawUsd) : item.defaultUsd;
+        const usdFormatted = (rawUsd !== null && rawUsd !== '') ? rawUsd : (typeof usd === 'number' ? usd.toFixed(2) : usd);
+
         const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0));
         const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE);
+        const memo = localStorage.getItem('ledger_memo_' + item.id) || '';
 
         const tax = usd * 0.04712;
         const tipAmt = usd * (tip / 100);
         const itemTotalUsd = usd + tax + tipAmt;
         const itemTotalKrw = Math.round(itemTotalUsd * rate);
-
-        if (isY) {
-          totalBase += itemTotalUsd;
-          totalKrw += itemTotalKrw;
-          if (payer === 'S') totalS += itemTotalKrw;
-          else if (payer === 'B') totalB += itemTotalKrw;
-        }
 
         return `
           <tr class="hover:bg-teal-50/30 transition-colors">
@@ -3099,25 +3600,38 @@
                 <option value="B" ${payer === 'B' ? 'selected' : ''}>🚙 B</option>
               </select>
             </td>
-            <td class="py-3 px-3"><input type="text" inputmode="decimal" value="${typeof usd === 'number' ? usd.toFixed(2) : usd}" oninput="updateLedgerVal('${item.id}', 'usd', this.value)" class="w-20 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold text-slate-900 text-center"></td>
-            <td class="py-3 px-3"><input type="number" step="1" value="${tip}" oninput="updateLedgerVal('${item.id}', 'tip', this.value)" class="w-16 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
-            <td class="py-3 px-3"><input type="number" step="1" value="${rate}" oninput="updateLedgerVal('${item.id}', 'rate', this.value)" class="w-24 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold"></td>
-            <td class="py-3 px-4 text-right font-mono font-bold text-teal-700">₩${itemTotalKrw.toLocaleString()}</td>
+            <!-- 원가 달러 입력 (소수점 자율 & 실시간 양방향) -->
+            <td class="py-3 px-2 text-center whitespace-nowrap">
+              <input type="text" inputmode="decimal" id="ledger-usd-${item.id}" value="${usdFormatted}" placeholder="0.00" oninput="handleLedgerUsdInput('${item.id}', this.value)" class="w-20 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold text-slate-900 text-center focus:bg-white focus:ring-1 focus:ring-teal-500">
+            </td>
+            <!-- 팁 비율 -->
+            <td class="py-3 px-2 text-center whitespace-nowrap">
+              <input type="number" step="1" id="ledger-tip-${item.id}" value="${tip}" oninput="handleLedgerTipInput('${item.id}', this.value)" class="w-14 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold text-center focus:bg-white focus:ring-1 focus:ring-teal-500">
+            </td>
+            <!-- 환율 -->
+            <td class="py-3 px-2 text-center whitespace-nowrap">
+              <input type="number" step="1" id="ledger-rate-${item.id}" value="${rate}" oninput="handleLedgerRateInput('${item.id}', this.value)" class="w-20 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold text-center focus:bg-white focus:ring-1 focus:ring-teal-500">
+            </td>
+            <!-- 최종 환산 원화 입력 (한화 입력 시 달러 양방향 자동 계산) -->
+            <td class="py-3 px-3 text-right whitespace-nowrap">
+              <input type="text" inputmode="numeric" id="ledger-krw-${item.id}" value="${itemTotalKrw > 0 ? itemTotalKrw.toLocaleString() : ''}" placeholder="0" oninput="handleLedgerKrwInput('${item.id}', this.value)" onblur="formatLedgerKrwBlur(this)" class="w-24 sm:w-28 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs font-mono font-bold text-teal-700 text-right focus:bg-white focus:ring-1 focus:ring-teal-500">
+            </td>
+            <!-- 비고 메모 저장 -->
+            <td class="py-3 px-3 whitespace-nowrap">
+              <input type="text" id="ledger-memo-${item.id}" value="${memo}" placeholder="비고/메모..." oninput="handleLedgerMemoInput('${item.id}', this.value)" class="w-28 sm:w-36 p-1.5 bg-surface-muted border border-slate-200 rounded-lg text-xs text-slate-700 focus:bg-white focus:ring-1 focus:ring-teal-500">
+            </td>
           </tr>
         `;
       }).join('');
 
-      if (sumBaseEl) sumBaseEl.innerText = '$' + totalBase.toFixed(2);
-      if (sumKrwEl) sumKrwEl.innerText = '₩' + totalKrw.toLocaleString();
-      if (sumSEl) sumSEl.innerText = '₩' + totalS.toLocaleString();
-      if (sumBEl) sumBEl.innerText = '₩' + totalB.toLocaleString();
+      updateLedgerSummaryCards();
     }
 
     function toggleLedgerY(id, checked) {
       const key = 'ledger_y_' + id;
       localStorage.setItem(key, checked);
       localStorage.setItem('_mod_' + key, Date.now());
-      renderLedgerTable();
+      updateLedgerSummaryCards();
       triggerAutoSync();
     }
 
@@ -3125,12 +3639,12 @@
       const key = 'ledger_' + field + '_' + id;
       localStorage.setItem(key, val);
       localStorage.setItem('_mod_' + key, Date.now());
-      renderLedgerTable();
+      updateLedgerSummaryCards();
       triggerAutoSync();
     }
 
     function exportLedgerCSV() {
-      let csv = '\ufeff수행여부,항목명,결제자,일정,분류,원가(USD),팁(%),적용환율(KRW),환산총액(KRW)\n';
+      let csv = '\ufeff수행여부,항목명,결제자,일정,분류,원가(USD),팁(%),적용환율(KRW),환산총액(KRW),비고\n';
       const fuelLedgerItems = (fuelRecords || []).map((f, idx) => ({
         id: f.id || ('fuel_' + idx),
         name: `⛽ 주유: ${f.loc} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
@@ -3145,11 +3659,12 @@
         const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
         if (!isY) return;
         const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
-        const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd);
-        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0));
-        const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE);
+        const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd) || 0;
+        const tip = parseFloat(localStorage.getItem('ledger_tip_' + item.id) !== null ? localStorage.getItem('ledger_tip_' + item.id) : (item.cat === '미식' ? 18 : 0)) || 0;
+        const rate = parseFloat(localStorage.getItem('ledger_rate_' + item.id) !== null ? localStorage.getItem('ledger_rate_' + item.id) : EXCHANGE_RATE) || EXCHANGE_RATE;
+        const memo = (localStorage.getItem('ledger_memo_' + item.id) || '').replace(/"/g, '""');
         const total = Math.round((usd + (usd * 0.04712) + (usd * (tip / 100))) * rate);
-        csv += `Y,"${item.name}","${payer}","${item.day || '공통'}","${item.cat}",${usd},${tip},${rate},${total}\n`;
+        csv += `Y,"${item.name}","${payer}","${item.day || '공통'}","${item.cat}",${usd},${tip},${rate},${total},"${memo}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
