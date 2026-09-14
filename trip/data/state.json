@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T14:53:00.357Z",
+  "updatedAt": "2026-09-14T14:56:25.326Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -41,6 +41,15 @@
       "cat": "관광",
       "desc": "관광 명소 5곳 쇼츠",
       "ytid": "mb1QGfVOSKE",
+      "isCustom": true
+    },
+    {
+      "id": "cvid_1789397783265",
+      "title": "하와이 운전 꿀팁",
+      "cat": "렌터카",
+      "desc": "단위 비교, 유의사항, 일방통행 많음",
+      "ytid": "HX_qoOvxAnM",
+      "isShort": true,
       "isCustom": true
     }
   ],
