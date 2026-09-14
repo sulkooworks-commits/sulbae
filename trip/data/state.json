@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T11:54:38.899Z",
+  "updatedAt": "2026-09-14T11:55:07.881Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -21,7 +21,8 @@
     "rem_diamond": 0,
     "ledger_usd_l_sup": 1789027666107,
     "ledger_rate_l_kualoa": 1789215023482,
-    "memo_Day": 1789215231039
+    "memo_Day": 1789215231039,
+    "ledger_memo_l_kualoa": 1789386905655
   },
   "customCosts": {
     "hotel": "3900",
@@ -55,6 +56,7 @@
     "rem_diamond": "false",
     "ledger_usd_l_sup": "65.045",
     "ledger_rate_l_kualoa": "1342.54",
-    "memo_Day": ""
+    "memo_Day": "",
+    "ledger_memo_l_kualoa": "Test"
   }
 }
