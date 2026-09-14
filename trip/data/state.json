@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T14:36:22.797Z",
+  "updatedAt": "2026-09-14T14:41:28.457Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -34,7 +34,16 @@
     "etc": "130"
   },
   "fuelRecords": [],
-  "customVideos": [],
+  "customVideos": [
+    {
+      "id": "cvid_1789396886401",
+      "title": "여행 코스 탑5",
+      "cat": "관광",
+      "desc": "관광 명소 5곳 쇼츠",
+      "ytid": "mb1QGfVOSKE",
+      "isCustom": true
+    }
+  ],
   "customBlogs": [
     {
       "id": "cblog_1789396580717",
