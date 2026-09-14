@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T15:13:50.458Z",
+  "updatedAt": "2026-09-14T15:21:56.415Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -101,7 +101,22 @@
       "img": "https://blogthumb.pstatic.net/MjAxNzA2MjRfMTA3/MDAxNDk4MzA2NjQ3MjA3.HMgyZzm7xg_Nxhtx0MAzXKtn-rP-4IDtS7G93wLUOhYg.NLtQduT57_H7Gkr3wyaY5uPEztGegjE89p53vAEdjT8g.JPEG.moss513/hawaii_(33).JPG?type=w2"
     }
   },
-  "customPlaces": [],
+  "customPlaces": [
+    {
+      "id": "cp_1789399315725",
+      "name": "호놀룰루 미술관",
+      "lat": 21.2344238422151,
+      "lng": -157.81510051499282,
+      "region": "와이키키",
+      "cat": "명소",
+      "day": "비상시",
+      "time": "10:00",
+      "desc": "",
+      "price": "25",
+      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FjMypjNuC9KT7B3Li9%3Fg_st%3Dac",
+      "isCustom": true
+    }
+  ],
   "customPackingList": [],
   "customLedgerItems": [],
   "placeOverrides": {},
