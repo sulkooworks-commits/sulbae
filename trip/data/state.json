@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T11:21:52.839Z",
+  "updatedAt": "2026-09-15T11:22:24.889Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -25,7 +25,7 @@
     "pack_%EC%97%AC%EA%B6%8C%20(%EC%9C%A0%ED%9A%A8%206%EA%B0%9C%EC%9B%94%20%EC%9D%B4%EC%83%81)": 1789386957780,
     "pack_%EA%B5%AD%EC%A0%9C%2F%EA%B5%AD%EB%82%B4%EC%9A%B4%EC%A0%84%EB%A9%B4%ED%97%88%EC%A6%9D": 1789386959895,
     "rem_passport": 1789386976852,
-    "memo_Day1": 1789387550360,
+    "memo_Day1": 1789471344355,
     "pack_ESTA%20%EC%8A%B9%EC%9D%B8%EB%B3%B8": 1789392295071,
     "memo_Day7": 1789471309918,
     "sched_done_p24": 0,
@@ -150,7 +150,7 @@
     "pack_%EC%97%AC%EA%B6%8C%20(%EC%9C%A0%ED%9A%A8%206%EA%B0%9C%EC%9B%94%20%EC%9D%B4%EC%83%81)": "true",
     "pack_%EA%B5%AD%EC%A0%9C%2F%EA%B5%AD%EB%82%B4%EC%9A%B4%EC%A0%84%EB%A9%B4%ED%97%88%EC%A6%9D": "true",
     "rem_passport": "true",
-    "memo_Day1": "0000",
+    "memo_Day1": "",
     "pack_ESTA%20%EC%8A%B9%EC%9D%B8%EB%B3%B8": "false",
     "memo_Day7": "호놀룰루 미술관",
     "sched_done_p24": "false",
