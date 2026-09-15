@@ -4288,6 +4288,662 @@
       });
     }
 
+        // -------------------------------------------------------------
+    // 타임라인 일자별(Day 1~8) 동선 체크(차량/주차/도보) 및 예상 지출 데이터
+    // -------------------------------------------------------------
+    const TIMELINE_LOGISTICS_DATA = [
+  {
+    "dayNum": 1,
+    "title": "입국 & 와이키키 바다수영",
+    "carNeededSummary": "10:00~14:00 공항 인수 및 와이키키 이동 시 차량 필요 / 14:00 체크인 이후 전 일정 차량 불필요 (100% 도보)",
+    "movementOverview": {
+      "drive": "공항 ➔ 와이키키 하얏트 리젠시 (약 18km, 30분)",
+      "walk": "호텔 ➔ 퀸즈 비치 ➔ 쿠폰북 가판대 ➔ 마구로스팟/마루카메 (도보 1~3분)",
+      "carNeed": "10:00~14:00 (공항 이동만 필요)",
+      "carNoNeed": "14:00 이후 (와이키키 시내 전역 도보)",
+      "baseParking": "14:00 하얏트 리젠시 지하/타워 주차장 입고 (인앤아웃 등록, 저녁까지 계속 주차)",
+      "tempParking": "공항 픽업 정차 외 임시주차 없음 (도보 이동)",
+      "moveTiming": "10:00 공항 출차 ➔ 12:00 와이키키 도착 ➔ 14:00 호텔 체크인"
+    },
+    "items": [
+      {
+        "text": "호놀룰루 공항 10:00 렌터카 인수",
+        "time": "10:00",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필요",
+        "parking": "공항 렌터카 셔틀",
+        "note": "HNL 공항 도착 후 렌터카 셔틀 탑승 및 SUV 인수"
+      },
+      {
+        "text": "이야스메 무스비 점심 포장",
+        "time": "12:00",
+        "mode": "🚶 도보/잠시 정차",
+        "carReq": "🚘 이동 중",
+        "parking": "매장 앞 잠시 정차/도보",
+        "note": "스팸 아보카도 무스비 테이크아웃 점심"
+      },
+      {
+        "text": "하얏트 리젠시 와이키키 체크인",
+        "time": "14:00",
+        "mode": "🅿️ 베이스캠프 주차",
+        "carReq": "🚗 이동 완료",
+        "parking": "하얏트 리젠시 주차장 입고",
+        "note": "체크인 시 7박 인앤아웃 주차 패스 등록 필수"
+      },
+      {
+        "text": "거리 가판대 무료 쿠폰북(KauKau) 챙기기",
+        "time": "15:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "칼라카우아 대로변 가판대 10~20% 맛집 쿠폰 수령 (도보 1분)"
+      },
+      {
+        "text": "호텔 3층 야외 풀 & 퀸즈 비치 수영",
+        "time": "15:30",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "방파제 안쪽 잔잔한 퀸즈 비치 & 호텔 풀/선베드 (도보 2분)"
+      },
+      {
+        "text": "마구로 스팟 포케 또는 마루카메 우동 가성비 디너",
+        "time": "18:30",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "와이키키 메인 스트리트 도보 3분 저녁 식사"
+      }
+    ],
+    "expenseTotalUsd": 115,
+    "expenseTotalKrw": "약 159,200원",
+    "perPerson": "1인당 약 8만 원 ($57.5)",
+    "expenseItems": [
+      {
+        "name": "이야스메 무스비 점심 포장 (2인)",
+        "cost": "$15",
+        "krw": "약 2.1만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "마구로 스팟 포케 / 마루카메 우동 디너",
+        "cost": "$30",
+        "krw": "약 4.2만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "치즈케이크 팩토리 테라스 디너/디저트",
+        "cost": "$70",
+        "krw": "약 9.7만 원",
+        "cat": "미식"
+      }
+    ],
+    "expenseTip": "하얏트 체크인 후 전 일정 도보이므로 주차비 추가 지출 없음"
+  },
+  {
+    "dayNum": 2,
+    "title": "다이아몬드 헤드 & 카일루아 SUP",
+    "carNeededSummary": "06:00~18:00 동부 해안 일주 차량 필수 / 18:00 복귀 후 와이키키 시내 도보",
+    "movementOverview": {
+      "drive": "와이키키 ➔ 다이아몬드 헤드 ➔ 72번 국도 ➔ 카일루아 ➔ 터틀캐년 (약 68km, 종일 이동)",
+      "walk": "카일루아 비치 파크 주차 후 해변/대여점 도보, 18시 이후 와이키키 도보",
+      "carNeed": "06:00~18:00 (새벽 트레킹부터 카일루아 해변까지 차량 필수)",
+      "carNoNeed": "18:00 이후 (호텔 복귀 후 저녁 식사 및 휴식 도보)",
+      "baseParking": "06:00 출차 ➔ 18:00 와이키키 복귀 후 베이스캠프 밤샘 주차",
+      "tempParking": "다이아몬드 헤드($5), 레오나즈(매장앞), 할로나(무료), 카일루아(공영무료)",
+      "moveTiming": "06:00 호텔 출차 ➔ 08:30 레오나즈 이동 ➔ 09:30 해안드라이브 ➔ 13:00 카일루아"
+    },
+    "items": [
+      {
+        "text": "06:30 다이아몬드 헤드 일출 트레킹 (아침: 세븐일레븐 스팸무스비)",
+        "time": "06:00",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 임시주차 ($5 예약)",
+        "note": "06:00 하얏트 출차, 분화구 내 사전예약 주차장 주차"
+      },
+      {
+        "text": "레오나즈 베이커리 갓 튀긴 말라사다",
+        "time": "08:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필요",
+        "parking": "🅿️ 매장 앞 정차",
+        "note": "카파훌루 본점 전용 주차장 또는 비상등 정차 후 테이크아웃"
+      },
+      {
+        "text": "72번 국도 드라이브 (마우날루아 베이 조망 & 할로나 블로우홀)",
+        "time": "09:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 전망대 무료주차",
+        "note": "마우날루아 룩아웃 및 할로나 블로우홀 무료 전망대 주차"
+      },
+      {
+        "text": "카일루아 비치 어드벤처스 SUP 패들보드",
+        "time": "13:00",
+        "mode": "🚶 주차 후 도보",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 비치 파크 무료주차",
+        "note": "카일루아 비치 파크 무료 주차 후 대여점 도보 이동"
+      },
+      {
+        "text": "오아후 거북이 스노쿨링 (터틀 캐년)",
+        "time": "16:00",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필요",
+        "parking": "🅿️ 마리나 선착장 주차",
+        "note": "보트 투어 집결지 임시주차 후 보트 스노클링 진행"
+      }
+    ],
+    "expenseTotalUsd": 110,
+    "expenseTotalKrw": "약 152,300원",
+    "perPerson": "1인당 약 7.6만 원 ($55)",
+    "expenseItems": [
+      {
+        "name": "다이아몬드 헤드 입장&주차 (2인)",
+        "cost": "$15",
+        "krw": "약 2.1만 원",
+        "cat": "명소"
+      },
+      {
+        "name": "레오나즈 베이커리 말라사다 도넛",
+        "cost": "$10",
+        "krw": "약 1.4만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "아일랜드 브루 마리나 뷰 코나 커피",
+        "cost": "$20",
+        "krw": "약 2.8만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "카일루아 비치 SUP 패들보드 대여 (2인)",
+        "cost": "$65",
+        "krw": "약 9만 원",
+        "cat": "웰니스"
+      }
+    ],
+    "expenseTip": "카일루아 비치 파크 주차 무료, 할로나 블로우홀 입장/주차 무료"
+  },
+  {
+    "dayNum": 3,
+    "title": "하나우마 베이 & 태닝 힐링",
+    "carNeededSummary": "07:00~13:30 하나우마 베이 왕복 차량 운행 / 14:00 이후 호텔 태닝 및 와이키키 도보",
+    "movementOverview": {
+      "drive": "와이키키 ➔ 하나우마 베이 ➔ 하와이카이 마리나 ➔ 와이키키 복귀 (약 34km)",
+      "walk": "14:00 이후 호텔 3층 풀/선베드 및 해변 도보, 저녁 돈키호테/스테이크 도보/단거리",
+      "carNeed": "07:00~13:30 (하나우마 베이 오전 스노클링 왕복)",
+      "carNoNeed": "14:00~17:30 (호텔 복귀 후 수영장/선베드 태닝 힐링)",
+      "baseParking": "07:00 출차 ➔ 13:30 하얏트 복귀 후 베이스캠프 주차 입고",
+      "tempParking": "하나우마 베이($3 공영, 07:30 전 만차 주의), 하와이카이 마리나(무료)",
+      "moveTiming": "07:00 호텔 출차 ➔ 07:30 하나우마 도착 ➔ 11:30 카페 ➔ 13:30 호텔 복귀"
+    },
+    "items": [
+      {
+        "text": "07:30 하나우마 베이 스노클링 (편의점 무스비/도시락 팩킹)",
+        "time": "07:00",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 임시주차 ($3 현금)",
+        "note": "07:00 호텔 출차, 공영 주차장 만차 전 07:30 도착 필수"
+      },
+      {
+        "text": "아일랜드 브루 하와이카이 & 마우날루아 베이 마리나 뷰 커피",
+        "time": "11:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필요",
+        "parking": "🅿️ 쇼핑센터 무료주차",
+        "note": "하와이카이 쇼핑센터 전용 야외 무료 주차장 이용"
+      },
+      {
+        "text": "하얏트 리조트 선베드 태닝 & 온수 풀",
+        "time": "14:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "🅿️ 베이스캠프 주차",
+        "note": "13:30 호텔 복귀 후 베이스캠프 입고, 3층 선베드 도보 이동"
+      },
+      {
+        "text": "돈키호테 호놀룰루 스낵 쇼핑",
+        "time": "16:30",
+        "mode": "🚗 차/도보 선택",
+        "carReq": "🚘 선택적 운행",
+        "parking": "🅿️ 돈키호테 고객주차",
+        "note": "차량 이동 시 고객 전용 무료 주차 (도보 시 20분/우버 5분)"
+      },
+      {
+        "text": "리틀 조스 프라임 립 디너 (대안: 도원 얼큰 짬뽕)",
+        "time": "18:30",
+        "mode": "🚶 주차 후 도보",
+        "carReq": "🚘 식사 후 귀가",
+        "parking": "🅿️ 베이스캠프 최종입고",
+        "note": "식사 후 하얏트 베이스캠프 주차장 최종 입고 및 휴식"
+      }
+    ],
+    "expenseTotalUsd": 238,
+    "expenseTotalKrw": "약 329,600원",
+    "perPerson": "1인당 약 16.5만 원 ($119)",
+    "expenseItems": [
+      {
+        "name": "하나우마 베이 입장료 & 주차 (2인)",
+        "cost": "$53",
+        "krw": "약 7.3만 원",
+        "cat": "액티비티"
+      },
+      {
+        "name": "편의점 무스비/도시락 스낵 팩킹",
+        "cost": "$15",
+        "krw": "약 2.1만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "리틀 조스 프라임 립 스테이크 만찬",
+        "cost": "$120",
+        "krw": "약 16.6만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "돈키호테 마트 스낵 & 맥주 쇼핑",
+        "cost": "$50",
+        "krw": "약 6.9만 원",
+        "cat": "쇼핑"
+      }
+    ],
+    "expenseTip": "하나우마 베이 주차비 $3 현금 지참 권장, 리틀 조스 팁(18%) 별도"
+  },
+  {
+    "dayNum": 4,
+    "title": "쿠알로아 랜치 UTV & 선셋",
+    "carNeededSummary": "08:30~20:30 동북부 고속도로 장거리 및 알라모아나 차량 필수",
+    "movementOverview": {
+      "drive": "와이키키 ➔ H-3 고속도로 ➔ 쿠알로아 랜치 ➔ 중국인모자섬 ➔ 알라모아나 (약 75km)",
+      "walk": "07:00 호텔 피트니스 도보, 알라모아나 센터 내부 및 매직 아일랜드 도보 산책",
+      "carNeed": "08:30~20:30 (동북부 산악/해안 및 대형 쇼핑몰 이동 차량 필수)",
+      "carNoNeed": "07:00~08:00 (호텔 3층 StayFit 모닝 운동)",
+      "baseParking": "08:30 호텔 출차 ➔ 20:30 와이키키 복귀 후 베이스캠프 주차 입고",
+      "tempParking": "쿠알로아 랜치(대형무료), 모자섬(공원무료), 알라모아나(대형무료)",
+      "moveTiming": "08:30 호텔 출차 ➔ 09:30 쿠알로아 도착 ➔ 13:30 모자섬 ➔ 15:30 알라모아나"
+    },
+    "items": [
+      {
+        "text": "07:00 하얏트 StayFit 모닝 피트니스",
+        "time": "07:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "호텔 3층 오션뷰 러닝머신 & 웨이트 트레이닝 도보 이용"
+      },
+      {
+        "text": "쿠알로아 랜치 쥐라기 계곡 UTV 랩터 투어",
+        "time": "08:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 방문자 센터 무료주차",
+        "note": "H-3 고속도로 경유 45분 이동, 랜치 대형 무료 주차장 이용"
+      },
+      {
+        "text": "중국인 모자섬 포토 스팟 피크닉",
+        "time": "13:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 해변 공원 무료주차",
+        "note": "쿠알로아 리저널 파크 무료 주차 후 잔디밭 해변 도보 산책"
+      },
+      {
+        "text": "알라모아나 센터 쇼핑 및 로컬 델리",
+        "time": "15:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 쇼핑몰 대형 무료주차",
+        "note": "세계 최대 야외 쇼핑몰 대형 무료 주차 후 내부 도보 쇼핑"
+      },
+      {
+        "text": "키아모쿠 한인타운 도원 짬뽕 또는 매직 아일랜드 선셋",
+        "time": "18:00",
+        "mode": "🚶 주차 후 도보",
+        "carReq": "🚘 이동 후 입고",
+        "parking": "🅿️ 공원 무료 / 베이스캠프",
+        "note": "알라모아나 비치 파크 무료 주차 후 일몰 감상 ➔ 호텔 베이스캠프 복귀"
+      }
+    ],
+    "expenseTotalUsd": 220,
+    "expenseTotalKrw": "약 304,700원",
+    "perPerson": "1인당 약 15.2만 원 ($110)",
+    "expenseItems": [
+      {
+        "name": "쿠알로아 랜치 UTV 랩터 2인 (사전/옵션)",
+        "cost": "$145",
+        "krw": "약 20.1만 원",
+        "cat": "액티비티"
+      },
+      {
+        "name": "릴리하 베이커리 로코모코 점심",
+        "cost": "$35",
+        "krw": "약 4.8만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "키아모쿠 도원 얼큰 해물 짬뽕 디너",
+        "cost": "$40",
+        "krw": "약 5.5만 원",
+        "cat": "미식"
+      }
+    ],
+    "expenseTip": "쿠알로아 랜치/알라모아나 전 구역 무료 주차로 주차비 $0"
+  },
+  {
+    "dayNum": 5,
+    "title": "노스쇼어 감성 & 샤크스코브",
+    "carNeededSummary": "08:30~20:00 노스쇼어 전일 종일 로드트립 차량 필수 (최장 96km)",
+    "movementOverview": {
+      "drive": "와이키키 ➔ H-2 고속도로 ➔ 돌 플랜테이션 ➔ 할레이바 ➔ 샤크스코브 ➔ 선셋비치 (약 96km)",
+      "walk": "할레이바 타운 상점가 무료 주차 후 맛집/상점 간 도보 5~10분 산책",
+      "carNeed": "08:30~20:00 (오아후 북부 일주로 전 일정 차량 필수 운행)",
+      "carNoNeed": "20:00 이후 (호텔 복귀 후 와이키키 야간 산책 도보)",
+      "baseParking": "08:30 호텔 출차 ➔ 20:00 와이키키 복귀 후 베이스캠프 주차 입고",
+      "tempParking": "돌 플랜테이션(무료), 할레이바 타운(무료), 샤크스코브(푸푸케아 무료), 선셋비치(무료)",
+      "moveTiming": "08:30 호텔 출차 ➔ 09:30 파인애플 농장 ➔ 11:00 할레이바 ➔ 14:30 스노클링"
+    },
+    "items": [
+      {
+        "text": "돌 플랜테이션 파인애플 돌휩 아이스크림",
+        "time": "08:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 농장 전용 무료주차",
+        "note": "08:30 출차 ➔ 09:30 도착, 농장 대형 무료 주차장 이용"
+      },
+      {
+        "text": "할레이바 빈티지 서퍼 마을 산책",
+        "time": "11:00",
+        "mode": "🚶 주차 후 도보",
+        "carReq": "🚘 이동 후 도보",
+        "parking": "🅿️ 타운 무료 임시주차",
+        "note": "노스쇼어 마켓플레이스 무료 주차 후 서퍼 마을 도보 산책"
+      },
+      {
+        "text": "지오반니 새우 트럭 원조 갈릭 스캠피",
+        "time": "12:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 도보 이동",
+        "parking": "타운 주차장 유지",
+        "note": "할레이바 타운 내 도보 이동 후 갈릭 쉬림프 점심"
+      },
+      {
+        "text": "마츠모토 무지개 쉐이브 아이스",
+        "time": "13:30",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 도보 이동",
+        "parking": "타운 주차장 유지",
+        "note": "타운 중심가 도보 이동, 70년 전통 무지개 빙수 & 아사이볼"
+      },
+      {
+        "text": "샤크스코브 천연 암초 수족관 스노클링 & 선셋",
+        "time": "14:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 푸푸케아 비치 무료",
+        "note": "푸푸케아 비치 파크 무료 주차 (차내 소지품 외부 노출 절대 금지)"
+      }
+    ],
+    "expenseTotalUsd": 86,
+    "expenseTotalKrw": "약 119,100원",
+    "perPerson": "1인당 약 6만 원 ($43)",
+    "expenseItems": [
+      {
+        "name": "돌 플랜테이션 파인애플 돌휩 (2인)",
+        "cost": "$15",
+        "krw": "약 2.1만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "지오반니 새우 트럭 원조 갈릭 쉬림프 (2인)",
+        "cost": "$34",
+        "krw": "약 4.7만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "마츠모토 쉐이브 아이스 & 아사이볼",
+        "cost": "$37",
+        "krw": "약 5.1만 원",
+        "cat": "미식"
+      }
+    ],
+    "expenseTip": "샤크스코브 스노클링 입장료 $0, 노스쇼어 전 방문지 주차비 $0"
+  },
+  {
+    "dayNum": 6,
+    "title": "StayFit 러닝 & 와이켈레 쇼핑",
+    "carNeededSummary": "08:45~16:30 진주만 및 아울렛 차량 운행 / 17:00 조기 입고 후 저녁 도보",
+    "movementOverview": {
+      "drive": "와이키키 ➔ 진주만 국립 기념관 ➔ 와이켈레 프리미엄 아울렛 ➔ 복귀 (약 54km)",
+      "walk": "07:00 호텔 헬스, 17:00 조기 입고 후 마루카메 우동 및 발코니 맥주 도보",
+      "carNeed": "08:45~16:30 (진주만 및 서부 아울렛 쇼핑 이동 차량 필요)",
+      "carNoNeed": "17:00 이후 (호텔 조기 주차 후 전 일정 도보 힐링)",
+      "baseParking": "08:45 호텔 출차 ➔ 17:00 와이키키 복귀 후 베이스캠프 조기 입고 (운행 종료)",
+      "tempParking": "진주만 기념관($7 공영, 가방 지참 금지), 와이켈레 아울렛(대형 무료)",
+      "moveTiming": "08:45 호텔 출차 ➔ 09:30 진주만 ➔ 12:30 아울렛 ➔ 16:30 호텔 복귀"
+    },
+    "items": [
+      {
+        "text": "07:00 StayFit 오션뷰 런닝머신 컨디셔닝",
+        "time": "07:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "호텔 3층 오션뷰 러닝머신 모닝 유산소 도보 이용"
+      },
+      {
+        "text": "진주만 국립 기념관 USS 애리조나 역사 탐방",
+        "time": "08:45",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 임시주차 ($7 결제)",
+        "note": "방문자 센터 공영 주차장 주차, 투명 가방/지갑 외 반입 금지 주의"
+      },
+      {
+        "text": "와이켈레 프리미엄 아울렛 대규모 쇼핑",
+        "time": "12:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 아울렛 대형 무료주차",
+        "note": "아울렛 전용 무료 주차 후 브랜드 쇼핑 & 푸드코트"
+      },
+      {
+        "text": "와이키키 복귀 후 마루카메 우동 가성비 디너",
+        "time": "17:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 운행 종료",
+        "parking": "🅿️ 베이스캠프 조기입고",
+        "note": "17:00 호텔 주차장에 차 넣고 마루카메 우동 도보 4분 이동"
+      },
+      {
+        "text": "호텔 발코니 코나 맥주 & 테라스 휴식",
+        "time": "19:30",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "ABC 스토어 맥주 픽업 후 객실 발코니 와이키키 야경 감상"
+      }
+    ],
+    "expenseTotalUsd": 74,
+    "expenseTotalKrw": "약 102,500원",
+    "perPerson": "1인당 약 5.1만 원 ($37)",
+    "expenseItems": [
+      {
+        "name": "진주만 USS 애리조나 예약&주차비",
+        "cost": "$9",
+        "krw": "약 1.2만 원",
+        "cat": "명소"
+      },
+      {
+        "name": "아울렛 간식 & 마루카메 우동 디너 (2인)",
+        "cost": "$45",
+        "krw": "약 6.2만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "ABC스토어 코나 맥주 6팩 & 안주",
+        "cost": "$20",
+        "krw": "약 2.8만 원",
+        "cat": "미식"
+      }
+    ],
+    "expenseTip": "와이켈레 아울렛 브랜드 쇼핑 금액(의류 등)은 개인별 별도 지출"
+  },
+  {
+    "dayNum": 7,
+    "title": "비치 요가 & 쇼핑 & 루아우",
+    "carNeededSummary": "06:30~15:00 전 일정 도보(차량 불필요) / 15:30 서부 루아우 디너 차량 이동",
+    "movementOverview": {
+      "drive": "와이키키 ➔ H-1 서부 고속도로 ➔ 코올리나 파라다이스 코브 루아우 왕복 (약 58km)",
+      "walk": "오전 06:30 퀸즈 비치 요가, 09:30~15:00 와이키키 시내 도보 쇼핑 (객실 짐 보관)",
+      "carNeed": "15:30~21:30 (서부 코올리나 리조트 루아우 디너 왕복)",
+      "carNoNeed": "06:30~15:00 (오전~오후 도보 쇼핑이 차량보다 훨씬 안전하고 편리)",
+      "baseParking": "오전 내내 호텔 주차장 계속 주차(출차 안 함) ➔ 15:30 출차 ➔ 21:00 마지막 입고",
+      "tempParking": "파라다이스 코브 전용 무료/행사 주차장 (Da Shop 방문 시 주택가 무료)",
+      "moveTiming": "06:30 모닝 요가 ➔ 10:00 도보 쇼핑 ➔ 15:30 코올리나 루아우 출발"
+    },
+    "items": [
+      {
+        "text": "06:30 퀸즈 비치 선라이즈 매트 비치 요가",
+        "time": "06:30",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "베이스캠프 주차 유지",
+        "note": "호텔 바로 앞 퀸즈 비치 백사장 도보 3분 모닝 요가"
+      },
+      {
+        "text": "호놀룰루 쿠키 & 파탈로하 기념품 도보 쇼핑 (쿠폰북 할인)",
+        "time": "10:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 도보 쇼핑 필수",
+        "parking": "베이스캠프 주차 유지",
+        "note": "차량 털이 위험 방지: 도보 쇼핑 후 쇼핑백 호텔 객실 즉시 보관"
+      },
+      {
+        "text": "Da Shop 로컬 독립서점 방문",
+        "time": "14:00",
+        "mode": "🚗 차/도보 선택",
+        "carReq": "🚘 단거리 선택",
+        "parking": "🅿️ 주택가 무료주차",
+        "note": "카이무키 주택가 무료 임시주차 후 로컬 아트북 쇼핑 (도보/버스 가능)"
+      },
+      {
+        "text": "코올리나 파라다이스 코브 루아우 전통 디너",
+        "time": "15:30",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 루아우 전용 무료주차",
+        "note": "15:30 하얏트 출차, 서부 코올리나 전용 주차장 주차 ➔ 21:00 호텔 입고"
+      }
+    ],
+    "expenseTotalUsd": 345,
+    "expenseTotalKrw": "약 477,800원",
+    "perPerson": "1인당 약 23.9만 원 ($172.5)",
+    "expenseItems": [
+      {
+        "name": "코올리나 파라다이스 루아우 디너 (2인)",
+        "cost": "$160",
+        "krw": "약 22.2만 원",
+        "cat": "액티비티"
+      },
+      {
+        "name": "호놀룰루 쿠키 파인애플 틴 쇼핑 (쿠폰할인)",
+        "cost": "$80",
+        "krw": "약 11.1만 원",
+        "cat": "쇼핑"
+      },
+      {
+        "name": "파타고니아 파탈로하 한정판 티셔츠",
+        "cost": "$90",
+        "krw": "약 12.5만 원",
+        "cat": "쇼핑"
+      },
+      {
+        "name": "Da Shop 독립서점 하와이 아트북",
+        "cost": "$15",
+        "krw": "약 2만 원",
+        "cat": "쇼핑"
+      }
+    ],
+    "expenseTip": "쿠폰북 10% 활용 시 쿠키 할인, 루아우 뷔페/음료 포함"
+  },
+  {
+    "dayNum": 8,
+    "title": "체크아웃 & 귀국 출국",
+    "carNeededSummary": "11:30 베이스캠프 주차 공식 종료 및 출차 / 20:30 공항 렌터카 최종 반납",
+    "movementOverview": {
+      "drive": "와이키키 ➔ 이윌레이 코스트코 주유소 ➔ 호놀룰루 공항 렌터카 반납 센터 (약 15km)",
+      "walk": "오전 체크아웃 도보, 20:30 공항 차량 반납 후 공항 출발 터미널 도보 이동",
+      "carNeed": "11:30~20:30 (호텔 체크아웃 후 짐 싣고 이동, 주유 및 공항 이동)",
+      "carNoNeed": "08:00~11:00 (오전 객실 발코니 및 체크아웃 도보)",
+      "baseParking": "11:30 하얏트 베이스캠프 주차 공식 종료 (짐 싣고 완전 출차)",
+      "tempParking": "코스트코 이윌레이 주유 대기선, 공항 인근 매장 무료주차",
+      "moveTiming": "11:30 호텔 출차 ➔ 15:00 코스트코 주유 ➔ 20:30 공항 렌터카 최종 반납"
+    },
+    "items": [
+      {
+        "text": "발코니 모닝 스트레칭 & 와이키키 뷰 작별",
+        "time": "08:00",
+        "mode": "🚶 걸어서 이동",
+        "carReq": "🚫 차량 불필요",
+        "parking": "체크아웃 준비",
+        "note": "오전 객실 발코니에서 에메랄드 해변 바라보며 짐 정리"
+      },
+      {
+        "text": "11:00 하얏트 리젠시 체크아웃",
+        "time": "11:30",
+        "mode": "🅿️ 베이스캠프 출차",
+        "carReq": "🚗 주차 종료",
+        "parking": "하얏트 주차 공식 종료",
+        "note": "11:00 체크아웃 후 11:30 트렁크 짐 싣고 완전 출차 (차내 짐 노출 금지)"
+      },
+      {
+        "text": "코스트코 Iwilei 최저가 Full 주유",
+        "time": "15:00",
+        "mode": "🚗 차로 이동",
+        "carReq": "🚘 차량 필수",
+        "parking": "🅿️ 주유 대기선 정차",
+        "note": "오아후 최저가 코스트코 이윌레이 주유소에서 반납 전 Full 주유"
+      },
+      {
+        "text": "20:30 호놀룰루 공항 렌터카 반납 후 KE8054 탑승",
+        "time": "20:30",
+        "mode": "🅿️ 렌터카 최종 반납",
+        "carReq": "✈️ 차량 반납 완료",
+        "parking": "공항 렌터카 반납 센터",
+        "note": "차량 반납 센터 진입 및 키 반납 ➔ 출발 터미널 도보 이동 후 KE8054 탑승"
+      }
+    ],
+    "expenseTotalUsd": 95,
+    "expenseTotalKrw": "약 131,600원",
+    "perPerson": "1인당 약 6.6만 원 ($47.5)",
+    "expenseItems": [
+      {
+        "name": "코스트코 Iwilei 반납 전 Full 주유",
+        "cost": "$45",
+        "krw": "약 6.2만 원",
+        "cat": "기타"
+      },
+      {
+        "name": "출국 전 점심 식사 & 커피 (2인)",
+        "cost": "$35",
+        "krw": "약 4.8만 원",
+        "cat": "미식"
+      },
+      {
+        "name": "공항 터미널 스낵 & 음료",
+        "cost": "$15",
+        "krw": "약 2.1만 원",
+        "cat": "미식"
+      }
+    ],
+    "expenseTip": "이윌레이 코스트코 주유 시 일반 주유소 대비 약 $15 절약"
+  }
+];
+
     function renderTimeline() {
       const track = document.getElementById('timeline-slider-track') || document.getElementById('timeline-container');
       if (!track) return;
@@ -4319,6 +4975,15 @@
         const dayLabel = 'Day ' + dayNum;
         const isToday = (idx === todayIdx);
         const savedMemo = localStorage.getItem('memo_' + dayKey) || localStorage.getItem('memo_' + dayLabel) || '';
+        const logistics = TIMELINE_LOGISTICS_DATA[idx] || {
+          vehicleBadge: '일정 확인',
+          carTiming: '-',
+          parkingGuide: '-',
+          walkingGuide: '-',
+          expenseTotalUsd: 0,
+          expenseTotalKrw: '-',
+          expenseItems: []
+        };
 
         // 1번 종합 일정표 연동 장소
         const dayPlaces = allPlaces.filter(p => {
@@ -4331,10 +4996,19 @@
           return timeA.localeCompare(timeB);
         });
 
-        // 일정 체크리스트
+        // 일정 체크리스트 (차량/도보/주차 세부 정보 연동)
         const itemObjects = d.items.map(it => {
           const isPassed = isTimelineItemPassed(dayKey, it, d.day);
-          return { text: it, isPassed };
+          const matchDetail = (logistics.items || []).find(x => x.text === it || it.includes(x.text) || x.text.includes(it));
+          return {
+            text: it,
+            isPassed,
+            time: matchDetail ? matchDetail.time : '',
+            mode: matchDetail ? matchDetail.mode : '',
+            carReq: matchDetail ? matchDetail.carReq : '',
+            parking: matchDetail ? matchDetail.parking : '',
+            note: matchDetail ? matchDetail.note : ''
+          };
         });
 
         itemObjects.sort((a, b) => {
@@ -4403,36 +5077,132 @@
                 </div>
               ` : ''}
 
-              <!-- 상세 동선 체크리스트 (호버 시 사진 미리보기) -->
-              <div class="space-y-1 pt-0.5">
-                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">📋 상세 동선 체크리스트 (호버 시 사진 미리보기)</div>
-                <ul class="text-xs space-y-1.5 pt-0.5">
-                  ${itemObjects.map(obj => {
-                    const it = obj.text;
-                    if (obj.isPassed) {
-                      return `
-                        <li class="flex items-start gap-2 py-1.5 px-2.5 rounded-xl bg-slate-100/80 border border-slate-200/60 text-slate-400 opacity-65 transition cursor-pointer"
-                            onmouseenter="showTimelineItemHoverPreview(event, '${escapeForAttr(it)}', '${d.day}')"
-                            onmousemove="moveTooltip(event)"
-                            onmouseleave="hideTooltip()">
-                          <input type="checkbox" checked onchange="toggleTimelineItem('${dayKey}', '${escapeForAttr(it)}')" onclick="event.stopPropagation()" class="mt-0.5 w-3.5 h-3.5 rounded text-slate-400 cursor-pointer shrink-0" title="완료/지남 취소">
-                          <span class="flex-1 line-through leading-snug break-words font-medium">${it}</span>
-                          <span class="text-[9px] font-bold px-1.5 py-0.2 bg-slate-200 text-slate-500 rounded-full shrink-0">지남</span>
-                        </li>
-                      `;
-                    } else {
-                      return `
-                        <li class="flex items-start gap-2 py-1.5 px-2.5 rounded-xl hover:bg-slate-50 border border-transparent transition text-slate-700 cursor-pointer"
-                            onmouseenter="showTimelineItemHoverPreview(event, '${escapeForAttr(it)}', '${d.day}')"
-                            onmousemove="moveTooltip(event)"
-                            onmouseleave="hideTooltip()">
-                          <input type="checkbox" onchange="toggleTimelineItem('${dayKey}', '${escapeForAttr(it)}')" onclick="event.stopPropagation()" class="mt-0.5 w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0" title="일정 완료/지남 체크">
-                          <span class="flex-1 leading-snug break-words font-medium">${it}</span>
-                        </li>
-                      `;
-                    }
-                  }).join('')}
-                </ul>
+              <!-- 4. 동선 체크 (차량 운행 & 주차·도보 가이드 + 상세 동선 체크리스트) -->
+              <div class="p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200/90 space-y-3">
+                <!-- 상단 헤더: 타이틀 + 차량 필요 상태 요약 배지 -->
+                <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-200/60">
+                  <span class="font-bold text-slate-900 flex items-center gap-1.5">
+                    <span>🚗</span> <span>동선 체크 (차량 운행 & 주차·도보 가이드)</span>
+                  </span>
+                  <span class="text-[10px] font-bold text-blue-700 bg-blue-100/80 px-2 py-0.5 rounded-lg border border-blue-200/60 whitespace-nowrap">${logistics.vehicleBadge || '일정 확인'}</span>
+                </div>
+
+                <!-- 차량 필요/불필요 & 이동/주차 정리 박스 -->
+                <div class="p-2.5 bg-white/90 rounded-xl border border-slate-200/70 space-y-1.5 text-[11px] leading-relaxed">
+                  <div class="flex items-start gap-1.5">
+                    <span class="font-bold text-slate-800 shrink-0 flex items-center gap-1"><span>🚘</span> <span>차량 운행:</span></span>
+                    <span class="text-slate-600">${logistics.movementOverview ? logistics.movementOverview.drive : logistics.carTiming}</span>
+                  </div>
+                  <div class="flex items-start gap-1.5">
+                    <span class="font-bold text-slate-800 shrink-0 flex items-center gap-1"><span>🅿️</span> <span>주차 가이드:</span></span>
+                    <span class="text-slate-600">${logistics.movementOverview ? `<strong class="text-blue-700 font-semibold">[베이스캠프]</strong> ${logistics.movementOverview.baseParking} <br/><strong class="text-emerald-700 font-semibold">[임시주차]</strong> ${logistics.movementOverview.tempParking}` : logistics.parkingGuide}</span>
+                  </div>
+                  <div class="flex items-start gap-1.5">
+                    <span class="font-bold text-slate-800 shrink-0 flex items-center gap-1"><span>🚶</span> <span>도보 이동:</span></span>
+                    <span class="text-slate-600">${logistics.movementOverview ? logistics.movementOverview.walk : logistics.walkingGuide}</span>
+                  </div>
+                  ${logistics.movementOverview && logistics.movementOverview.moveTiming ? `
+                    <div class="flex items-start gap-1.5 pt-1 border-t border-slate-100 text-[10px]">
+                      <span class="font-bold text-amber-800 shrink-0 flex items-center gap-1"><span>⏰</span> <span>이동 필요 시점:</span></span>
+                      <span class="text-slate-500 font-mono font-medium">${logistics.movementOverview.moveTiming}</span>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <!-- 상세 동선 체크리스트 (호버 시 사진 미리보기) -->
+                <div class="pt-1 space-y-1.5">
+                  <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                    <span>📋 상세 동선 체크리스트 (호버 시 사진 미리보기)</span>
+                    <span class="text-[9px] text-slate-400 font-normal">차로 이동 / 도보 / 주차 태그</span>
+                  </div>
+                  <ul class="text-xs space-y-2 pt-0.5">
+                    ${itemObjects.map(obj => {
+                      const it = obj.text;
+                      if (obj.isPassed) {
+                        return `
+                          <li class="flex items-start gap-2 py-2 px-2.5 rounded-xl bg-slate-100/80 border border-slate-200/60 text-slate-400 opacity-65 transition cursor-pointer"
+                              onmouseenter="showTimelineItemHoverPreview(event, '${escapeForAttr(it)}', '${d.day}')"
+                              onmousemove="moveTooltip(event)"
+                              onmouseleave="hideTooltip()">
+                            <input type="checkbox" checked onchange="toggleTimelineItem('${dayKey}', '${escapeForAttr(it)}')" onclick="event.stopPropagation()" class="mt-0.5 w-3.5 h-3.5 rounded text-slate-400 cursor-pointer shrink-0" title="완료/지남 취소">
+                            <div class="flex-1 min-w-0">
+                              <div class="flex items-center gap-1 flex-wrap mb-0.5">
+                                ${obj.time ? `<span class="font-mono text-[9px] font-bold text-slate-400 bg-slate-200 px-1 py-0.2 rounded">⏰ ${obj.time}</span>` : ''}
+                                ${obj.mode ? `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-200 text-slate-500">${obj.mode}</span>` : ''}
+                                ${obj.carReq ? `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-200 text-slate-400">${obj.carReq}</span>` : ''}
+                              </div>
+                              <span class="line-through leading-snug break-words font-medium">${it}</span>
+                              ${obj.parking ? `<div class="text-[10px] text-slate-400 mt-0.5">${obj.parking}</div>` : ''}
+                            </div>
+                            <span class="text-[9px] font-bold px-1.5 py-0.2 bg-slate-200 text-slate-500 rounded-full shrink-0 mt-0.5">지남</span>
+                          </li>
+                        `;
+                      } else {
+                        return `
+                          <li class="flex items-start gap-2 py-2 px-2.5 rounded-xl hover:bg-slate-50 border border-slate-200/60 bg-white transition text-slate-800 shadow-3xs cursor-pointer"
+                              onmouseenter="showTimelineItemHoverPreview(event, '${escapeForAttr(it)}', '${d.day}')"
+                              onmousemove="moveTooltip(event)"
+                              onmouseleave="hideTooltip()">
+                            <input type="checkbox" onchange="toggleTimelineItem('${dayKey}', '${escapeForAttr(it)}')" onclick="event.stopPropagation()" class="mt-0.5 w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0" title="일정 완료/지남 체크">
+                            <div class="flex-1 min-w-0">
+                              <div class="flex items-center gap-1.5 flex-wrap mb-0.5">
+                                ${obj.time ? `<span class="font-mono text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200/60">⏰ ${obj.time}</span>` : ''}
+                                ${obj.mode ? `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded ${obj.mode.includes('차로') ? 'bg-blue-50 text-blue-700 border border-blue-200/60' : (obj.mode.includes('주차') ? 'bg-purple-50 text-purple-700 border border-purple-200/60' : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60')}">${obj.mode}</span>` : ''}
+                                ${obj.carReq ? `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded ${obj.carReq.includes('필수') || obj.carReq.includes('필요') ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-100 text-slate-600'}">${obj.carReq}</span>` : ''}
+                              </div>
+                              <span class="leading-snug break-words font-semibold text-slate-900">${it}</span>
+                              ${obj.parking ? `<div class="text-[10px] text-slate-500 mt-0.5">${obj.parking}</div>` : ''}
+                            </div>
+                          </li>
+                        `;
+                      }
+                    }).join('')}
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 5. 동선 체크 다음 단락: 💰 일자별 예상 지출 총액 (Estimated Expenses) -->
+              <div class="p-3.5 bg-gradient-to-br from-amber-50/90 to-amber-100/50 rounded-2xl border border-amber-200/90 shadow-2xs space-y-2.5">
+                <div class="flex items-center justify-between text-xs pb-2 border-b border-amber-200/70">
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="p-1 rounded-lg bg-amber-500 text-white text-xs">💰</span>
+                    <div>
+                      <div class="font-bold text-amber-950 text-xs">${dayNum}일차 예상 지출 총액</div>
+                      <div class="text-[10px] text-amber-700">${logistics.perPerson || ''}</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <div class="text-right">
+                      <div class="font-mono font-extrabold text-sm text-amber-900">$${logistics.expenseTotalUsd}</div>
+                      <div class="font-mono text-[10px] font-semibold text-amber-700">${logistics.expenseTotalKrw}</div>
+                    </div>
+                    <button type="button" onclick="switchFooterTab('ledger', 'sec-ledger')" class="px-2 py-1 bg-amber-200/80 hover:bg-amber-300 text-amber-900 rounded-lg text-[10px] font-bold transition flex items-center gap-0.5" title="가계부로 이동">
+                      <span>가계부</span> <span>↗</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 세부 지출 항목 -->
+                <div class="space-y-1 text-[11px]">
+                  ${(logistics.expenseItems || []).map(exp => `
+                    <div class="flex items-center justify-between py-1 px-2.5 rounded-xl bg-white/90 border border-amber-200/50 shadow-3xs">
+                      <span class="text-slate-800 truncate mr-2 flex items-center gap-1.5 min-w-0">
+                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md ${exp.cat === '미식' ? 'bg-orange-100 text-orange-800' : (exp.cat === '액티비티' ? 'bg-indigo-100 text-indigo-800' : (exp.cat === '웰니스' ? 'bg-emerald-100 text-emerald-800' : (exp.cat === '쇼핑' ? 'bg-pink-100 text-pink-800' : 'bg-slate-100 text-slate-700')))} shrink-0">${exp.cat}</span>
+                        <span class="font-medium truncate">${exp.name}</span>
+                      </span>
+                      <div class="text-right shrink-0">
+                        <span class="font-mono font-bold text-slate-900 text-xs">${exp.cost}</span>
+                        <span class="font-mono text-[10px] text-slate-400 ml-1">(${exp.krw || ''})</span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+
+                ${logistics.expenseTip ? `
+                  <div class="text-[10px] text-amber-800/90 bg-amber-100/60 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                    <span>💡</span> <span>${logistics.expenseTip}</span>
+                  </div>
+                ` : ''}
               </div>
             </div>
 
