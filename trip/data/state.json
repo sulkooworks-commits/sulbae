@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T15:26:00.964Z",
+  "updatedAt": "2026-09-15T01:33:39.447Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -110,14 +110,16 @@
       "lng": -157.81510051499282,
       "region": "와이키키",
       "cat": "명소",
-      "day": "비상시",
+      "day": "Day 7",
       "time": "10:00",
       "desc": "",
       "price": "25",
-      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FjMypjNuC9KT7B3Li9%3Fg_st%3Dac",
-      "isCustom": true
+      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FjMypjNuC9KT7B3Li9%253Fg_st%253Dac",
+      "isCustom": true,
+      "updatedAt": 1789436017273
     }
   ],
+  "deletedPlaces": [],
   "customPackingList": [],
   "customLedgerItems": [],
   "placeOverrides": {},
