@@ -470,6 +470,9 @@
           <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">🗺️ 오아후 북마크 종합 지도 (48개소)</h2>
         </div>
         <div class="flex items-center flex-wrap gap-2">
+          <button type="button" onclick="switchFooterTab('schedule', 'sec-table')" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95" title="종합 일정 데이터 표로 이동">
+            <span>📋</span> <span>전체 일정표 바로가기 (48개소)</span>
+          </button>
           <a href="https://maps.app.goo.gl/nu4gW7omveRA9y416?g_st=ac" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300 transition flex items-center gap-1.5 shadow-2xs active:scale-95" title="구글 지도 저장 목록(북마크) 열기">
             <span>📍</span> <span>하와이 북마크 바로가기 ↗</span>
           </a>
@@ -793,6 +796,9 @@
             <span id="table-count-badge" class="bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">40개 항목</span>
             <button type="button" onclick="downloadAllIcs()" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 text-xs font-bold rounded-xl transition flex items-center gap-1 shrink-0" title="전체 일정 캘린더 일괄 다운로드">
               <span>📅</span> <span class="hidden sm:inline">전체 캘린더 다운</span>
+            </button>
+            <button type="button" onclick="restoreDefaultPlaces()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition flex items-center gap-1 shrink-0" title="기본 일정 48개소 복원">
+              <span>🔄</span> <span class="hidden sm:inline">기본 복원</span>
             </button>
             <button type="button" onclick="openPlaceModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
               <span class="text-sm font-black leading-none">+</span> <span>장소 등록</span>
@@ -2868,15 +2874,53 @@
 
     function getAllPlaces() {
       const deleted = JSON.parse(localStorage.getItem('deleted_places_list') || '[]');
-      const list = placesData.filter(p => !deleted.includes(p.id) && !deleted.includes(p.name)).map(p => {
+      let list = placesData.filter(p => !deleted.includes(p.id) && !deleted.includes(p.name)).map(p => {
         const ovr = placeOverrides[p.id] || placeOverrides[p.name];
         return ovr ? Object.assign({}, p, ovr) : Object.assign({}, p);
       });
+
+      // 안전장치: 혹시라도 모든 기본 일정이 삭제 목록에 들어가서 빈 리스트가 된 경우 자동 복원
+      if (list.length === 0 && placesData.length > 0) {
+        console.warn('기본 일정 목록이 비어 있어 삭제 목록을 초기화하고 기본 일정을 복원합니다.');
+        localStorage.removeItem('deleted_places_list');
+        list = placesData.map(p => {
+          const ovr = placeOverrides[p.id] || placeOverrides[p.name];
+          return ovr ? Object.assign({}, p, ovr) : Object.assign({}, p);
+        });
+      }
+
       const customs = (customPlaces || []).filter(p => !deleted.includes(p.id)).map(p => {
         const ovr = placeOverrides[p.id] || placeOverrides[p.name];
         return ovr ? Object.assign({}, p, ovr) : Object.assign({}, p);
       });
       return list.concat(customs);
+    }
+
+    // 기본 일정 48개소 일괄 복원 함수
+    function restoreDefaultPlaces() {
+      if (confirm('기본 일정 48개소를 모두 복원하시겠습니까? (직접 추가하신 커스텀 일정은 유지됩니다)')) {
+        localStorage.removeItem('deleted_places_list');
+        localStorage.setItem('_mod_deleted_places_list', Date.now());
+        renderMasterTable();
+        renderTimeline();
+        if (typeof renderLedgerTable === 'function') renderLedgerTable();
+        if (typeof updateLedgerSummaryCards === 'function') updateLedgerSummaryCards();
+        triggerAutoSync();
+        alert('✓ 기본 일정 48개소가 모두 복원되었습니다!');
+      }
+    }
+
+    // 일정표 필터 리셋 함수
+    function resetTableFilters() {
+      const q = document.getElementById('table-search-input');
+      const reg = document.getElementById('filter-region');
+      const cat = document.getElementById('filter-category');
+      const day = document.getElementById('filter-day');
+      if (q) q.value = '';
+      if (reg) reg.value = 'all';
+      if (cat) cat.value = 'all';
+      if (day) day.value = 'all';
+      renderMasterTable();
     }
 
     const timelineData = [
@@ -4542,6 +4586,28 @@
 
       if (badge) badge.innerText = `${filtered.length}개 항목`;
 
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-12 text-center text-slate-400">
+              <div class="flex flex-col items-center justify-center gap-2">
+                <span class="text-3xl">📋</span>
+                <p class="font-bold text-slate-700 text-sm">표시할 일정이 없습니다</p>
+                <p class="text-xs text-slate-500 max-w-md leading-relaxed">
+                  검색어나 필터 조건을 초기화하거나, 아래 버튼을 눌러 기본 일정을 즉시 복원하실 수 있습니다.
+                </p>
+                <div class="flex items-center gap-2 mt-2">
+                  <button onclick="resetTableFilters()" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition">필터 초기화</button>
+                  <button onclick="restoreDefaultPlaces()" class="px-3 py-1.5 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-700 transition">🔄 기본 일정 48개소 복원</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+        if (badge) badge.innerText = '0개 항목';
+        return;
+      }
+
       tbody.innerHTML = filtered.map(p => {
         const isPassed = isPlacePassed(p);
         const rowClass = isPassed
@@ -6082,14 +6148,24 @@
 
       let fetchedData = null;
 
-      // 시도 1: 정적 상대 경로 (동일 저장소 배포 시 레이트 리밋 0, 토큰 불필요)
-      try {
-        const relRes = await fetch(`trip/data/state.json?t=${Date.now()}`, { cache: 'no-store' });
-        if (relRes.ok) {
-          fetchedData = await relRes.json();
-          console.log('✓ Fetched state from static relative path');
-        }
-      } catch(e) {}
+      // 시도 1: 정적 상대 경로 (동일 저장소 배포 시 레이트 리밋 0, 토큰 불필요 - trip/oahu.html 및 root index.html 모두 지원)
+      const candidatePaths = [
+        `data/state.json?t=${Date.now()}`,
+        `trip/data/state.json?t=${Date.now()}`,
+        `/sulbae/trip/data/state.json?t=${Date.now()}`,
+        `../trip/data/state.json?t=${Date.now()}`
+      ];
+      for (const p of candidatePaths) {
+        if (fetchedData) break;
+        try {
+          const relRes = await fetch(p, { cache: 'no-store' });
+          if (relRes.ok) {
+            fetchedData = await relRes.json();
+            console.log('✓ Fetched state from static path:', p);
+            break;
+          }
+        } catch(e) {}
+      }
 
       // 시도 2: GitHub API 호출 (토큰 보유 시 인증, 미보유 시 공개 조회)
       if (!fetchedData) {
@@ -6454,6 +6530,16 @@
       renderHeaderNavTabs('dashboard');
       window.addEventListener('resize', updateHeaderExpandButtonState);
       setTimeout(initScrollTabObserver, 800);
+
+      // 5. URL Hash 또는 파라미터 기반 탭/섹션 자동 전환 (예: #table, #sec-table, #schedule)
+      const curHash = (window.location.hash || '').replace('#', '');
+      if (curHash === 'table' || curHash === 'sec-table' || curHash === 'schedule') {
+        setTimeout(() => { switchFooterTab('schedule', 'sec-table'); }, 100);
+      } else if (curHash === 'timeline' || curHash === 'sec-timeline') {
+        setTimeout(() => { switchFooterTab('schedule', 'sec-timeline'); }, 100);
+      } else if (curHash === 'ledger' || curHash === 'sec-ledger') {
+        setTimeout(() => { switchFooterTab('ledger', 'sec-ledger'); }, 100);
+      }
     }
 
     // 세션 유효 여부 확인 후 자동 열림 또는 잠금 대기
