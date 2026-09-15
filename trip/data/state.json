@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T11:22:35.196Z",
+  "updatedAt": "2026-09-15T11:23:59.592Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -30,7 +30,8 @@
     "memo_Day7": 1789471309918,
     "sched_done_p24": 0,
     "memo_Day4": 1789460645567,
-    "memo_Day2": 1789471352667
+    "memo_Day2": 1789471352667,
+    "pack_110V%2011%EC%9E%90%20%EB%8F%BC%EC%A7%80%EC%BD%94%20%EC%96%B4%EB%8C%91%ED%84%B0": 1789471437565
   },
   "customCosts": {
     "hotel": "3900",
@@ -156,6 +157,7 @@
     "memo_Day7": "호놀룰루 미술관",
     "sched_done_p24": "false",
     "memo_Day4": "쿠알로아 랜치 이티켓 챙겨야 함 (각 개인 메일 참고)",
-    "memo_Day2": "터틀 캐년은 꼭 가야 함"
+    "memo_Day2": "터틀 캐년은 꼭 가야 함",
+    "pack_110V%2011%EC%9E%90%20%EB%8F%BC%EC%A7%80%EC%BD%94%20%EC%96%B4%EB%8C%91%ED%84%B0": "true"
   }
 }
