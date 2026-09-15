@@ -92,85 +92,129 @@
       border-bottom: 2px solid #e2e8f0 !important;
     }
 
-    /* [1] 종합 일정: 1열(일정 68px) + 2열(장소명 106px) = 총 174px (모바일 360px 기준 48.3%, 390px 기준 44.6%로 화면 너비 절반 미만 엄수) */
+    /* [1] 종합 일정: 헤더 영구 고정(top:0, z-index:50/49/40) & 스티키 해제 시에도 헤더 보존 */
+    .table-schedule-sticky {
+      table-layout: auto !important;
+      width: 100% !important;
+      min-width: 1020px !important;
+      border-collapse: separate !important;
+      border-spacing: 0 !important;
+    }
+
+    /* 모든 thead th는 기본적으로 세로 스크롤 시 상단 0에 고정 */
+    .table-schedule-sticky thead th {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 40 !important;
+      background-color: #f8fafc !important;
+      border-bottom: 2px solid #cbd5e1 !important;
+    }
+
+    /* 1열 헤더 (상단 0, 좌측 0 고정): 최상위 z-index 50 */
     .table-schedule-sticky th:first-child {
       position: -webkit-sticky !important;
       position: sticky !important;
       top: 0 !important;
       left: 0 !important;
-      z-index: 32 !important;
+      z-index: 50 !important;
       background-color: #f1f5f9 !important;
-      width: 68px !important;
-      min-width: 68px !important;
-      max-width: 68px !important;
-      border-right: 1px solid #e2e8f0 !important;
+      width: 145px !important;
+      min-width: 145px !important;
+      max-width: 145px !important;
+      border-right: 1px solid #cbd5e1 !important;
+      border-bottom: 2px solid #cbd5e1 !important;
+      overflow: visible !important;
+      white-space: normal !important;
     }
-    .table-schedule-sticky td:first-child {
-      position: -webkit-sticky !important;
-      position: sticky !important;
-      left: 0 !important;
-      z-index: 12 !important;
-      background-color: #ffffff !important;
-      width: 68px !important;
-      min-width: 68px !important;
-      max-width: 68px !important;
-      border-right: 1px solid #e2e8f0 !important;
-    }
+
+    /* 2열 헤더 (상단 0, 좌측 145px 고정): 상위 z-index 49 */
     .table-schedule-sticky th:nth-child(2) {
       position: -webkit-sticky !important;
       position: sticky !important;
       top: 0 !important;
-      left: 68px !important;
-      z-index: 31 !important;
+      left: 145px !important;
+      z-index: 49 !important;
       background-color: #f1f5f9 !important;
-      width: 106px !important;
-      min-width: 106px !important;
-      max-width: 106px !important;
+      width: 230px !important;
+      min-width: 230px !important;
+      max-width: 260px !important;
       border-right: 1px solid #cbd5e1 !important;
+      border-bottom: 2px solid #cbd5e1 !important;
       box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.08) !important;
+      overflow: visible !important;
+      white-space: normal !important;
     }
+
+    /* 1열 데이터 셀 (좌측 0 고정): z-index 20 */
+    .table-schedule-sticky td:first-child {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      left: 0 !important;
+      top: auto !important;
+      z-index: 20 !important;
+      background-color: #ffffff !important;
+      width: 145px !important;
+      min-width: 145px !important;
+      max-width: 145px !important;
+      border-right: 1px solid #e2e8f0 !important;
+      overflow: visible !important;
+      white-space: normal !important;
+    }
+
+    /* 2열 데이터 셀 (좌측 145px 고정): z-index 19 */
     .table-schedule-sticky td:nth-child(2) {
       position: -webkit-sticky !important;
       position: sticky !important;
-      left: 68px !important;
-      z-index: 11 !important;
+      left: 145px !important;
+      top: auto !important;
+      z-index: 19 !important;
       background-color: #ffffff !important;
-      width: 106px !important;
-      min-width: 106px !important;
-      max-width: 106px !important;
+      width: 230px !important;
+      min-width: 230px !important;
+      max-width: 260px !important;
       border-right: 1px solid #cbd5e1 !important;
       box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.08) !important;
+      overflow: visible !important;
+      white-space: normal !important;
     }
 
-    /* 종합 일정 태블릿/데스크톱 확장 (sm: 640px 이상) */
-    @media (min-width: 640px) {
-      .table-schedule-sticky th:first-child,
-      .table-schedule-sticky td:first-child {
-        width: 82px !important;
-        min-width: 82px !important;
-        max-width: 82px !important;
-      }
-      .table-schedule-sticky th:nth-child(2),
-      .table-schedule-sticky td:nth-child(2) {
-        left: 82px !important;
-        width: 160px !important;
-        min-width: 160px !important;
-        max-width: 160px !important;
-      }
+    /* 3열~7열 데이터 셀: 기본 z-index 1 */
+    .table-schedule-sticky td {
+      z-index: 1 !important;
     }
-    @media (min-width: 1024px) {
-      .table-schedule-sticky th:first-child,
-      .table-schedule-sticky td:first-child {
-        width: 90px !important;
-        min-width: 90px !important;
-        max-width: 90px !important;
-      }
-      .table-schedule-sticky th:nth-child(2),
-      .table-schedule-sticky td:nth-child(2) {
-        left: 90px !important;
-        width: 200px !important;
-        min-width: 200px !important;
-        max-width: 200px !important;
+
+    /* 좌측 열 고정 해제 모드: 1, 2열 헤더는 top:0 고정을 절대 잃지 않고 left만 해제됨 */
+    .unfreeze-sticky .table-schedule-sticky th:first-child,
+    .unfreeze-sticky .table-schedule-sticky th:nth-child(2) {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      left: auto !important;
+      z-index: 40 !important;
+      background-color: #f1f5f9 !important;
+      box-shadow: none !important;
+    }
+    .unfreeze-sticky .table-schedule-sticky td:first-child,
+    .unfreeze-sticky .table-schedule-sticky td:nth-child(2) {
+      position: static !important;
+      left: auto !important;
+      top: auto !important;
+      z-index: 1 !important;
+      box-shadow: none !important;
+    }
+
+    /* 스티키 일정 필터 바 */
+    #sticky-schedule-filter-bar {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 48px !important;
+      z-index: 35 !important;
+      transition: box-shadow 0.2s ease, top 0.2s ease;
+    }
+    @media (min-width: 640px) {
+      #sticky-schedule-filter-bar {
+        top: 52px !important;
       }
     }
 
@@ -388,8 +432,8 @@
             <div class="text-[10px] font-bold text-blue-600 flex items-center gap-1 uppercase tracking-wider">
               <span>📍</span> <span>HAWAII OAHU • D-24</span>
             </div>
-            <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-tight truncate">
-              알로하! 오아후 7박 8일 스마트 일정
+            <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-tight truncate flex items-center gap-2">
+              <span>알로하! 오아후 7박 8일 스마트 일정</span> <span class="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded-full shadow-2xs">v4.6 최신패치</span>
             </h1>
           </div>
         </div>
@@ -857,14 +901,18 @@
     </section>
 
 <!-- 10. 종합 일정표 -->
-    <section id="sec-table" class="scroll-mt-24 space-y-4">
-      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+    <section id="sec-table" class="scroll-mt-24 relative space-y-4">
+      <!-- 1. 종합 일정 헤더 & 메인 액션 버튼 카드 -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-soft space-y-3.5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span class="px-3 py-0.5 bg-pastel-emerald text-pastel-emeraldText text-xs font-bold rounded-full">MASTER SCHEDULE</span>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-0.5 bg-pastel-emerald text-pastel-emeraldText text-xs font-bold rounded-full">MASTER SCHEDULE</span>
+              <span class="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded-full shadow-2xs">v4.6 최신패치</span>
+            </div>
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1">📋 전체 일정 & 장소 종합 데이터 표</h2>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <span id="table-count-badge" class="bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">40개 항목</span>
             <button type="button" onclick="downloadAllIcs()" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 text-xs font-bold rounded-xl transition flex items-center gap-1 shrink-0" title="전체 일정 캘린더 일괄 다운로드">
               <span>📅</span> <span class="hidden sm:inline">전체 캘린더 다운</span>
@@ -883,35 +931,127 @@
             </button>
           </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 bg-surface-muted p-4 rounded-2xl border border-slate-200/70 text-xs">
-          <div><label class="block font-bold text-slate-400 mb-1">🔍 검색</label><input type="text" id="table-search-input" oninput="renderMasterTable()" placeholder="장소명, 메뉴 검색..." class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none"></div>
-          <div><label class="block font-bold text-slate-400 mb-1">📍 권역</label><select id="filter-region" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium"><option value="all">전체 권역</option><option value="와이키키">와이키키 & 다운타운</option><option value="동부">동부 해안</option><option value="노스쇼어">북부 노스쇼어</option><option value="진주만">진주만·서부</option></select></div>
-          <div><label class="block font-bold text-slate-400 mb-1">🏷️ 분류</label><select id="filter-category" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium"><option value="all">전체 분류</option><option value="웰니스">🧘 웰니스</option><option value="명소">🏞️ 관광·명소</option><option value="미식">🍽️ 식당·카페</option><option value="액티비티">🏄 액티비티</option><option value="쇼핑">🛍️ 쇼핑</option><option value="의료">🏥 의료</option></select></div>
-          <div><label class="block font-bold text-slate-400 mb-1">🗓️ 일정</label><select id="filter-day" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium"><option value="all">전체 일자</option><option value="Day 1">Day 1</option><option value="Day 2">Day 2</option><option value="Day 3">Day 3</option><option value="Day 4">Day 4</option><option value="Day 5">Day 5</option><option value="Day 6">Day 6</option><option value="Day 7">Day 7</option><option value="Day 8">Day 8</option></select></div>
-          <div>
-            <label class="block font-bold text-slate-400 mb-1">↕️ 일정 정렬</label>
-            <select id="table-sort-order" onchange="renderMasterTable()" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-bold focus:ring-2 focus:ring-brand-500 focus:outline-none">
-              <option value="dayAsc" selected>🗓️ 일정 오름차순 (Day 1 ➔ 8)</option>
-              <option value="dayDesc">🗓️ 일정 내림차순 (Day 8 ➔ 1)</option>
-              <option value="timeAsc">⏰ 시간 빠른순 (06:00 ➔ 21:00)</option>
-              <option value="nameAsc">장소명 가나다순</option>
-              <option value="regionAsc">📍 권역순</option>
-            </select>
+      </div>
+
+      <!-- 2. [스티키 필터 & 뷰 전환 바]
+           종합 일정 섹션(#sec-table) 내에서 상단 탭바 아래에 고정(Sticky)되며, 
+           종합 일정이 끝나 다음 섹션으로 이동하면 자연스럽게 위로 넘어가 스크롤아웃됩니다. -->
+      <div id="sticky-schedule-filter-bar" class="sticky top-[48px] sm:top-[52px] z-30 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-md p-2.5 sm:p-3 transition-all space-y-2.5">
+        <!-- 상단 컨트롤 1행: 보기 모드 전환 & 열 고정 해제 & 요약 및 필터 열기 버튼 -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-bold text-slate-500 shrink-0">보기 모드:</span>
+            <div class="inline-flex p-0.5 sm:p-1 bg-slate-100 border border-slate-200/80 rounded-xl shadow-2xs">
+              <button type="button" id="btn-view-card" onclick="setScheduleViewMode('card')" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-xs">
+                <span>📱</span> <span>모바일 카드 뷰</span>
+              </button>
+              <button type="button" id="btn-view-table" onclick="setScheduleViewMode('table')" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 text-slate-600 hover:text-slate-900">
+                <span>🖥️</span> <span>PC 전체 표 뷰</span>
+              </button>
+            </div>
+
+            <!-- PC 표 좌측 고정열(Sticky) 토글 버튼 -->
+            <button type="button" id="btn-toggle-sticky" onclick="toggleTableStickyColumns()" class="px-2.5 py-1 sm:py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-xs border border-slate-200 shadow-2xs transition flex items-center gap-1" title="표 좌측 열(일정, 장소명) 고정 켜기/끄기">
+              <span id="sticky-toggle-icon">📌</span> <span id="sticky-toggle-text">좌측 열 고정 해제</span>
+            </button>
+          </div>
+
+          <!-- 우측: 필터 상태 요약 & 필터 열기 버튼 -->
+          <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="text-xs">🔍</span>
+              <span id="active-filter-summary" class="text-[11px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 truncate max-w-[170px] sm:max-w-xs">전체 (40개소)</span>
+              <button type="button" id="btn-reset-filters" onclick="resetScheduleFilters(event)" class="hidden px-2 py-0.5 text-[10px] font-bold text-rose-600 hover:text-rose-700 bg-rose-50 border border-rose-200 rounded-md transition" title="필터 초기화">
+                초기화
+              </button>
+            </div>
+            <button type="button" onclick="toggleScheduleFilterPanel()" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl text-xs border border-blue-200 transition flex items-center gap-1 shrink-0 active:scale-95 shadow-2xs">
+              <span id="filter-expand-text">필터 열기</span>
+              <span id="filter-expand-icon" class="text-[10px] transition-transform">▼</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 상단 컨트롤 2행: 확장 시 펼쳐지는 5대 상세 필터 그리드 (기본 축소) -->
+        <div id="schedule-filter-panel" class="hidden pt-2.5 border-t border-slate-200 bg-slate-50/70 p-3 rounded-xl space-y-2.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs">
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">🔍 검색</label>
+              <input type="text" id="table-search-input" oninput="renderMasterTable(); updateFilterSummary();" placeholder="장소명, 메뉴 검색..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">📍 권역</label>
+              <select id="filter-region" onchange="renderMasterTable(); updateFilterSummary();" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium">
+                <option value="all">전체 권역</option>
+                <option value="와이키키">와이키키 & 다운타운</option>
+                <option value="동부">동부 해안</option>
+                <option value="노스쇼어">북부 노스쇼어</option>
+                <option value="진주만">진주만·서부</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">🏷️ 분류</label>
+              <select id="filter-category" onchange="renderMasterTable(); updateFilterSummary();" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium">
+                <option value="all">전체 분류</option>
+                <option value="웰니스">🧘 웰니스</option>
+                <option value="명소">🏞️ 관광·명소</option>
+                <option value="미식">🍽️ 식당·카페</option>
+                <option value="액티비티">🏄 액티비티</option>
+                <option value="쇼핑">🛍️ 쇼핑</option>
+                <option value="의료">🏥 의료</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">🗓️ 일정</label>
+              <select id="filter-day" onchange="renderMasterTable(); updateFilterSummary();" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium">
+                <option value="all">전체 일자</option>
+                <option value="Day 1">Day 1</option>
+                <option value="Day 2">Day 2</option>
+                <option value="Day 3">Day 3</option>
+                <option value="Day 4">Day 4</option>
+                <option value="Day 5">Day 5</option>
+                <option value="Day 6">Day 6</option>
+                <option value="Day 7">Day 7</option>
+                <option value="Day 8">Day 8</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">↕️ 정렬</label>
+              <select id="table-sort-order" onchange="renderMasterTable(); updateFilterSummary();" class="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="dayAsc" selected>🗓️ 일정 오름차순</option>
+                <option value="dayDesc">🗓️ 일정 내림차순</option>
+                <option value="timeAsc">⏰ 시간 빠른순</option>
+                <option value="nameAsc">장소명 가나다순</option>
+                <option value="regionAsc">📍 권역순</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[11px] text-slate-400">필터 설정 시 목록이 즉시 동기화됩니다.</span>
+            <button type="button" onclick="toggleScheduleFilterPanel(false)" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-600 font-bold rounded-lg text-xs border border-slate-200 transition shadow-2xs">
+              ▲ 필터 접기
+            </button>
           </div>
         </div>
       </div>
+
+      <!-- 3. 종합 일정 본문 카드: 모바일 아코디언 카드 리스트 & PC 테이블 -->
       <div class="bg-white rounded-3xl border border-slate-200/80 shadow-soft overflow-hidden">
-        <div class="table-sticky-container custom-scrollbar">
+        <!-- [모바일 뷰]: 한 손으로 탭하여 펼치는 아코디언 카드 리스트 -->
+        <div id="master-mobile-list" class="p-3 sm:p-4 space-y-3 bg-slate-50/50"></div>
+
+        <!-- [PC 뷰]: 1열(145px), 2열(230px) 및 상단 헤더 영구 고정 데이터 테이블 -->
+        <div id="master-table-container" class="table-sticky-container custom-scrollbar">
           <table class="w-full text-left text-xs sm:text-sm table-schedule-sticky">
             <thead>
               <tr class="text-slate-600 font-bold uppercase text-[11px]">
-                <th class="py-2.5 px-1.5">일정</th>
-                <th class="py-2.5 px-2">장소명</th>
-                <th class="py-2.5 px-2">권역</th>
-                <th class="py-2.5 px-2">분류</th>
-                <th class="py-2.5 px-3">상세 설명</th>
-                <th class="py-2.5 px-2.5">비용</th>
-                <th class="py-2.5 px-2.5 text-center text-brand-600">관리</th>
+                <th class="py-3 px-3">일정 / 시간</th>
+                <th class="py-3 px-3">장소명</th>
+                <th class="py-3 px-3">권역</th>
+                <th class="py-3 px-3">분류</th>
+                <th class="py-3 px-4">상세 설명</th>
+                <th class="py-3 px-3">비용</th>
+                <th class="py-3 px-3 text-center text-brand-600">관리</th>
               </tr>
             </thead>
             <tbody id="master-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
@@ -1708,10 +1848,40 @@
               <option value="상시">상시</option>
             </select>
           </div>
-          <div>
-            <label class="block font-bold text-slate-600 mb-1">예정 시간 (Time)</label>
-            <input type="text" id="modal-place-time" placeholder="예: 10:00 또는 09:30~11:00" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl font-mono text-slate-900 font-bold">
+        </div>
+
+        <!-- 24시간 시작~종료 시간(hh:mm~hh:mm) 입력 전용 섹션 -->
+        <div class="p-3 bg-amber-50/50 border border-amber-200/70 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block font-bold text-slate-800 text-xs flex items-center gap-1.5">
+              <span>⏰</span> <span>예정 시간 (24시간 기준 시작~종료)</span>
+            </label>
+            <span class="text-[10px] font-mono text-amber-700 font-bold bg-amber-100/70 px-1.5 py-0.2 rounded">hh:mm ~ hh:mm</span>
           </div>
+
+          <!-- 24시간 시작 / 종료 타임 피커 -->
+          <div class="flex items-center gap-2">
+            <div class="flex-1 relative">
+              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">시작</span>
+              <input type="time" id="modal-place-time-start" onchange="syncPlaceTimeFromInputs()" class="w-full pl-9 pr-2 py-2 bg-white border border-slate-200 rounded-xl font-mono text-xs sm:text-sm font-bold text-slate-900 text-center focus:ring-1 focus:ring-brand-500 focus:outline-none transition">
+            </div>
+            <span class="text-slate-400 font-bold font-mono text-sm shrink-0">~</span>
+            <div class="flex-1 relative">
+              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">종료</span>
+              <input type="time" id="modal-place-time-end" onchange="syncPlaceTimeFromInputs()" class="w-full pl-9 pr-2 py-2 bg-white border border-slate-200 rounded-xl font-mono text-xs sm:text-sm font-bold text-slate-900 text-center focus:ring-1 focus:ring-brand-500 focus:outline-none transition">
+            </div>
+          </div>
+
+          <!-- 조합 텍스트 & 빠른 시간 프리셋 버튼 -->
+          <div class="flex items-center gap-1.5">
+            <input type="text" id="modal-place-time" oninput="syncPlaceInputsFromText()" placeholder="10:00~11:30" class="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl font-mono text-xs font-bold text-slate-900 text-center focus:ring-1 focus:ring-brand-500 focus:outline-none transition" title="시간 직접 입력">
+            <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="setPlaceDuration(60)" class="px-2 py-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-800 text-[10px] font-bold rounded-lg border border-slate-200 transition" title="시작 시간 기준 1시간">+1h</button>
+              <button type="button" onclick="setPlaceDuration(90)" class="px-2 py-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-800 text-[10px] font-bold rounded-lg border border-slate-200 transition" title="시작 시간 기준 1.5시간">+1.5h</button>
+              <button type="button" onclick="setPlaceDuration(120)" class="px-2 py-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-800 text-[10px] font-bold rounded-lg border border-slate-200 transition" title="시작 시간 기준 2시간">+2h</button>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-500 pl-0.5">※ 24시간 형식(00:00~23:59)으로 시작-종료 시간을 선택하거나 직접 입력할 수 있습니다.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1739,10 +1909,10 @@
 
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="font-bold text-slate-600">상세 설명 (최대 50자)</label>
-            <span class="text-[10px] text-slate-400 font-mono"><span id="modal-desc-count">0</span>/50자</span>
+            <label class="font-bold text-slate-600">상세 설명 (최대 150자)</label>
+            <span class="text-[10px] text-slate-400 font-mono"><span id="modal-desc-count">0</span>/150자</span>
           </div>
-          <input type="text" id="modal-place-desc" maxlength="50" oninput="updatePlaceDescCounter(this.value)" placeholder="주요 특징, 추천 메뉴, 팁 (최대 50자)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
+          <input type="text" id="modal-place-desc" maxlength="150" oninput="updatePlaceDescCounter(this.value)" placeholder="주요 특징, 추천 메뉴, 팁 (최대 150자)" class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl">
         </div>
 
         <div>
@@ -2928,54 +3098,54 @@
     }
 
     const placesData = [
-      { id: "p1", name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", time: "07:00", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
-      { id: "p2", name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", time: "15:30", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
-      { id: "p3", name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", time: "06:30", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
-      { id: "p4", name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", time: "14:00", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
-      { id: "p5", name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", time: "15:00", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
-      { id: "p6", name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", time: "11:30", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
-      { id: "p7", name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", time: "18:00", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
-      { id: "p8", name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", time: "19:30", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
-      { id: "p9", name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", time: "21:00", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
-      { id: "p10", name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", time: "21:30", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
+      { id: "p1", name: "하얏트 StayFit 피트니스 센터", lat: 21.2768, lng: -157.8246, region: "와이키키", cat: "웰니스", day: "Day 4, 6", time: "07:00~08:00", desc: "호텔 3층 오션뷰 러닝 & 웨이트", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+StayFit" },
+      { id: "p2", name: "하얏트 오션뷰 수영장 & 자쿠지", lat: 21.2765, lng: -157.8249, region: "와이키키", cat: "웰니스", day: "Day 1, 3", time: "15:30~17:00", desc: "와이키키 해변 굽어보는 선베드 태닝 & 온수 풀", price: "투숙객 무료", gmap: "Hyatt+Regency+Waikiki+Pool" },
+      { id: "p3", name: "와이키키 퀸즈 비치 (바다수영 & 모닝요가)", lat: 21.2715, lng: -157.8220, region: "와이키키", cat: "웰니스", day: "Day 1, 7", time: "06:30~08:00", desc: "파도 잔잔한 방파제 안쪽 바다수영 & 06:30 일출 요가", price: "무료", gmap: "Queens+Surf+Beach+Honolulu" },
+      { id: "p4", name: "카일루아 비치 어드벤처스 (SUP)", lat: 21.4010, lng: -157.7380, region: "동부", cat: "웰니스", day: "Day 2", time: "14:00~16:00", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여", price: "$65 (2시간)", gmap: "Kailua+Beach+Adventures" },
+      { id: "p5", name: "하얏트 리젠시 와이키키", lat: 21.2766, lng: -157.8248, region: "와이키키", cat: "명소", day: "Day 1~8", time: "15:00~16:00", desc: "7박 베이스캠프 호텔", price: "숙박 바우처", gmap: "Hyatt+Regency+Waikiki" },
+      { id: "p6", name: "이야스메 무스비 본점", lat: 21.2778, lng: -157.8256, region: "와이키키", cat: "미식", day: "Day 1", time: "11:30~12:30", desc: "스팸 아보카도 무스비 맛집", price: "$3~$8", gmap: "Musubi+Cafe+Iyasume+Waikiki" },
+      { id: "p7", name: "마구로 스팟 (Maguro Spot)", lat: 21.2769, lng: -157.8241, region: "와이키키", cat: "미식", day: "Day 1", time: "18:00~19:00", desc: "생참치 커스텀 포케볼", price: "$12~$20", gmap: "Maguro+Spot+Waikiki" },
+      { id: "p8", name: "치즈케이크 팩토리", lat: 21.2785, lng: -157.8284, region: "와이키키", cat: "미식", day: "Day 1", time: "19:30~21:00", desc: "파스타 & 치즈케이크 테라스 디너", price: "$25~$45", gmap: "The+Cheesecake+Factory+Honolulu" },
+      { id: "p9", name: "ABC 스토어 #38", lat: 21.2798, lng: -157.8291, region: "와이키키", cat: "쇼핑", day: "Day 1", time: "21:00~21:30", desc: "탄키티 인형, 선크림, 스낵", price: "품목별", gmap: "ABC+Stores+Honolulu" },
+      { id: "p10", name: "롱스 드럭스 (Longs Drugs 와이키키)", lat: 21.2805, lng: -157.8305, region: "와이키키", cat: "의료", day: "Day 1", time: "21:30~22:00", desc: "CVS 대형 드럭스토어, OTC 상비약", price: "품목별", gmap: "Longs+Drugs+2155+Kalakaua+Ave" },
       { id: "p11", name: "닥터스 온 콜 (Doctors on Call)", lat: 21.2782, lng: -157.8295, region: "와이키키", cat: "의료", day: "비상시", time: "상시", desc: "쉐라톤 2층 워크인 긴급진료소 (한국어 통역 지원)", price: "보험 적용", gmap: "Doctors+on+Call+Sheraton+Waikiki" },
-      { id: "p12", name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "10:30", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
-      { id: "p13", name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "11:30", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
-      { id: "p14", name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "12:30", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
-      { id: "p15", name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", time: "15:00", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
-      { id: "p16", name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", time: "15:30", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
-      { id: "p17", name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", time: "18:00", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
-      { id: "p18", name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", time: "17:00", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
-      { id: "p19", name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", time: "16:30", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
-      { id: "p20", name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", time: "18:30", desc: "프리미엄 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
-      { id: "p21", name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "14:00", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
-      { id: "p22", name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", time: "08:30", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
-      { id: "p23", name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", time: "06:30", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
-      { id: "p24", name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", time: "10:30", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
-      { id: "p25", name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", time: "07:30", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
-      { id: "p26", name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", time: "10:00", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
-      { id: "p27", name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", time: "11:30", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
-      { id: "p28", name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", time: "13:00", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
-      { id: "p29", name: "오아후 거북이 스노쿨링 (터틀 캐년)", lat: 21.2720, lng: -157.8280, region: "와이키키", cat: "액티비티", day: "Day 2", time: "16:00", desc: "청정 바다에서 야생 바다거북(호누)과 함께 유영하는 보트 스노클링 세션", price: "$65 (장비포함)", gmap: "Waikiki+Turtle+Canyon+Snorkel" },
-      { id: "p30", name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", time: "13:30", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
-      { id: "p31", name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", time: "09:30", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
-      { id: "p32", name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", time: "13:30", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
-      { id: "p33", name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", time: "09:30", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
-      { id: "p34", name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", time: "11:00", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
-      { id: "p35", name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", time: "12:00", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
-      { id: "p36", name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", time: "13:30", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
-      { id: "p37", name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", time: "14:00", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
-      { id: "p38", name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", time: "15:00", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
-      { id: "p39", name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", time: "18:00", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
-      { id: "p40", name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", time: "09:30", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
-      { id: "p41", name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", time: "13:00", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
-      { id: "p42", name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", time: "15:00", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
-      { id: "p43", name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", time: "16:30", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" },
-      { id: "p44", name: "마루카메 우동 와이키키 (Marukame Udon)", lat: 21.2797, lng: -157.8268, region: "와이키키", cat: "미식", day: "Day 1, 6, 7", time: "12:00", desc: "블로그 추천: 와이키키 최강 가성비 수제 사누키 우동 & 바삭한 튀김 (팁 부담 없는 셀프 주문, 테이크아웃 추천)", price: "$7~$13", gmap: "Marugame+Udon+Waikiki" },
-      { id: "p45", name: "세븐일레븐 하와이 와이키키점 (7-Eleven Hawaii)", lat: 21.2828, lng: -157.8285, region: "와이키키", cat: "미식", day: "Day 2, 3, 5", time: "06:30", desc: "블로그 추천: 하와이안 스팸 무스비 성지, 데리야키 무스비 & 벤토 도시락 가성비 아침 테이크아웃", price: "$2~$6", gmap: "7-Eleven+Hawaii+Honolulu" },
-      { id: "p46", name: "마우날루아 베이 비치 파크 (Maunalua Bay)", lat: 21.2818, lng: -157.7126, region: "동부", cat: "명소", day: "Day 2, 3", time: "10:30", desc: "블로그 언급: 하와이 카이 해안 만 & 코코헤드 조망, 잔디밭 도시락 피크닉 및 로컬 오션뷰 명소", price: "무료 (공원)", gmap: "Maunalua+Bay+Beach+Park" },
-      { id: "p47", name: "도원 (Dowon) / 안동장 - 호놀룰루 정통 중식당", lat: 21.2975, lng: -157.8420, region: "호놀룰루", cat: "미식", day: "Day 4, 7", time: "18:30", desc: "블로그 언급: 기름진 미국식 식사에 지쳤을 때 생각나는 얼큰한 해물 짬뽕 & 바삭한 탕수육 (키아모쿠 한인타운)", price: "$15~$25", gmap: "Dowon+Chinese+Restaurant+Honolulu" },
-      { id: "p48", name: "와이키키 거리 무료 쿠폰북 가판대 (KauKau & Aloha Street)", lat: 21.2780, lng: -157.8270, region: "와이키키", cat: "쇼핑", day: "Day 1, 7", time: "14:00", desc: "블로그 추천 꿀팁: 와이키키 거리 가판대 무료 가이드북, 15~20% 식당 할인권으로 세금/팁 부담 대폭 상쇄", price: "무료 배포", gmap: "Kalakaua+Avenue+Honolulu" }
+      { id: "p12", name: "호놀룰루 쿠키 본점", lat: 21.2775, lng: -157.8265, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "10:30~11:30", desc: "파인애플 틴케이스 시그니처 쇼트브레드", price: "$15~$35", gmap: "Honolulu+Cookie+Company+Waikiki" },
+      { id: "p13", name: "모니(Moni) 호놀룰루", lat: 21.2790, lng: -157.8280, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "11:30~12:30", desc: "태닝 스누피 서핑 티셔츠 & 에코백", price: "$30~$50", gmap: "Moni+Honolulu" },
+      { id: "p14", name: "파타고니아 호놀룰루 (파탈로하)", lat: 21.2952, lng: -157.8542, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "12:30~13:30", desc: "Pataloha 하와이 한정판 티셔츠", price: "$45~$65", gmap: "Patagonia+Honolulu" },
+      { id: "p15", name: "와이키키 마켓 (Waikiki Market)", lat: 21.2795, lng: -157.8245, region: "와이키키", cat: "쇼핑", day: "Day 3", time: "15:00~16:00", desc: "프리미엄 로컬 식료품 & 델리", price: "$15~$25", gmap: "Waikiki+Market+Kuhio" },
+      { id: "p16", name: "알라모아나 센터", lat: 21.2913, lng: -157.8435, region: "와이키키", cat: "쇼핑", day: "Day 4", time: "15:30~18:00", desc: "세계 최대 야외 쇼핑몰", price: "무료주차", gmap: "Ala+Moana+Center" },
+      { id: "p17", name: "매직 아일랜드 선셋", lat: 21.2865, lng: -157.8465, region: "와이키키", cat: "명소", day: "Day 4", time: "18:00~19:00", desc: "호놀룰루 도심과 어우러진 석양", price: "무료", gmap: "Magic+Island+Ala+Moana" },
+      { id: "p18", name: "릴리하 베이커리 본점", lat: 21.3255, lng: -157.8655, region: "와이키키", cat: "미식", day: "Day 4", time: "17:00~18:00", desc: "원조 로코모코 & 코코퍼프 디저트", price: "$15~$25", gmap: "Liliha+Bakery+Kuakini" },
+      { id: "p19", name: "돈키호테 호놀룰루", lat: 21.2975, lng: -157.8405, region: "와이키키", cat: "쇼핑", day: "Day 3", time: "16:30~18:00", desc: "24시간 대형마트 & 스낵", price: "품목별", gmap: "Don+Quijote+Honolulu" },
+      { id: "p20", name: "리틀 조스 스테이크하우스", lat: 21.3185, lng: -157.8665, region: "와이키키", cat: "미식", day: "Day 3", time: "18:30~20:30", desc: "프리미엄 립 & 티본 스테이크", price: "$50~$90", gmap: "Little+Joe's+Steakhouse+Honolulu" },
+      { id: "p21", name: "Da Shop 로컬 북스토어", lat: 21.2825, lng: -157.8085, region: "와이키키", cat: "쇼핑", day: "Day 7", time: "14:00~15:00", desc: "하와이안 그림책 & 사진집 독립서점", price: "$15~$35", gmap: "da+Shop+books+curiosities" },
+      { id: "p22", name: "레오나즈 베이커리 본점", lat: 21.2785, lng: -157.8130, region: "동부", cat: "미식", day: "Day 2", time: "08:30~09:30", desc: "갓 튀긴 말라사다 도넛", price: "개당 $2", gmap: "Leonard's+Bakery+Honolulu" },
+      { id: "p23", name: "다이아몬드 헤드", lat: 21.2644, lng: -157.8062, region: "동부", cat: "명소", day: "Day 2", time: "06:30~08:30", desc: "분화구 정상 360도 트레킹", price: "$5 (예약)", gmap: "Diamond+Head+State+Monument" },
+      { id: "p24", name: "아일랜드 브루 커피", lat: 21.2792, lng: -157.7055, region: "동부", cat: "미식", day: "Day 2", time: "10:30~11:30", desc: "하와이카이 마리나 뷰 코나 커피", price: "$10~$20", gmap: "Island+Brew+Coffeehouse+Hawaii+Kai" },
+      { id: "p25", name: "하나우마 베이 (Hanauma Bay)", lat: 21.2690, lng: -157.6938, region: "동부", cat: "액티비티", day: "Day 3", time: "07:30~11:00", desc: "산호초 & 바다거북 스노클링", price: "$25 (예약)", gmap: "Hanauma+Bay+Oahu" },
+      { id: "p26", name: "할로나 블로우홀", lat: 21.2825, lng: -157.6775, region: "동부", cat: "명소", day: "Day 2", time: "10:00~10:40", desc: "바위틈으로 치솟는 바다 분수", price: "무료", gmap: "Halona+Blowhole+Lookout" },
+      { id: "p27", name: "와이마날로 비치", lat: 21.3285, lng: -157.6975, region: "동부", cat: "명소", day: "Day 2", time: "11:30~12:30", desc: "에메랄드빛 해안 드라이브", price: "무료", gmap: "Waimanalo+Beach+Park" },
+      { id: "p28", name: "라니카이 비치", lat: 21.3932, lng: -157.7145, region: "동부", cat: "명소", day: "Day 2", time: "13:00~14:30", desc: "천국의 바다 잔잔한 수영", price: "무료", gmap: "Lanikai+Beach+Oahu" },
+      { id: "p29", name: "오아후 거북이 스노쿨링 (터틀 캐년)", lat: 21.2720, lng: -157.8280, region: "와이키키", cat: "액티비티", day: "Day 2", time: "16:00~17:30", desc: "청정 바다에서 야생 바다거북(호누)과 함께 유영하는 보트 스노클링 세션", price: "$65 (장비포함)", gmap: "Waikiki+Turtle+Canyon+Snorkel" },
+      { id: "p30", name: "카일루아 비치 파크", lat: 21.3995, lng: -157.7285, region: "동부", cat: "명소", day: "Day 2", time: "13:30~16:30", desc: "주차장 및 샤워시설 완비", price: "무료주차", gmap: "Kailua+Beach+Park" },
+      { id: "p31", name: "쿠알로아 랜치 (Kualoa Ranch)", lat: 21.5208, lng: -157.8373, region: "동부", cat: "액티비티", day: "Day 4", time: "09:30~12:30", desc: "쥐라기 계곡 UTV 랩터 질주", price: "$145~ (예약)", gmap: "Kualoa+Ranch+Hawaii" },
+      { id: "p32", name: "쿠알로아 리저널 파크", lat: 21.5155, lng: -157.8365, region: "동부", cat: "명소", day: "Day 4", time: "13:30~14:30", desc: "중국인 모자섬 포토 스팟", price: "무료", gmap: "Kualoa+Regional+Park" },
+      { id: "p33", name: "돌 플랜테이션 (Dole)", lat: 21.5255, lng: -158.0375, region: "노스쇼어", cat: "명소", day: "Day 5", time: "09:30~11:00", desc: "파인애플 아이스크림(돌휩)", price: "입장무료", gmap: "Dole+Plantation+Oahu" },
+      { id: "p34", name: "할레이바 타운", lat: 21.5915, lng: -158.1065, region: "노스쇼어", cat: "명소", day: "Day 5", time: "11:00~14:00", desc: "빈티지 목조 서퍼 마을 산책", price: "무료", gmap: "Haleiwa+Town+Oahu" },
+      { id: "p35", name: "지오반니 새우 트럭 할레이바", lat: 21.5925, lng: -158.1045, region: "노스쇼어", cat: "미식", day: "Day 5", time: "12:00~13:00", desc: "원조 갈릭 스캠피 버터 새우", price: "$17", gmap: "Giovanni's+Shrimp+Truck+Haleiwa" },
+      { id: "p36", name: "마츠모토 쉐이브 아이스", lat: 21.5908, lng: -158.1052, region: "노스쇼어", cat: "미식", day: "Day 5", time: "13:30~14:00", desc: "70년 전통 무지개 레인보우 빙수", price: "$5~$7", gmap: "Matsumoto+Shave+Ice+Haleiwa" },
+      { id: "p37", name: "헤일레바 볼스 (Haleiwa Bowls)", lat: 21.5945, lng: -158.1030, region: "노스쇼어", cat: "미식", day: "Day 5", time: "14:00~14:30", desc: "유기농 과일 수제 아사이볼", price: "$12~$16", gmap: "Haleiwa+Bowls" },
+      { id: "p38", name: "샤크스 코브 (Shark's Cove)", lat: 21.6535, lng: -158.0635, region: "노스쇼어", cat: "웰니스", day: "Day 5", time: "15:00~17:30", desc: "천연 바위 웅덩이 암초 수족관 스노클", price: "무료", gmap: "Shark's+Cove+Oahu" },
+      { id: "p39", name: "선셋 비치 파크", lat: 21.6785, lng: -158.0535, region: "노스쇼어", cat: "명소", day: "Day 5", time: "18:00~19:00", desc: "태평양 수평선 붉은 일몰", price: "무료", gmap: "Sunset+Beach+Park+Oahu" },
+      { id: "p40", name: "진주만 국립 기념관", lat: 21.3655, lng: -157.9395, region: "진주만", cat: "명소", day: "Day 6", time: "09:30~12:00", desc: "제2차 세계대전 역사 현장", price: "무료 ($1예약)", gmap: "Pearl+Harbor+National+Memorial" },
+      { id: "p41", name: "와이켈레 프리미엄 아울렛", lat: 21.3985, lng: -158.0065, region: "진주만", cat: "쇼핑", day: "Day 6", time: "13:00~16:30", desc: "미국 브랜드 대폭 할인 쇼핑", price: "무료주차", gmap: "Waikele+Premium+Outlets" },
+      { id: "p42", name: "코스트코 주유소 (Iwilei)", lat: 21.3160, lng: -157.8685, region: "진주만", cat: "웰니스", day: "Day 8", time: "15:00~15:30", desc: "오아후 최저가 주유소 (반납 전 주유)", price: "갤런당 $1 저렴", gmap: "Costco+Gas+Station+Honolulu+Iwilei" },
+      { id: "p43", name: "파라다이스 코브 루아우", lat: 21.3125, lng: -158.1285, region: "진주만", cat: "액티비티", day: "Day 7", time: "16:30~20:30", desc: "코올리나 해변 전통 훌라 & 디너", price: "$140~$190", gmap: "Paradise+Cove+Luau+Oahu" },
+      { id: "p44", name: "마루카메 우동 와이키키 (Marukame Udon)", lat: 21.2797, lng: -157.8268, region: "와이키키", cat: "미식", day: "Day 1, 6, 7", time: "12:00~13:00", desc: "블로그 추천: 와이키키 최강 가성비 수제 사누키 우동 & 바삭한 튀김 (팁 부담 없는 셀프 주문, 테이크아웃 추천)", price: "$7~$13", gmap: "Marugame+Udon+Waikiki" },
+      { id: "p45", name: "세븐일레븐 하와이 와이키키점 (7-Eleven Hawaii)", lat: 21.2828, lng: -157.8285, region: "와이키키", cat: "미식", day: "Day 2, 3, 5", time: "06:30~07:00", desc: "블로그 추천: 하와이안 스팸 무스비 성지, 데리야키 무스비 & 벤토 도시락 가성비 아침 테이크아웃", price: "$2~$6", gmap: "7-Eleven+Hawaii+Honolulu" },
+      { id: "p46", name: "마우날루아 베이 비치 파크 (Maunalua Bay)", lat: 21.2818, lng: -157.7126, region: "동부", cat: "명소", day: "Day 2, 3", time: "10:30~11:30", desc: "블로그 언급: 하와이 카이 해안 만 & 코코헤드 조망, 잔디밭 도시락 피크닉 및 로컬 오션뷰 명소", price: "무료 (공원)", gmap: "Maunalua+Bay+Beach+Park" },
+      { id: "p47", name: "도원 (Dowon) / 안동장 - 호놀룰루 정통 중식당", lat: 21.2975, lng: -157.8420, region: "호놀룰루", cat: "미식", day: "Day 4, 7", time: "18:30~19:30", desc: "블로그 언급: 기름진 미국식 식사에 지쳤을 때 생각나는 얼큰한 해물 짬뽕 & 바삭한 탕수육 (키아모쿠 한인타운)", price: "$15~$25", gmap: "Dowon+Chinese+Restaurant+Honolulu" },
+      { id: "p48", name: "와이키키 거리 무료 쿠폰북 가판대 (KauKau & Aloha Street)", lat: 21.2780, lng: -157.8270, region: "와이키키", cat: "쇼핑", day: "Day 1, 7", time: "14:00~14:30", desc: "블로그 추천 꿀팁: 와이키키 거리 가판대 무료 가이드북, 15~20% 식당 할인권으로 세금/팁 부담 대폭 상쇄", price: "무료 배포", gmap: "Kalakaua+Avenue+Honolulu" }
     ];
 
     function getAllPlaces() {
@@ -4176,8 +4346,8 @@
         const rankA = getDayRank(a.day);
         const rankB = getDayRank(b.day);
         if (rankA !== rankB) return rankA - rankB;
-        const timeA = a.time || '99:99';
-        const timeB = b.time || '99:99';
+        const timeA = (a.time || '99:99').split('~')[0].trim();
+        const timeB = (b.time || '99:99').split('~')[0].trim();
         return timeA.localeCompare(timeB);
       });
 
@@ -4991,8 +5161,8 @@
           return p.day.includes(dayLabel) || (p.day.includes('Day 1~8') && (dayNum === 1 || dayNum === 8));
         });
         dayPlaces.sort((a, b) => {
-          const timeA = a.time || '99:99';
-          const timeB = b.time || '99:99';
+          const timeA = (a.time || '99:99').split('~')[0].trim();
+          const timeB = (b.time || '99:99').split('~')[0].trim();
           return timeA.localeCompare(timeB);
         });
 
@@ -5380,6 +5550,233 @@
       if (cnt) cnt.innerText = (val || '').length;
     }
 
+    // -------------------------------------------------------------
+    // 24시간제 시작~종료 시간(hh:mm~hh:mm) 헬퍼 및 양방향 동기화 함수
+    // -------------------------------------------------------------
+    function normalize24H(t) {
+      if (!t) return '10:00';
+      const m = String(t).match(/(\d{1,2}):(\d{1,2})/);
+      if (m) {
+        const h = Math.min(23, Math.max(0, parseInt(m[1], 10)));
+        const min = Math.min(59, Math.max(0, parseInt(m[2], 10)));
+        return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+      }
+      return '10:00';
+    }
+
+    function addDuration24H(t, durationMin) {
+      const norm = normalize24H(t);
+      const [hStr, mStr] = norm.split(':');
+      let totalMin = parseInt(hStr, 10) * 60 + parseInt(mStr, 10) + durationMin;
+      totalMin = totalMin % (24 * 60);
+      const newH = Math.floor(totalMin / 60);
+      const newM = totalMin % 60;
+      return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+    }
+
+    function syncPlaceTimeFromInputs() {
+      const startEl = document.getElementById('modal-place-time-start');
+      const endEl = document.getElementById('modal-place-time-end');
+      const textEl = document.getElementById('modal-place-time');
+      if (!startEl || !endEl || !textEl) return;
+
+      if (startEl.value && !endEl.value) {
+        endEl.value = addDuration24H(startEl.value, 90);
+      }
+      if (startEl.value && endEl.value) {
+        textEl.value = `${startEl.value}~${endEl.value}`;
+      }
+    }
+
+    function syncPlaceInputsFromText() {
+      const textEl = document.getElementById('modal-place-time');
+      const startEl = document.getElementById('modal-place-time-start');
+      const endEl = document.getElementById('modal-place-time-end');
+      if (!textEl || !startEl || !endEl) return;
+      const val = textEl.value.trim();
+      if (val.includes('~') || val.includes('-')) {
+        const parts = val.split(/[-~～]/);
+        if (parts[0] && parts[0].includes(':')) {
+          startEl.value = normalize24H(parts[0].trim());
+        }
+        if (parts[1] && parts[1].includes(':')) {
+          endEl.value = normalize24H(parts[1].trim());
+        }
+      }
+    }
+
+    function setPlaceDuration(durationMin) {
+      const startEl = document.getElementById('modal-place-time-start');
+      const endEl = document.getElementById('modal-place-time-end');
+      const textEl = document.getElementById('modal-place-time');
+      if (!startEl || !endEl || !textEl) return;
+
+      const startVal = startEl.value || '10:00';
+      startEl.value = normalize24H(startVal);
+      const endVal = addDuration24H(startVal, durationMin);
+      endEl.value = endVal;
+      textEl.value = `${startEl.value}~${endVal}`;
+    }
+
+    // 모바일 아코디언 상세 정보 펼침/접힘 제어 함수
+    function toggleMobilePlaceDetail(placeId) {
+      const detailEl = document.getElementById('mob-detail-' + placeId);
+      const chevronEl = document.getElementById('mob-chevron-' + placeId);
+      if (!detailEl) return;
+      if (detailEl.classList.contains('hidden')) {
+        detailEl.classList.remove('hidden');
+        if (chevronEl) chevronEl.innerText = '▲ 접기';
+      } else {
+        detailEl.classList.add('hidden');
+        if (chevronEl) chevronEl.innerText = '▼ 상세';
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 보기 모드 전환 (카드 뷰 vs 표 뷰)
+    // -------------------------------------------------------------
+    let currentScheduleViewMode = window.innerWidth < 768 ? 'card' : 'table';
+
+        // -------------------------------------------------------------
+    // PC 전체 표 좌측 열(일정, 장소명) 고정(Sticky) 토글 함수
+    // -------------------------------------------------------------
+        // -------------------------------------------------------------
+    // 종합 일정 스마트 필터 축소/확장 및 요약 상태 동기화 함수
+    // -------------------------------------------------------------
+    function toggleScheduleFilterPanel(forceState) {
+      const panel = document.getElementById('schedule-filter-panel');
+      const text = document.getElementById('filter-expand-text');
+      const icon = document.getElementById('filter-expand-icon');
+      if (!panel) return;
+
+      const isCurrentlyHidden = panel.classList.contains('hidden');
+      const shouldOpen = forceState !== undefined ? forceState : isCurrentlyHidden;
+
+      if (shouldOpen) {
+        panel.classList.remove('hidden');
+        if (text) text.innerText = '필터 접기';
+        if (icon) {
+          icon.innerText = '▲';
+        }
+      } else {
+        panel.classList.add('hidden');
+        if (text) text.innerText = '필터 열기';
+        if (icon) {
+          icon.innerText = '▼';
+        }
+      }
+    }
+
+    function updateFilterSummary() {
+      const q = (document.getElementById('table-search-input')?.value || '').trim();
+      const region = document.getElementById('filter-region')?.value || 'all';
+      const category = document.getElementById('filter-category')?.value || 'all';
+      const day = document.getElementById('filter-day')?.value || 'all';
+      const sortOrder = document.getElementById('table-sort-order')?.value || 'dayAsc';
+
+      const summaryEl = document.getElementById('active-filter-summary');
+      const resetBtn = document.getElementById('btn-reset-filters');
+      if (!summaryEl) return;
+
+      const badges = [];
+      if (q) badges.push(`검색: "${q}"`);
+      if (region !== 'all') badges.push(region);
+      if (category !== 'all') badges.push(category);
+      if (day !== 'all') badges.push(day);
+
+      const hasActiveFilter = badges.length > 0;
+      if (resetBtn) {
+        if (hasActiveFilter) {
+          resetBtn.classList.remove('hidden');
+        } else {
+          resetBtn.classList.add('hidden');
+        }
+      }
+
+      if (hasActiveFilter) {
+        summaryEl.innerText = `필터: ${badges.join(' • ')}`;
+        summaryEl.className = 'text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 truncate';
+      } else {
+        const count = document.getElementById('table-count-badge')?.innerText || '40개 항목';
+        summaryEl.innerText = `전체 (${count})`;
+        summaryEl.className = 'text-[11px] font-medium text-slate-500 bg-white px-2 py-0.5 rounded-md border border-slate-200 truncate';
+      }
+    }
+
+    function resetScheduleFilters(e) {
+      if (e) e.stopPropagation();
+      const inputQ = document.getElementById('table-search-input');
+      const selectReg = document.getElementById('filter-region');
+      const selectCat = document.getElementById('filter-category');
+      const selectDay = document.getElementById('filter-day');
+      const selectSort = document.getElementById('table-sort-order');
+
+      if (inputQ) inputQ.value = '';
+      if (selectReg) selectReg.value = 'all';
+      if (selectCat) selectCat.value = 'all';
+      if (selectDay) selectDay.value = 'all';
+      if (selectSort) selectSort.value = 'dayAsc';
+
+      renderMasterTable();
+      updateFilterSummary();
+    }
+
+function toggleTableStickyColumns() {
+      const container = document.getElementById('master-table-container');
+      const icon = document.getElementById('sticky-toggle-icon');
+      const text = document.getElementById('sticky-toggle-text');
+      if (!container) return;
+
+      if (container.classList.contains('unfreeze-sticky')) {
+        container.classList.remove('unfreeze-sticky');
+        if (icon) icon.innerText = '📌';
+        if (text) text.innerText = '좌측 열 고정 해제';
+      } else {
+        container.classList.add('unfreeze-sticky');
+        if (icon) icon.innerText = '🔓';
+        if (text) text.innerText = '좌측 열 고정 활성화';
+      }
+    }
+
+function setScheduleViewMode(mode) {
+      currentScheduleViewMode = mode;
+      const mobList = document.getElementById('master-mobile-list');
+      const tblCont = document.getElementById('master-table-container');
+      const btnCard = document.getElementById('btn-view-card');
+      const btnTbl = document.getElementById('btn-view-table');
+
+      if (mode === 'card') {
+        if (mobList) mobList.classList.remove('hidden');
+        if (tblCont) tblCont.classList.add('hidden');
+        if (btnCard) {
+          btnCard.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-xs';
+        }
+        if (btnTbl) {
+          btnTbl.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        }
+      } else {
+        if (mobList) mobList.classList.add('hidden');
+        if (tblCont) tblCont.classList.remove('hidden');
+        if (btnTbl) {
+          btnTbl.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-xs';
+        }
+        if (btnCard) {
+          btnCard.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        }
+      }
+    }
+
+    // 윈도우 리사이즈 시 초기 모드 자동 감지 (사용자가 수동 변경하지 않은 경우)
+    let userManuallySetViewMode = false;
+    window.addEventListener('resize', () => {
+      if (!userManuallySetViewMode) {
+        const autoMode = window.innerWidth < 768 ? 'card' : 'table';
+        if (autoMode !== currentScheduleViewMode) {
+          setScheduleViewMode(autoMode);
+        }
+      }
+    });
+
     function openPlaceModal() {
       currentEditingPlaceId = null;
       document.getElementById('modal-place-header-title').innerText = '새 장소 등록';
@@ -5388,7 +5785,16 @@
       document.getElementById('modal-place-name').disabled = false;
       document.getElementById('modal-place-name').dataset.autoFilled = 'false';
       document.getElementById('modal-place-day').value = 'Day 1';
-      document.getElementById('modal-place-time').value = '10:00';
+      
+      const defaultStart = '10:00';
+      const defaultEnd = '11:30';
+      const startEl = document.getElementById('modal-place-time-start');
+      const endEl = document.getElementById('modal-place-time-end');
+      const textEl = document.getElementById('modal-place-time');
+      if (startEl) startEl.value = defaultStart;
+      if (endEl) endEl.value = defaultEnd;
+      if (textEl) textEl.value = `${defaultStart}~${defaultEnd}`;
+
       document.getElementById('modal-place-region').value = '와이키키';
       document.getElementById('modal-place-cat').value = '명소';
       document.getElementById('modal-place-desc').value = '';
@@ -5412,7 +5818,25 @@
       document.getElementById('modal-place-delete-btn')?.classList.remove('hidden');
       
       document.getElementById('modal-place-day').value = p.day ? p.day.split(',')[0].trim() : 'Day 1';
-      document.getElementById('modal-place-time').value = p.time || '10:00';
+      
+      const rawT = (p.time || '10:00~11:30').trim();
+      let startT = '10:00';
+      let endT = '11:30';
+      if (rawT.includes('~') || rawT.includes('-')) {
+        const parts = rawT.split(/[-~～]/);
+        startT = normalize24H(parts[0].trim());
+        endT = normalize24H(parts[1].trim());
+      } else if (rawT.includes(':')) {
+        startT = normalize24H(rawT);
+        endT = addDuration24H(startT, 90);
+      }
+      const startEl = document.getElementById('modal-place-time-start');
+      const endEl = document.getElementById('modal-place-time-end');
+      const textEl = document.getElementById('modal-place-time');
+      if (startEl) startEl.value = startT;
+      if (endEl) endEl.value = endT;
+      if (textEl) textEl.value = (rawT === '상시') ? '상시' : `${startT}~${endT}`;
+
       document.getElementById('modal-place-region').value = p.region || '와이키키';
       document.getElementById('modal-place-cat').value = p.cat || '명소';
       document.getElementById('modal-place-desc').value = p.desc || '';
@@ -5436,7 +5860,29 @@
     function savePlaceModal(forceSync = true) {
       const name = document.getElementById('modal-place-name').value.trim();
       const day = document.getElementById('modal-place-day').value;
-      const time = document.getElementById('modal-place-time').value.trim() || '10:00';
+      const startIn = document.getElementById('modal-place-time-start')?.value.trim();
+      const endIn = document.getElementById('modal-place-time-end')?.value.trim();
+      let textIn = document.getElementById('modal-place-time')?.value.trim() || '';
+
+      let time = '10:00~11:30';
+      if (startIn && endIn) {
+        time = `${normalize24H(startIn)}~${normalize24H(endIn)}`;
+      } else if (textIn) {
+        if (textIn === '상시') {
+          time = '상시';
+        } else if (textIn.includes('~') || textIn.includes('-')) {
+          const parts = textIn.split(/[-~～]/);
+          time = `${normalize24H(parts[0].trim())}~${normalize24H(parts[1].trim())}`;
+        } else if (textIn.includes(':')) {
+          const s = normalize24H(textIn);
+          time = `${s}~${addDuration24H(s, 90)}`;
+        } else {
+          time = textIn;
+        }
+      } else if (startIn) {
+        const s = normalize24H(startIn);
+        time = `${s}~${addDuration24H(s, 90)}`;
+      }
       const region = document.getElementById('modal-place-region').value;
       const cat = document.getElementById('modal-place-cat').value;
       const desc = document.getElementById('modal-place-desc').value.trim();
@@ -5444,7 +5890,7 @@
       const gmapInput = document.getElementById('modal-place-gmap').value.trim();
 
       if (!name) { alert('장소명을 입력해주세요.'); return; }
-      if (desc.length > 50) { alert('상세 설명은 최대 50자까지 입력 가능합니다.'); return; }
+      if (desc.length > 150) { alert('상세 설명은 최대 150자까지 입력 가능합니다.'); return; }
 
       let gmapQuery = name;
       if (gmapInput) {
@@ -5497,6 +5943,8 @@
       closePlaceModal();
       renderMasterTable();
       renderTimeline();
+      if (typeof renderLedgerTable === 'function') renderLedgerTable();
+      if (typeof renderMapMarkers === 'function') renderMapMarkers();
       if (leafletMapInstance) {
         leafletMapInstance.remove();
         leafletMapInstance = null;
@@ -5531,6 +5979,8 @@
       closePlaceModal();
       renderMasterTable();
       renderTimeline();
+      if (typeof renderLedgerTable === 'function') renderLedgerTable();
+      if (typeof renderMapMarkers === 'function') renderMapMarkers();
       if (leafletMapInstance) {
         leafletMapInstance.remove();
         leafletMapInstance = null;
@@ -5577,7 +6027,13 @@
     function isScheduleTimePassed(dayStr, timeStr) {
       try {
         const dateStr = getDayDateIsoString(dayStr);
-        let timeClean = (timeStr || '23:59').replace(/[^0-9:]/g, '');
+        let targetTime = timeStr || '23:59';
+        if (targetTime.includes('~')) {
+          targetTime = targetTime.split('~')[1].trim();
+        } else if (targetTime.includes('-')) {
+          targetTime = targetTime.split('-')[1].trim();
+        }
+        let timeClean = targetTime.replace(/[^0-9:]/g, '');
         if (!timeClean.includes(':')) {
           if (timeClean.length === 4) timeClean = timeClean.substring(0,2) + ':' + timeClean.substring(2,4);
           else timeClean = '23:59';
@@ -5664,12 +6120,22 @@
       document.getElementById('cal-modal-desc').innerText = `${p.desc || ''} | 분류: ${p.cat} | 예상비용: ${p.price || '무료'}`;
       document.getElementById('cal-modal-loc').innerText = `📍 ${p.region} (${p.name}, Oahu, Hawaii)`;
 
-      // 구글 캘린더 바로가기 URL 생성
+      // 구글 캘린더 바로가기 URL 생성 (24시간 시작~종료 연동)
       const datePart = getEventDateIso(p.day);
-      const timeClean = (p.time || '10:00').replace(/[^0-9]/g, '').padEnd(4, '0').substring(0, 4);
-      const startH = parseInt(timeClean.substring(0, 2), 10) || 10;
-      const startM = parseInt(timeClean.substring(2, 4), 10) || 0;
-      const endH = (startH + 1) < 24 ? (startH + 1) : 23;
+      let startH = 10, startM = 0, endH = 11, endM = 30;
+      if (p.time && (p.time.includes('~') || p.time.includes('-'))) {
+        const parts = p.time.split(/[-~～]/);
+        const sM = parts[0].match(/(\d{1,2}):(\d{2})/);
+        const eM = parts[1].match(/(\d{1,2}):(\d{2})/);
+        if (sM) { startH = parseInt(sM[1], 10); startM = parseInt(sM[2], 10); }
+        if (eM) { endH = parseInt(eM[1], 10); endM = parseInt(eM[2], 10); }
+      } else if (p.time && p.time.includes(':')) {
+        const m = p.time.match(/(\d{1,2}):(\d{2})/);
+        if (m) {
+          startH = parseInt(m[1], 10); startM = parseInt(m[2], 10);
+          endH = (startH + 1) % 24; endM = startM;
+        }
+      }
       const startIso = `${datePart}T${String(startH).padStart(2,'0')}${String(startM).padStart(2,'0')}00`;
       const endIso = `${datePart}T${String(endH).padStart(2,'0')}${String(startM).padStart(2,'0')}00`;
 
@@ -5798,8 +6264,9 @@
     
     function renderMasterTable() {
       const tbody = document.getElementById('master-table-body');
+      const mobileList = document.getElementById('master-mobile-list');
       const badge = document.getElementById('table-count-badge');
-      if (!tbody) return;
+      if (!tbody && !mobileList) return;
 
       const q = (document.getElementById('table-search-input')?.value || '').toLowerCase().trim();
       const region = document.getElementById('filter-region')?.value || 'all';
@@ -5816,18 +6283,17 @@
         return true;
       });
 
-      // 정렬 처리: 일정 지난 항목(isPlacePassed)은 각 섹션(Day)의 마지막 순서로 배치
+      // 정렬 처리
       if (sortOrder === 'dayAsc') {
         filtered.sort((a, b) => {
           const rankA = getDayRank(a.day);
           const rankB = getDayRank(b.day);
           if (rankA !== rankB) return rankA - rankB;
-          // 같은 일자 내에서 활성 일정 먼저, 지난 일정은 섹션 마지막으로 배치
           const passA = isPlacePassed(a) ? 1 : 0;
           const passB = isPlacePassed(b) ? 1 : 0;
           if (passA !== passB) return passA - passB;
-          const timeA = a.time || '99:99';
-          const timeB = b.time || '99:99';
+          const timeA = (a.time || '99:99').split('~')[0].trim();
+          const timeB = (b.time || '99:99').split('~')[0].trim();
           return timeA.localeCompare(timeB);
         });
       } else if (sortOrder === 'dayDesc') {
@@ -5838,8 +6304,8 @@
           const passA = isPlacePassed(a) ? 1 : 0;
           const passB = isPlacePassed(b) ? 1 : 0;
           if (passA !== passB) return passA - passB;
-          const timeA = a.time || '99:99';
-          const timeB = b.time || '99:99';
+          const timeA = (a.time || '99:99').split('~')[0].trim();
+          const timeB = (b.time || '99:99').split('~')[0].trim();
           return timeA.localeCompare(timeB);
         });
       } else if (sortOrder === 'timeAsc') {
@@ -5847,104 +6313,153 @@
           const passA = isPlacePassed(a) ? 1 : 0;
           const passB = isPlacePassed(b) ? 1 : 0;
           if (passA !== passB) return passA - passB;
-          const timeA = a.time || '99:99';
-          const timeB = b.time || '99:99';
+          const timeA = (a.time || '99:99').split('~')[0].trim();
+          const timeB = (b.time || '99:99').split('~')[0].trim();
           return timeA.localeCompare(timeB);
-        });
-      } else if (sortOrder === 'nameAsc') {
-        filtered.sort((a, b) => {
-          const passA = isPlacePassed(a) ? 1 : 0;
-          const passB = isPlacePassed(b) ? 1 : 0;
-          if (passA !== passB) return passA - passB;
-          return a.name.localeCompare(b.name);
-        });
-      } else if (sortOrder === 'regionAsc') {
-        filtered.sort((a, b) => {
-          const passA = isPlacePassed(a) ? 1 : 0;
-          const passB = isPlacePassed(b) ? 1 : 0;
-          if (passA !== passB) return passA - passB;
-          return a.region.localeCompare(b.region);
         });
       }
 
-      if (badge) badge.innerText = `${filtered.length}개 항목`;
+      if (badge) {
+        badge.innerText = `${filtered.length}개 항목`;
+      }
+      setScheduleViewMode(currentScheduleViewMode);
+      updateFilterSummary();
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7" class="py-12 text-center text-slate-400">
-              <div class="flex flex-col items-center justify-center gap-2">
-                <span class="text-3xl">📋</span>
-                <p class="font-bold text-slate-700 text-sm">표시할 일정이 없습니다</p>
-                <p class="text-xs text-slate-500 max-w-md leading-relaxed">
-                  검색어나 필터 조건을 초기화하거나, 아래 버튼을 눌러 기본 일정을 즉시 복원하실 수 있습니다.
-                </p>
-                <div class="flex items-center gap-2 mt-2">
-                  <button onclick="resetTableFilters()" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition">필터 초기화</button>
-                  <button onclick="restoreDefaultPlaces()" class="px-3 py-1.5 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-700 transition">🔄 기본 일정 48개소 복원</button>
+      // [1] 데스크톱 전용 테이블 바디 렌더링 (PC: 시간/타이틀 자르지 않고 100% full 노출)
+      if (tbody) {
+        tbody.innerHTML = filtered.map(p => {
+          const isPassed = isPlacePassed(p);
+          const rowClass = isPassed
+            ? 'row-passed bg-slate-50/90 text-slate-400 opacity-65 transition-colors hover:bg-slate-100/70'
+            : 'hover:bg-brand-50/30 transition-colors text-slate-700';
+
+          return `
+          <tr class="${rowClass}">
+            <!-- 1열(일정/시간): PC 125px 스티키 (자르지 않고 Full 노출) -->
+            <td class="py-3 px-3 align-top whitespace-nowrap">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" onchange="togglePlacePassed('${p.id || p.name}')" ${isPassed ? 'checked' : ''} class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0" title="${isPassed ? '완료 취소' : '일정 완료 체크'}">
+                <div class="min-w-0">
+                  <div class="font-mono font-bold text-xs ${isPassed ? 'line-through text-slate-400' : 'text-brand-600'}">${p.day}</div>
+                  <div class="mt-1 text-[11px] font-mono font-bold ${isPassed ? 'line-through text-slate-400' : 'text-amber-800 bg-amber-50'} px-2 py-0.5 rounded-md border border-amber-200/70 inline-flex items-center gap-1">
+                    <span>⏰</span> <span>${p.time || '-'}</span>
+                  </div>
                 </div>
               </div>
             </td>
-          </tr>
-        `;
-        if (badge) badge.innerText = '0개 항목';
-        return;
-      }
 
-      tbody.innerHTML = filtered.map(p => {
-        const isPassed = isPlacePassed(p);
-        const rowClass = isPassed
-          ? 'row-passed bg-slate-50/90 text-slate-400 opacity-65 transition-colors hover:bg-slate-100/70'
-          : 'hover:bg-brand-50/30 transition-colors text-slate-700';
-
-        return `
-        <tr class="${rowClass}">
-          <!-- 1열(일정): 68px 고정 (체크박스 + 일차 + 시간) -->
-          <td class="py-2.5 px-1.5 whitespace-nowrap">
-            <div class="flex items-center gap-1">
-              <input type="checkbox" onchange="togglePlacePassed('${p.id || p.name}')" ${isPassed ? 'checked' : ''} class="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0" title="${isPassed ? '완료/지남 취소' : '일정 완료/지남 체크'}">
-              <div class="min-w-0 leading-tight">
-                <div class="font-mono font-bold text-[11px] leading-tight ${isPassed ? 'line-through text-slate-400' : 'text-brand-600'}">${p.day}</div>
-                <div class="text-[10px] font-mono font-semibold flex items-center gap-0.5 leading-tight mt-0.5 ${isPassed ? 'line-through text-slate-400' : 'text-slate-500'}">
-                  <span class="${isPassed ? 'opacity-40' : 'text-amber-500'}">⏰</span><span>${p.time || '-'}</span>
+            <!-- 2열(장소명): PC 230px+ 스티키 (line-clamp 없이 전체 타이틀 100% Full 노출) -->
+            <td class="py-3 px-3 font-bold align-top">
+              <div class="w-full">
+                <div class="${isPassed ? 'line-through text-slate-400' : 'text-slate-900'} text-xs sm:text-sm font-bold break-words leading-snug cursor-pointer hover:text-brand-600" onclick="openPlaceEditModal('${p.id || p.name}')" title="클릭하여 장소 수정">
+                  ${p.name}
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                  ${p.isCustom ? '<span class="px-1.5 py-0.2 bg-purple-100 text-purple-700 text-[10px] rounded font-semibold shrink-0">추가</span>' : ''}
+                  ${isPassed ? '<span class="px-1.5 py-0.2 bg-slate-200 text-slate-500 text-[10px] rounded font-bold shrink-0">지남</span>' : ''}
                 </div>
               </div>
+            </td>
+
+            <!-- 3열(권역) -->
+            <td class="py-3 px-2 align-top whitespace-nowrap">
+              <span class="px-2 py-0.5 ${isPassed ? 'bg-slate-200/60 text-slate-400' : 'bg-slate-100 text-slate-700'} rounded-md text-xs font-semibold">${p.region}</span>
+            </td>
+
+            <!-- 4열(분류) -->
+            <td class="py-3 px-2 align-top whitespace-nowrap">
+              <span class="px-2 py-0.5 ${isPassed ? 'bg-slate-200/60 text-slate-400' : 'bg-pastel-blue text-pastel-blueText'} rounded-md text-xs font-bold">${p.cat}</span>
+            </td>
+
+            <!-- 5열(상세설명): PC에서 자르지 않고 여유롭게 노출 -->
+            <td class="py-3 px-3 text-xs text-slate-600 align-top">
+              <div class="min-w-[200px] max-w-lg ${isPassed ? 'line-through text-slate-400' : 'text-slate-700'} break-words leading-relaxed">${p.desc || '-'}</div>
+            </td>
+
+            <!-- 6열(예상비용) -->
+            <td class="py-3 px-2.5 text-xs font-mono font-bold ${isPassed ? 'line-through text-slate-400' : 'text-slate-800'} whitespace-nowrap align-top">
+              ${p.price || '무료'}
+            </td>
+
+            <!-- 7열(관리) -->
+            <td class="py-3 px-2.5 text-center whitespace-nowrap align-top">
+              <div class="inline-flex items-center gap-1.5 justify-center">
+                <button type="button" onclick="openPlaceEditModal('${p.id || p.name}')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition active:scale-95 shadow-2xs flex items-center gap-1" title="일정/시간/설명/비용 수정">
+                  <span>✏️</span> <span>수정</span>
+                </button>
+                <button type="button" onclick="openCalendarModal('${p.id || p.name}')" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs transition inline-flex items-center gap-0.5 shadow-2xs active:scale-95" title="캘린더 등록">
+                  <span>📅</span> <span>캘린더</span>
+                </button>
+                <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap || encodeURIComponent(p.name)}" target="_blank" class="w-8 h-8 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-xl transition flex items-center justify-center text-sm shrink-0 shadow-2xs active:scale-95 border border-brand-200/60" title="구글맵에서 '${p.name}' 열기">
+                  📍
+                </a>
+              </div>
+            </td>
+          </tr>
+          `;
+        }).join('');
+      }
+
+      // [2] 모바일 전용 반응형 아코디언 카드 뷰 렌더링 (MO: 스티키 해제, 시간·타이틀 Full 노출, 탭 시 잔여 정보 확장)
+      if (mobileList) {
+        mobileList.innerHTML = filtered.map(p => {
+          const isPassed = isPlacePassed(p);
+          const safeId = (p.id || p.name).replace(/[^a-zA-Z0-9_-]/g, '_');
+
+          return `
+          <div class="p-3.5 bg-white rounded-2xl border ${isPassed ? 'border-slate-200 bg-slate-50/80 opacity-70' : 'border-slate-200/90 shadow-2xs'} transition-all space-y-2.5">
+            <!-- 상단 바: 체크박스 + 일차 + 시간 (우상단 수정 버튼 삭제로 깔끔한 여백 확보) -->
+            <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-100">
+              <div class="flex items-center gap-2 min-w-0 flex-wrap">
+                <input type="checkbox" onchange="togglePlacePassed('${p.id || p.name}')" ${isPassed ? 'checked' : ''} onclick="event.stopPropagation()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0" title="${isPassed ? '완료 취소' : '일정 완료'}">
+                <span class="font-mono font-bold text-xs text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-md border border-brand-200/70">${p.day}</span>
+                <span class="font-mono font-bold text-xs text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200/70 inline-flex items-center gap-1 whitespace-nowrap">
+                  <span>⏰</span> <span>${p.time || '-'}</span>
+                </span>
+                ${isPassed ? '<span class="text-[10px] font-bold text-slate-500 bg-slate-200 px-1.5 py-0.2 rounded">완료됨</span>' : ''}
+              </div>
             </div>
-          </td>
-          <!-- 2열(장소명): 106px 고정 (1열과 합산 174px로 화면 절반 미만 엄수 & 2줄 행갈이) -->
-          <td class="py-2.5 px-2 font-bold ${isPassed ? 'text-slate-400' : 'text-slate-900'}">
-            <div class="w-full">
-              <div class="${isPassed ? 'line-through text-slate-400' : 'text-slate-900'} text-xs font-bold line-clamp-2 break-words leading-tight" title="${p.name}">
+
+            <!-- 중단: 장소명 (Full 노출) & 탭하여 아코디언 토글 -->
+            <div class="cursor-pointer" onclick="toggleMobilePlaceDetail('${safeId}')" title="상세 정보 펼치기/접기">
+              <div class="font-bold text-sm text-slate-900 leading-snug break-words ${isPassed ? 'line-through text-slate-400' : ''}">
                 ${p.name}
               </div>
-              <div class="flex items-center gap-1 mt-0.5">
-                ${p.isCustom ? '<span class="px-1 py-0.2 bg-purple-100 text-purple-700 text-[9px] rounded font-semibold shrink-0">추가</span>' : ''}
-                ${isPassed ? '<span class="px-1 py-0.2 bg-slate-200 text-slate-500 text-[9px] rounded font-bold shrink-0">지남</span>' : ''}
+              <div class="flex items-center justify-between gap-2 mt-2 pt-1 border-t border-slate-100/80 text-[11px] text-slate-500">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-medium text-[10px]">${p.region}</span>
+                  <span class="px-2 py-0.5 bg-pastel-blue text-pastel-blueText rounded-md font-bold text-[10px]">${p.cat}</span>
+                  <span class="px-2 py-0.5 font-mono font-bold text-emerald-800 bg-emerald-50 rounded-md border border-emerald-200/60 text-[10px]">💵 ${p.price || '무료'}</span>
+                </div>
+                <span id="mob-chevron-${safeId}" class="text-xs font-bold text-slate-400">▼ 상세</span>
               </div>
             </div>
-          </td>
-          <td class="py-2.5 px-2 whitespace-nowrap"><span class="px-2 py-0.5 ${isPassed ? 'bg-slate-200/60 text-slate-400' : 'bg-slate-100 text-slate-600'} rounded-md text-xs font-semibold">${p.region}</span></td>
-          <td class="py-2.5 px-2 whitespace-nowrap"><span class="px-2 py-0.5 ${isPassed ? 'bg-slate-200/60 text-slate-400' : 'bg-pastel-blue text-pastel-blueText'} rounded-md text-xs font-bold">${p.cat}</span></td>
-          <td class="py-2.5 px-3 text-xs text-slate-600">
-            <div class="min-w-[220px] sm:min-w-[300px] max-w-md ${isPassed ? 'line-through text-slate-400' : 'text-slate-600'} line-clamp-2 break-words leading-relaxed" title="${p.desc || ''}">${p.desc || ''}</div>
-          </td>
-          <td class="py-2.5 px-2.5 text-xs font-mono font-bold ${isPassed ? 'line-through text-slate-400' : 'text-slate-700'} whitespace-nowrap">${p.price || ''}</td>
-          <td class="py-2.5 px-2.5 text-center whitespace-nowrap">
-            <div class="inline-flex items-center gap-1.5 justify-center">
-              <button type="button" onclick="openPlaceEditModal('${p.id || p.name}')" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition active:scale-95" title="일정/시간/설명/비용 수정">
-                ✏️ 수정
-              </button>
-              <button type="button" onclick="openCalendarModal('${p.id || p.name}')" class="px-2 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs transition inline-flex items-center gap-0.5 shadow-2xs active:scale-95" title="캘린더 등록 및 알림">
-                <span>📅</span> <span>캘린더</span>
-              </button>
-              <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap || encodeURIComponent(p.name)}" target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 bg-brand-50 hover:bg-brand-100 text-brand-700 hover:text-brand-800 rounded-xl transition flex items-center justify-center text-base sm:text-lg shrink-0 shadow-2xs active:scale-95 border border-brand-200/60" title="구글맵에서 '${p.name}' 열기">
-                📍
-              </a>
+
+            <!-- 하단: 탭 시 확장되는 상세 잔여 정보 (설명, 비용, 지도/캘린더) -->
+            <div id="mob-detail-${safeId}" class="hidden pt-2.5 mt-1 border-t border-slate-200/80 space-y-2.5 bg-slate-50/70 p-3 rounded-xl">
+              <!-- 상세 설명 (Full 노출) -->
+              <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">📝 상세 설명</span>
+                <p class="text-xs text-slate-700 leading-relaxed break-words">${p.desc || '등록된 상세 설명이 없습니다.'}</p>
+              </div>
+
+              <!-- 원터치 액션 바 -->
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-200/60">
+                <button type="button" onclick="openPlaceEditModal('${p.id || p.name}'); event.stopPropagation();" class="flex-1 py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-xs border border-slate-200 transition shadow-2xs flex items-center justify-center gap-1">
+                  <span>✏️</span> <span>수정</span>
+                </button>
+                <button type="button" onclick="openCalendarModal('${p.id || p.name}'); event.stopPropagation();" class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-xl text-xs border border-emerald-200 transition shadow-2xs flex items-center justify-center gap-1">
+                  <span>📅</span> <span>캘린더</span>
+                </button>
+                <a href="https://www.google.com/maps/search/?api=1&query=${p.gmap || encodeURIComponent(p.name)}" target="_blank" onclick="event.stopPropagation()" class="flex-1 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-xl text-xs border border-brand-200 transition shadow-2xs flex items-center justify-center gap-1">
+                  <span>📍</span> <span>길찾기 ↗</span>
+                </a>
+              </div>
             </div>
-          </td>
-        </tr>
-        `;
-      }).join('');
+          </div>
+          `;
+        }).join('');
+      }
     }
 
     // 6. 예산 & 변동비 & 고정비 로직
