@@ -826,14 +826,34 @@
   <!-- 3. 🗓️ 여행 일정 화면 (7박 8일 타임라인, 종합 일정표, 버킷리스트 Top 7) -->
   <div id="page-schedule" class="tab-page-view space-y-8 hidden">
 <!-- 9. 타임라인 -->
-    <section id="sec-timeline" class="scroll-mt-24 space-y-5">
-      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex items-center justify-between">
+    <!-- 9. 타임라인 (가로 슬라이드 뷰: PC 최대 3개, 모바일 1개, 오늘 일정 자동 포커스) -->
+    <section id="sec-timeline" class="scroll-mt-24 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <span class="px-3 py-0.5 bg-pastel-blue text-pastel-blueText text-xs font-bold rounded-full">DETAILED TIMELINE</span>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1">🗓️ 7박 8일 일자별 상세 타임라인</h2>
+          <span class="px-3 py-0.5 bg-pastel-blue text-pastel-blueText text-xs font-bold rounded-full">DETAILED TIMELINE SLIDER</span>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 pt-1 flex items-center gap-2">
+            <span>🗓️</span> <span>7박 8일 일자별 상세 타임라인</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">좌우 화살표(또는 터치 스와이프)로 일자별 일정을 탐색할 수 있으며, 오늘 일정이 우선 표시됩니다.</p>
+        </div>
+        <div class="flex items-center gap-2 self-end sm:self-auto">
+          <button type="button" onclick="slideTimeline(-1)" id="timeline-prev-btn" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs flex items-center justify-center font-bold text-sm transition active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed" title="이전 일자">◀</button>
+          <button type="button" onclick="slideTimeline(1)" id="timeline-next-btn" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs flex items-center justify-center font-bold text-sm transition active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed" title="다음 일자">▶</button>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-5" id="timeline-container"></div>
+
+      <!-- 슬라이더 컨테이너 -->
+      <div class="relative">
+        <!-- 슬라이더 트랙: PC 3개씩(w-[calc(33.333%-14px)]), 태블릿 2개씩(w-[calc(50%-10px)]), 모바일 1개씩(w-full) -->
+        <div id="timeline-slider-track" class="flex items-stretch gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-0.5 custom-scrollbar">
+          <!-- 8개의 Day 카드가 renderTimeline()에 의해 슬라이드 카드로 렌더링됨 -->
+        </div>
+
+        <!-- 일자별 퀵 이동 인디케이터 바 (Day 1 ~ Day 8) -->
+        <div id="timeline-indicators-bar" class="flex items-center justify-start sm:justify-center gap-1.5 pt-3 overflow-x-auto custom-scrollbar pb-1">
+          <!-- 동적 인디케이터 버튼군 -->
+        </div>
+      </div>
     </section>
 
 <!-- 10. 종합 일정표 -->
@@ -4107,15 +4127,95 @@ function showPlaceHoverPreview(e, placeId) {
       URL.revokeObjectURL(url);
     }
 
+    // -------------------------------------------------------------
+    // 7박 8일 일자별 타임라인 가로 슬라이더 엔진 (PC 3개, 모바일 1개, D-Day 자동 포커스)
+    // -------------------------------------------------------------
+    function getTodayDayIndex() {
+      try {
+        const nowHst = getNowHawaiiDate();
+        const y = nowHst.getFullYear();
+        const m = String(nowHst.getMonth() + 1).padStart(2, '0');
+        const d = String(nowHst.getDate()).padStart(2, '0');
+        const todayIso = `${y}-${m}-${d}`;
+
+        const dayMap = {
+          '2026-10-09': 0,
+          '2026-10-10': 1,
+          '2026-10-11': 2,
+          '2026-10-12': 3,
+          '2026-10-13': 4,
+          '2026-10-14': 5,
+          '2026-10-15': 6,
+          '2026-10-16': 7
+        };
+
+        if (dayMap[todayIso] !== undefined) {
+          return dayMap[todayIso];
+        }
+        if (todayIso < '2026-10-09') return 0; // 여행 전이면 Day 1
+        if (todayIso > '2026-10-16') return 7; // 여행 후면 Day 8
+        return 0;
+      } catch(e) {
+        return 0;
+      }
+    }
+
+    function slideTimeline(dir) {
+      const track = document.getElementById('timeline-slider-track');
+      if (!track) return;
+      const card = track.querySelector('.timeline-slide-card');
+      const cardWidth = card ? (card.offsetWidth + 16) : 320;
+      track.scrollBy({ left: dir * cardWidth, behavior: 'smooth' });
+      setTimeout(updateTimelineSliderState, 350);
+    }
+
+    function slideTimelineToDay(dayIndex) {
+      const track = document.getElementById('timeline-slider-track');
+      if (!track) return;
+      const cards = track.querySelectorAll('.timeline-slide-card');
+      if (cards[dayIndex]) {
+        cards[dayIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        setTimeout(updateTimelineSliderState, 350);
+      }
+    }
+
+    function updateTimelineSliderState() {
+      const track = document.getElementById('timeline-slider-track');
+      if (!track) return;
+
+      const prevBtn = document.getElementById('timeline-prev-btn');
+      const nextBtn = document.getElementById('timeline-next-btn');
+      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 5;
+      if (nextBtn) nextBtn.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+
+      const cards = track.querySelectorAll('.timeline-slide-card');
+      let closestIdx = 0;
+      let minDiff = Infinity;
+      cards.forEach((c, idx) => {
+        const diff = Math.abs(c.offsetLeft - track.scrollLeft);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = idx;
+        }
+      });
+
+      document.querySelectorAll('.timeline-indicator-btn').forEach((btn, idx) => {
+        if (idx === closestIdx) {
+          btn.className = 'timeline-indicator-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-xs transition shrink-0';
+        } else {
+          btn.className = 'timeline-indicator-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition shrink-0';
+        }
+      });
+    }
+
     function renderTimeline() {
-      const container = document.getElementById('timeline-container');
-      if (!container) return;
+      const track = document.getElementById('timeline-slider-track') || document.getElementById('timeline-container');
+      if (!track) return;
 
       const activeEl = document.activeElement;
       const isTypingMemo = activeEl && activeEl.id && activeEl.id.startsWith('memo-input-');
 
-      // 사용자가 모바일/웹에서 메모를 작성 중일 때 DOM 재생성으로 인한 포커스 해제 방지
-      if (isTypingMemo && container.children.length > 0) {
+      if (isTypingMemo && track.children.length > 0) {
         timelineData.forEach((d, idx) => {
           const m = d.day.match(/Day\s*(\d+)/i);
           const dayNum = m ? m[1] : (idx + 1);
@@ -4130,15 +4230,17 @@ function showPlaceHoverPreview(e, placeId) {
       }
 
       const allPlaces = getAllPlaces();
+      const todayIdx = getTodayDayIndex();
 
-      container.innerHTML = timelineData.map((d, idx) => {
+      track.innerHTML = timelineData.map((d, idx) => {
         const m = d.day.match(/Day\s*(\d+)/i);
         const dayNum = m ? parseInt(m[1], 10) : (idx + 1);
-        const dayKey = 'Day' + dayNum; // 고유 키: Day1, Day2, ... Day8
-        const dayLabel = 'Day ' + dayNum; // 라벨: Day 1, Day 2, ...
+        const dayKey = 'Day' + dayNum;
+        const dayLabel = 'Day ' + dayNum;
+        const isToday = (idx === todayIdx);
         const savedMemo = localStorage.getItem('memo_' + dayKey) || localStorage.getItem('memo_' + dayLabel) || '';
 
-        // 1번(종합 일정표)에서 해당 일자에 속한 장소 연동 및 시간순 정렬
+        // 1번 종합 일정표 연동 장소
         const dayPlaces = allPlaces.filter(p => {
           if (!p.day) return false;
           return p.day.includes(dayLabel) || (p.day.includes('Day 1~8') && (dayNum === 1 || dayNum === 8));
@@ -4149,13 +4251,12 @@ function showPlaceHoverPreview(e, placeId) {
           return timeA.localeCompare(timeB);
         });
 
-        // 일정 지나면 회색처리하고 각 섹션(Day)의 마지막 순서로 보내기
+        // 일정 체크리스트
         const itemObjects = d.items.map(it => {
           const isPassed = isTimelineItemPassed(dayKey, it, d.day);
           return { text: it, isPassed };
         });
 
-        // 활성 일정 먼저, 지난 일정은 섹션(Day) 마지막 순서로 정렬
         itemObjects.sort((a, b) => {
           if (a.isPassed !== b.isPassed) return a.isPassed ? 1 : -1;
           return 0;
@@ -4164,12 +4265,14 @@ function showPlaceHoverPreview(e, placeId) {
         const allItemsPassed = itemObjects.length > 0 && itemObjects.every(x => x.isPassed);
 
         return `
-          <div class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-soft space-y-3.5 flex flex-col justify-between transition-all ${allItemsPassed ? 'opacity-70 bg-slate-50/70 border-slate-300' : ''}">
+          <!-- 가로 슬라이더 카드: PC 최대 3개(w-[calc(33.333%-12px)]), 태블릿 2개(w-[calc(50%-8px)]), 모바일 1개(w-full) -->
+          <div class="timeline-slide-card w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] shrink-0 snap-start bg-white p-5 rounded-3xl border ${isToday ? 'border-blue-500 ring-2 ring-blue-100 shadow-md' : 'border-slate-200/90 shadow-soft'} space-y-3.5 flex flex-col justify-between transition-all ${allItemsPassed ? 'opacity-70 bg-slate-50/70' : ''}">
             <div class="space-y-3">
-              <!-- 카드 헤더 (텍스트 강제 줄바꿈 및 깨짐 완벽 방지) -->
+              <!-- 카드 헤더 -->
               <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
                 <div class="flex items-center gap-1.5 flex-wrap min-w-0">
-                  <span class="px-2.5 py-1 ${allItemsPassed ? 'bg-slate-200 text-slate-500' : 'bg-blue-50 text-blue-700 border-blue-200'} text-xs font-bold rounded-xl border whitespace-nowrap">${d.day}</span>
+                  <span class="px-2.5 py-1 ${isToday ? 'bg-blue-600 text-white' : (allItemsPassed ? 'bg-slate-200 text-slate-500' : 'bg-blue-50 text-blue-700 border-blue-200')} text-xs font-bold rounded-xl border whitespace-nowrap">${d.day}</span>
+                  ${isToday ? '<span class="text-[10px] font-bold text-white bg-amber-500 px-2 py-0.5 rounded-lg whitespace-nowrap">오늘의 일정</span>' : ''}
                   <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg whitespace-nowrap">📍 일정 ${dayPlaces.length}개소</span>
                   ${allItemsPassed ? '<span class="px-2 py-0.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-lg whitespace-nowrap">✓ 일정 종료</span>' : ''}
                 </div>
@@ -4177,12 +4280,12 @@ function showPlaceHoverPreview(e, placeId) {
               </div>
               <h3 class="font-bold text-sm sm:text-base leading-snug ${allItemsPassed ? 'text-slate-500 line-through' : 'text-slate-900'}">${d.title}</h3>
 
-              <!-- 1번 종합 일정표 연동 방문 장소 블록 (2단 최적화 레이아웃: 장소명 잘림 및 버튼 겹침 완벽 해결) -->
+              <!-- 1번 종합 일정표 연동 방문 장소 블록 -->
               ${dayPlaces.length > 0 ? `
                 <div class="p-3 bg-slate-50/90 rounded-2xl border border-slate-200/90 space-y-2">
                   <div class="flex items-center justify-between text-xs pb-1.5 border-b border-slate-200/60">
                     <span class="font-bold text-slate-800 flex items-center gap-1">📍 일정표 연동 장소 (${dayPlaces.length}개소)</span>
-                    <button type="button" onclick="switchFooterTab('schedule', 'sec-table')" class="text-blue-600 hover:text-blue-800 text-[11px] font-bold hover:underline">일정표 표 보기 ↗</button>
+                    <button type="button" onclick="switchFooterTab('schedule', 'sec-table')" class="text-blue-600 hover:text-blue-800 text-[11px] font-bold hover:underline">일정표 보기 ↗</button>
                   </div>
                   <div class="space-y-1.5">
                     ${dayPlaces.map(p => {
@@ -4193,14 +4296,14 @@ function showPlaceHoverPreview(e, placeId) {
                              onmouseenter="showPlaceHoverPreview(event, '${p.id || p.name}')"
                              onmousemove="moveTooltip(event)"
                              onmouseleave="hideTooltip()">
-                          <!-- 1열: 체크박스 + 시간 + 장소명 (충분한 너비 확보로 말줄임/숨김 방지) -->
+                          <!-- 1열: 체크박스 + 시간 + 장소명 -->
                           <div class="flex items-center gap-2 min-w-0">
                             <input type="checkbox" ${isPassed ? 'checked' : ''} onchange="togglePlacePassed('${p.id || p.name}')" onclick="event.stopPropagation()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0" title="${isPassed ? '완료 취소' : '일정 완료 체크'}">
                             <span class="font-mono text-[11px] font-bold ${isPassed ? 'text-slate-400 line-through' : 'text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200/60'} shrink-0">⏰ ${p.time || '-'}</span>
                             <span class="text-xs font-bold ${isPassed ? 'line-through text-slate-400' : 'text-slate-900'} truncate flex-1" title="${p.name}">${iconInfo.emoji} ${p.name}</span>
                             ${p.isCustom ? '<span class="px-1.5 py-0.2 bg-purple-100 text-purple-700 text-[9px] rounded font-bold shrink-0">추가</span>' : ''}
                           </div>
-                          <!-- 2열: 가격/설명(좌측) + 길찾기/수정 버튼(우측) 분리 배치 -->
+                          <!-- 2열: 가격/설명(좌) + 길찾기/수정(우) -->
                           <div class="flex items-center justify-between text-[11px] pt-1 border-t border-slate-100 pl-6">
                             <div class="flex items-center gap-1.5 text-slate-500 truncate min-w-0 mr-2">
                               ${p.price ? `<span class="text-[10px] font-mono font-bold text-teal-700 bg-teal-50 px-1.5 py-0.2 rounded shrink-0">💵 ${p.price}</span>` : ''}
@@ -4220,7 +4323,7 @@ function showPlaceHoverPreview(e, placeId) {
                 </div>
               ` : ''}
 
-              <!-- 상세 동선 체크리스트 (마우스 호버 시 사진 보기) -->
+              <!-- 상세 동선 체크리스트 (호버 시 사진 미리보기) -->
               <div class="space-y-1 pt-0.5">
                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">📋 상세 동선 체크리스트 (호버 시 사진 미리보기)</div>
                 <ul class="text-xs space-y-1.5 pt-0.5">
@@ -4266,15 +4369,323 @@ function showPlaceHoverPreview(e, placeId) {
           </div>
         `;
       }).join('');
+
+      // 하단 인디케이터 바 생성 (Day 1 ~ Day 8 퀵 이동 버튼)
+      const indBar = document.getElementById('timeline-indicators-bar');
+      if (indBar) {
+        indBar.innerHTML = timelineData.map((d, idx) => {
+          const isToday = (idx === todayIdx);
+          const isCur = (idx === todayIdx);
+          return `<button type="button" onclick="slideTimelineToDay(${idx})" class="timeline-indicator-btn px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${isCur ? 'bg-blue-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}">${d.day.split(' ')[0]} ${isToday ? '★오늘' : ''}</button>`;
+        }).join('');
+      }
+
+      // 스크롤 리스너 연결
+      if (!track.dataset.scrollListenerAttached) {
+        track.addEventListener('scroll', updateTimelineSliderState);
+        track.dataset.scrollListenerAttached = 'true';
+      }
+
+      // 오늘 일정이 우선 보이도록 자동 슬라이드
+      setTimeout(() => {
+        slideTimelineToDay(todayIdx);
+        updateTimelineSliderState();
+      }, 150);
     }
 
-        function getNowHawaiiDate() {
-      const now = new Date();
-      const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
-      return new Date(utcMs - (10 * 3600000));
+    // 4. 위시리스트 렌더링
+    function renderWishlists() {
+      renderWishlistGroup('must-do-extreme-list', mustDoExtremeItems);
+      renderWishlistGroup('must-do-wellness-list', mustDoWellnessItems);
+      renderWishlistGroup('must-eat-list', mustEatItems);
+      renderWishlistGroup('must-buy-list', mustBuyItems);
+      updateStatProgress();
     }
 
-        function getDayRank(dayStr) {
+    function renderWishlistGroup(containerId, items) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      el.innerHTML = items.map(item => {
+        const isDone = localStorage.getItem('wish_' + item.id) === 'true';
+        return `
+          <div class="flex items-center justify-between p-3 bg-surface-muted hover:bg-slate-100 rounded-2xl border border-slate-100 transition group"
+               onmouseenter="showTooltip(event, '${item.img}', '${item.title.replace(/'/g, "\'")}', '${item.desc.replace(/'/g, "\'")}', '${item.tag}')"
+               onmousemove="moveTooltip(event)"
+               onmouseleave="hideTooltip()">
+            <div class="flex items-center gap-3 min-w-0">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleWishItem('${item.id}', this.checked)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer shrink-0">
+              <div class="truncate">
+                <div class="font-bold text-xs text-slate-900 group-hover:text-brand-600 transition truncate ${isDone ? 'line-through text-slate-400' : ''}">${item.title}</div>
+                <div class="text-[11px] text-slate-400 truncate">${item.sub}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-lg shrink-0 ml-2 shadow-2xs">${item.tag}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleWishItem(id, checked) {
+      const key = 'wish_' + id;
+      localStorage.setItem(key, checked);
+      localStorage.setItem('_mod_' + key, Date.now());
+      renderWishlists();
+      triggerAutoSync();
+    }
+
+    function showTooltip(e, img, title, desc, tag) {
+      const tip = document.getElementById('hover-tooltip');
+      if (!tip) return;
+      const tImg = document.getElementById('tooltip-img');
+      if (tImg) {
+        tImg.onerror = function() {
+          this.onerror = null;
+          this.src = 'https://images.unsplash.com/photo-1542259009-559971a0d02a?w=600&auto=format&fit=crop&q=80';
+        };
+        tImg.src = img;
+      }
+      document.getElementById('tooltip-badge').innerText = tag;
+      document.getElementById('tooltip-title').innerText = title;
+      document.getElementById('tooltip-desc').innerText = desc;
+      tip.style.display = 'block';
+      moveTooltip(e);
+    }
+
+    function moveTooltip(e) {
+      const tip = document.getElementById('hover-tooltip');
+      if (!tip || tip.style.display === 'none') return;
+      const x = Math.min(window.innerWidth - 275, e.clientX + 15);
+      const y = Math.min(window.innerHeight - 250, e.clientY + 15);
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    }
+
+    function hideTooltip() {
+      const tip = document.getElementById('hover-tooltip');
+      if (tip) tip.style.display = 'none';
+    }
+
+    // 5. 전체 일정 및 장소 종합 표 & 모달 로직
+    function autoParseGoogleMapLink(val) {
+      if (!val) return;
+      let query = '';
+      try {
+        if (val.includes('query=')) {
+          query = decodeURIComponent(val.split('query=')[1].split('&')[0]);
+        } else if (val.includes('/place/')) {
+          query = decodeURIComponent(val.split('/place/')[1].split('/')[0]);
+        } else if (val.includes('?q=')) {
+          query = decodeURIComponent(val.split('?q=')[1].split('&')[0]);
+        } else if (!val.startsWith('http')) {
+          query = val.trim();
+        }
+      } catch(e) { query = val; }
+
+      query = query.replace(/\+/g, ' ').trim();
+      if (query) {
+        const nameInput = document.getElementById('modal-place-name');
+        if (nameInput && (!nameInput.value || nameInput.dataset.autoFilled === 'true')) {
+          nameInput.value = query;
+          nameInput.dataset.autoFilled = 'true';
+        }
+        const lower = query.toLowerCase();
+        const regSelect = document.getElementById('modal-place-region');
+        if (regSelect) {
+          if (lower.includes('waikiki') || lower.includes('와이키키') || lower.includes('ala moana') || lower.includes('알라모아나') || lower.includes('kuhio') || lower.includes('downtown') || lower.includes('kalakaua')) {
+            regSelect.value = '와이키키';
+          } else if (lower.includes('kailua') || lower.includes('카일루아') || lower.includes('lanikai') || lower.includes('라니카이') || lower.includes('hanauma') || lower.includes('하나우마') || lower.includes('diamond') || lower.includes('kualoa') || lower.includes('waimanalo')) {
+            regSelect.value = '동부';
+          } else if (lower.includes('haleiwa') || lower.includes('할레이바') || lower.includes('north') || lower.includes('dole') || lower.includes('shrimp') || lower.includes('shark') || lower.includes('sunset')) {
+            regSelect.value = '노스쇼어';
+          } else if (lower.includes('pearl') || lower.includes('진주만') || lower.includes('waikele') || lower.includes('와이켈레') || lower.includes('costco') || lower.includes('ko olina') || lower.includes('paradise')) {
+            regSelect.value = '진주만';
+          }
+        }
+      }
+    }
+
+    function manualParseGmap() {
+      const gmapInput = document.getElementById('modal-place-gmap');
+      const val = gmapInput ? gmapInput.value.trim() : '';
+      if (!val) {
+        alert('구글 지도 링크 또는 장소 검색어를 입력해주세요.');
+        gmapInput?.focus();
+        return;
+      }
+      autoParseGoogleMapLink(val);
+      const nameVal = document.getElementById('modal-place-name')?.value;
+      if (nameVal) {
+        alert(`✓ 구글맵 정보 분석 완료!\n장소명: "${nameVal}"\n권역: "${document.getElementById('modal-place-region')?.value}"`);
+      }
+    }
+
+    function updatePlaceDescCounter(val) {
+      const cnt = document.getElementById('modal-desc-count');
+      if (cnt) cnt.innerText = (val || '').length;
+    }
+
+    function openPlaceModal() {
+      currentEditingPlaceId = null;
+      document.getElementById('modal-place-header-title').innerText = '새 장소 등록';
+      document.getElementById('modal-place-gmap').value = '';
+      document.getElementById('modal-place-name').value = '';
+      document.getElementById('modal-place-name').disabled = false;
+      document.getElementById('modal-place-name').dataset.autoFilled = 'false';
+      document.getElementById('modal-place-day').value = 'Day 1';
+      document.getElementById('modal-place-time').value = '10:00';
+      document.getElementById('modal-place-region').value = '와이키키';
+      document.getElementById('modal-place-cat').value = '명소';
+      document.getElementById('modal-place-desc').value = '';
+      updatePlaceDescCounter('');
+      document.getElementById('modal-place-price').value = '무료';
+      document.getElementById('modal-place-delete-btn')?.classList.add('hidden');
+      document.getElementById('place-edit-modal')?.classList.remove('hidden');
+    }
+
+    function openPlaceEditModal(placeId) {
+      const all = getAllPlaces();
+      const p = all.find(x => x.id === placeId || x.name === placeId);
+      if (!p) return;
+
+      currentEditingPlaceId = p.id || p.name;
+      document.getElementById('modal-place-header-title').innerText = `장소 수정: ${p.name}`;
+      document.getElementById('modal-place-gmap').value = p.gmap ? (p.gmap.startsWith('http') ? p.gmap : `https://www.google.com/maps/search/?api=1&query=${p.gmap}`) : '';
+      document.getElementById('modal-place-name').value = p.name;
+      document.getElementById('modal-place-name').dataset.autoFilled = 'false';
+      document.getElementById('modal-place-name').disabled = false;
+      document.getElementById('modal-place-delete-btn')?.classList.remove('hidden');
+      
+      document.getElementById('modal-place-day').value = p.day ? p.day.split(',')[0].trim() : 'Day 1';
+      document.getElementById('modal-place-time').value = p.time || '10:00';
+      document.getElementById('modal-place-region').value = p.region || '와이키키';
+      document.getElementById('modal-place-cat').value = p.cat || '명소';
+      document.getElementById('modal-place-desc').value = p.desc || '';
+      updatePlaceDescCounter(p.desc || '');
+      document.getElementById('modal-place-price').value = p.price || '';
+
+      const delBtn = document.getElementById('modal-place-delete-btn');
+      if (delBtn) {
+        if (p.isCustom) delBtn.classList.remove('hidden');
+        else delBtn.classList.add('hidden');
+      }
+
+      document.getElementById('place-edit-modal')?.classList.remove('hidden');
+    }
+
+    function closePlaceModal() {
+      document.getElementById('place-edit-modal')?.classList.add('hidden');
+      currentEditingPlaceId = null;
+    }
+
+    function savePlaceModal(forceSync = true) {
+      const name = document.getElementById('modal-place-name').value.trim();
+      const day = document.getElementById('modal-place-day').value;
+      const time = document.getElementById('modal-place-time').value.trim() || '10:00';
+      const region = document.getElementById('modal-place-region').value;
+      const cat = document.getElementById('modal-place-cat').value;
+      const desc = document.getElementById('modal-place-desc').value.trim();
+      const price = document.getElementById('modal-place-price').value.trim();
+      const gmapInput = document.getElementById('modal-place-gmap').value.trim();
+
+      if (!name) { alert('장소명을 입력해주세요.'); return; }
+      if (desc.length > 50) { alert('상세 설명은 최대 50자까지 입력 가능합니다.'); return; }
+
+      let gmapQuery = name;
+      if (gmapInput) {
+        if (gmapInput.includes('query=')) gmapQuery = gmapInput.split('query=')[1].split('&')[0];
+        else gmapQuery = encodeURIComponent(gmapInput.replace(/\s/g, '+'));
+      }
+
+      const now = Date.now();
+
+      if (currentEditingPlaceId) {
+        // 1. 커스텀 등록 장소 여부 판별
+        const isCustom = customPlaces.some(p => p.id === currentEditingPlaceId);
+        if (isCustom) {
+          customPlaces = customPlaces.map(p => {
+            if (p.id === currentEditingPlaceId) {
+              return Object.assign({}, p, { name, day, time, region, cat, desc, price, gmap: gmapQuery, updatedAt: now });
+            }
+            return p;
+          });
+          localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+          localStorage.setItem('_mod_custom_places_list', now);
+        } else {
+          // 2. 기본 등록 장소 수정 오버라이드 (이름, 일정, 시간 등 전체 수정 지원)
+          placeOverrides[currentEditingPlaceId] = { name, day, time, region, cat, desc, price, gmap: gmapQuery, updatedAt: now };
+          localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
+          localStorage.setItem('_mod_place_overrides', now);
+        }
+      } else {
+        // 새 장소 등록
+        const newPlace = {
+          id: 'cp_' + now,
+          name: name,
+          lat: 21.2768 + (Math.random() - 0.5) * 0.1,
+          lng: -157.8246 + (Math.random() - 0.5) * 0.1,
+          region: region,
+          cat: cat,
+          day: day,
+          time: time,
+          desc: desc,
+          price: price || '무료',
+          gmap: gmapQuery,
+          isCustom: true,
+          updatedAt: now
+        };
+        customPlaces.push(newPlace);
+        localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+        localStorage.setItem('_mod_custom_places_list', now);
+      }
+
+      closePlaceModal();
+      renderMasterTable();
+      renderTimeline();
+      if (leafletMapInstance) {
+        leafletMapInstance.remove();
+        leafletMapInstance = null;
+        safeInitMap();
+      }
+
+      if (forceSync) {
+        triggerAutoSync();
+      }
+    }
+
+    function deleteCurrentPlace() {
+      if (!currentEditingPlaceId) return;
+      if (!confirm('이 일정을 삭제하시겠습니까? (디폴트 및 등록 일정 모두 삭제 가능)')) return;
+
+      const now = Date.now();
+      const deleted = JSON.parse(localStorage.getItem('deleted_places_list') || '[]');
+      if (!deleted.includes(currentEditingPlaceId)) {
+        deleted.push(currentEditingPlaceId);
+        localStorage.setItem('deleted_places_list', JSON.stringify(deleted));
+        localStorage.setItem('_mod_deleted_places_list', now);
+      }
+
+      customPlaces = customPlaces.filter(p => p.id !== currentEditingPlaceId);
+      localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
+      localStorage.setItem('_mod_custom_places_list', now);
+
+      delete placeOverrides[currentEditingPlaceId];
+      localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
+      localStorage.setItem('_mod_place_overrides', now);
+
+      closePlaceModal();
+      renderMasterTable();
+      renderTimeline();
+      if (leafletMapInstance) {
+        leafletMapInstance.remove();
+        leafletMapInstance = null;
+        safeInitMap();
+      }
+      triggerAutoSync();
+    }
+
+    // 일정 순서 랭킹 헬퍼 (Day 1 ~ Day 8 오름차순/내림차순 정렬)
+    function getDayRank(dayStr) {
       if (!dayStr) return 99;
       const m = dayStr.match(/Day\s*(\d+)/i);
       if (m) return parseInt(m[1], 10);
@@ -4284,7 +4695,14 @@ function showPlaceHoverPreview(e, placeId) {
       return 99;
     }
 
-function getDayDateIsoString(dayStr) {
+    // 하와이 기준 현재 날짜/시간 (HST: UTC-10) 계산
+    function getNowHawaiiDate() {
+      const now = new Date();
+      const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+      return new Date(utcMs - (10 * 3600000));
+    }
+
+    function getDayDateIsoString(dayStr) {
       const dayMap = {
         'Day 1': '2026-10-09',
         'Day 2': '2026-10-10',
@@ -4309,7 +4727,7 @@ function getDayDateIsoString(dayStr) {
           if (timeClean.length === 4) timeClean = timeClean.substring(0,2) + ':' + timeClean.substring(2,4);
           else timeClean = '23:59';
         }
-        const scheduleIso = dateStr + 'T' + timeClean + ':00';
+        const scheduleIso = `${dateStr}T${timeClean}:00`;
         const scheduleDate = new Date(scheduleIso);
         const nowHst = getNowHawaiiDate();
         return nowHst > scheduleDate;
@@ -4319,7 +4737,6 @@ function getDayDateIsoString(dayStr) {
     }
 
     function isPlacePassed(p) {
-      if (!p) return false;
       const id = p.id || p.name;
       const manual = localStorage.getItem('sched_done_' + id);
       if (manual !== null) {
@@ -4328,16 +4745,12 @@ function getDayDateIsoString(dayStr) {
       return isScheduleTimePassed(p.day, p.time);
     }
 
-function togglePlacePassed(placeId) {
+    function togglePlacePassed(placeId) {
       const current = localStorage.getItem('sched_done_' + placeId);
       const willBeDone = current !== 'true';
       localStorage.setItem('sched_done_' + placeId, willBeDone ? 'true' : 'false');
-      localStorage.setItem('_mod_sched_done_' + placeId, Date.now());
       renderMasterTable();
       if (typeof renderTimeline === 'function') renderTimeline();
-      if (typeof renderLedgerTable === 'function') renderLedgerTable();
-      if (typeof updateLedgerSummaryCards === 'function') updateLedgerSummaryCards();
-      triggerAutoSync();
     }
 
     function toggleTimelineItem(dayKey, itemText) {
@@ -4527,6 +4940,7 @@ function togglePlacePassed(placeId) {
       }
     }
 
+    
     function renderMasterTable() {
       const tbody = document.getElementById('master-table-body');
       const badge = document.getElementById('table-count-badge');
@@ -6593,7 +7007,7 @@ function togglePlacePassed(placeId) {
 
     function startDashboardApp() {
       // 스티키 상태 초기 계산
-      updateStickyHeaderState();
+      try { updateStickyHeaderState(); } catch(e) { console.error('Sticky header init error:', e); }
 
       // 구 버전 memo_Day 단일 키 오염 데이터 정리
       try {
@@ -6601,44 +7015,48 @@ function togglePlacePassed(placeId) {
           localStorage.removeItem('memo_Day');
         }
       } catch(e) {}
+
       // 1. URL Hash를 통한 토큰 자동 수신 처리
-      checkHashTokenImport();
+      try { checkHashTokenImport(); } catch(e) { console.error('Hash token error:', e); }
 
-      // 2. 기본 UI 렌더링
-      updateClocks();
-      setInterval(updateClocks, 1000);
-      fetchLiveExchangeRate();
-      renderReminders();
-      renderVideos();
-      renderBlogs();
-      renderTimeline();
-      renderWishlists();
-      renderMasterTable();
-      renderFuelRecords();
-      renderBudgetChecklist();
-      renderPackingList();
-      renderGuideHub();
-      renderLedgerTable();
-      setTimeout(safeInitMap, 300);
-      setTimeout(safeInitCharts, 400);
+      // 2. 기본 UI 안전 렌더링 (단일 컴포넌트 오류가 전체 대시보드를 멈추지 않도록 Fail-Safe 보호 격리)
+      try { updateClocks(); setInterval(updateClocks, 1000); } catch(e) {}
+      try { fetchLiveExchangeRate(); } catch(e) {}
+      try { renderReminders(); } catch(e) { console.error('Reminders error:', e); }
+      try { renderVideos(); } catch(e) { console.error('Videos error:', e); }
+      try { renderBlogs(); } catch(e) { console.error('Blogs error:', e); }
+      try { renderTimeline(); } catch(e) { console.error('Timeline error:', e); }
+      try { if (typeof renderWishlists === 'function') renderWishlists(); } catch(e) { console.error('Wishlists error:', e); }
+      try { renderMasterTable(); } catch(e) { console.error('MasterTable error:', e); }
+      try { renderFuelRecords(); } catch(e) { console.error('Fuel error:', e); }
+      try { renderBudgetChecklist(); } catch(e) { console.error('Budget error:', e); }
+      try { renderPackingList(); } catch(e) { console.error('Packing error:', e); }
+      try { renderGuideHub(); } catch(e) { console.error('Guide error:', e); }
+      try { renderLedgerTable(); } catch(e) { console.error('Ledger error:', e); }
+      try { setTimeout(safeInitMap, 300); } catch(e) {}
+      try { setTimeout(safeInitCharts, 400); } catch(e) {}
 
-      // 3. 최신 데이터 자동 복원 (3중 안전 폴백)
-      fetchStateFromGitHub(true);
+      // 3. 최신 데이터 자동 복원 (다중 폴백 지원)
+      try { fetchStateFromGitHub(true); } catch(e) { console.error('Fetch state error:', e); }
 
       // 4. 초기 헤더 서브메뉴 탭 및 스크롤 옵저버 초기화
-      renderHeaderNavTabs('dashboard');
-      window.addEventListener('resize', updateHeaderExpandButtonState);
-      setTimeout(initScrollTabObserver, 800);
+      try {
+        renderHeaderNavTabs('dashboard');
+        window.addEventListener('resize', updateHeaderExpandButtonState);
+        setTimeout(initScrollTabObserver, 800);
+      } catch(e) {}
 
       // 5. URL Hash 또는 파라미터 기반 탭/섹션 자동 전환 (예: #table, #sec-table, #schedule)
-      const curHash = (window.location.hash || '').replace('#', '');
-      if (curHash === 'table' || curHash === 'sec-table' || curHash === 'schedule') {
-        setTimeout(() => { switchFooterTab('schedule', 'sec-table'); }, 100);
-      } else if (curHash === 'timeline' || curHash === 'sec-timeline') {
-        setTimeout(() => { switchFooterTab('schedule', 'sec-timeline'); }, 100);
-      } else if (curHash === 'ledger' || curHash === 'sec-ledger') {
-        setTimeout(() => { switchFooterTab('ledger', 'sec-ledger'); }, 100);
-      }
+      try {
+        const curHash = (window.location.hash || '').replace('#', '');
+        if (curHash === 'table' || curHash === 'sec-table' || curHash === 'schedule') {
+          setTimeout(() => { switchFooterTab('schedule', 'sec-table'); }, 100);
+        } else if (curHash === 'timeline' || curHash === 'sec-timeline') {
+          setTimeout(() => { switchFooterTab('schedule', 'sec-timeline'); }, 100);
+        } else if (curHash === 'ledger' || curHash === 'sec-ledger') {
+          setTimeout(() => { switchFooterTab('ledger', 'sec-ledger'); }, 100);
+        }
+      } catch(e) {}
     }
 
     // 세션 유효 여부 확인 후 자동 열림 또는 잠금 대기
