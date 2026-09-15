@@ -467,11 +467,14 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <span class="px-2.5 py-0.5 bg-pastel-purple text-pastel-purpleText text-xs font-bold rounded-full">720PX MAP</span>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">🗺️ 오아후 40개 북마크 종합 지도</h2>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">🗺️ 오아후 북마크 종합 지도 (48개소)</h2>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="toggleIllustModal(true)" class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold rounded-xl border border-brand-200 transition">🖼️ 일러스트 지도</button>
-          <button id="toggle-map-btn" onclick="toggleMapType()" class="px-3 py-1.5 bg-surface-muted hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition">🛰️ 구글맵 전환</button>
+        <div class="flex items-center flex-wrap gap-2">
+          <a href="https://maps.app.goo.gl/nu4gW7omveRA9y416?g_st=ac" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300 transition flex items-center gap-1.5 shadow-2xs active:scale-95" title="구글 지도 저장 목록(북마크) 열기">
+            <span>📍</span> <span>하와이 북마크 바로가기 ↗</span>
+          </a>
+          <button onclick="toggleIllustModal(true)" class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold rounded-xl border border-brand-200 transition shadow-2xs active:scale-95">🖼️ 일러스트 지도</button>
+          <button id="toggle-map-btn" onclick="toggleMapType()" class="px-3 py-1.5 bg-surface-muted hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition shadow-2xs active:scale-95">🛰️ 구글맵 전환</button>
         </div>
       </div>
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-semibold custom-scrollbar">
@@ -488,6 +491,22 @@
         <div id="gmap-frame-container" class="hidden w-full h-full">
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d237937.1956699264!2d-158.1130638069502!3d21.464522912443026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c00663bed931b23%3A0xef77b10222f98642!2z7ZWY7JmA7J20IOyYpO2VmOyasA!5e0!3m2!1sko!2skr!4v1710000000000!5m2!1sko!2skr" class="w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
         </div>
+
+        <!-- 스크롤 방지 딤(Dim) 오버레이 레이어: 탭해야 조작 가능 -->
+        <div id="map-interaction-dimmer" onclick="enableMapInteraction()" class="absolute inset-0 z-20 bg-slate-900/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-300 group">
+          <div class="px-5 py-3.5 bg-white/95 rounded-2xl shadow-xl border border-slate-200/90 text-center flex items-center gap-3 group-hover:scale-105 transition-transform">
+            <span class="text-2xl animate-bounce">👆</span>
+            <div class="text-left">
+              <div class="text-xs sm:text-sm font-bold text-slate-900">지도를 탭하면 확대·이동이 활성화됩니다</div>
+              <div class="text-[11px] text-slate-500 font-medium mt-0.5">스크롤 오작동 방지를 위해 잠겨 있습니다 (터치 시 잠금 해제)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 지도 잠금 복구 버튼 (활성화 시 우측 상단 노출) -->
+        <button id="map-lock-btn" type="button" onclick="disableMapInteraction(event)" class="hidden absolute top-3 right-3 z-20 px-3 py-1.5 bg-white/95 hover:bg-white text-slate-700 text-xs font-bold rounded-xl shadow-md border border-slate-200 transition flex items-center gap-1.5 active:scale-95">
+          <span>🔒</span> <span>지도 잠그기</span>
+        </button>
       </div>
     </section>
 
@@ -2042,6 +2061,8 @@
         return;
       }
 
+      setActiveHeaderSubTab(id);
+
       const el = document.getElementById(id);
       if (el) {
         const yOffset = -75;
@@ -2845,11 +2866,16 @@
     ];
 
     function getAllPlaces() {
-      const list = placesData.map(p => {
+      const deleted = JSON.parse(localStorage.getItem('deleted_places_list') || '[]');
+      const list = placesData.filter(p => !deleted.includes(p.id) && !deleted.includes(p.name)).map(p => {
         const ovr = placeOverrides[p.id] || placeOverrides[p.name];
         return ovr ? Object.assign({}, p, ovr) : Object.assign({}, p);
       });
-      return list.concat(customPlaces);
+      const customs = (customPlaces || []).filter(p => !deleted.includes(p.id)).map(p => {
+        const ovr = placeOverrides[p.id] || placeOverrides[p.name];
+        return ovr ? Object.assign({}, p, ovr) : Object.assign({}, p);
+      });
+      return list.concat(customs);
     }
 
     const timelineData = [
@@ -3922,7 +3948,8 @@
       document.getElementById('modal-place-gmap').value = p.gmap ? (p.gmap.startsWith('http') ? p.gmap : `https://www.google.com/maps/search/?api=1&query=${p.gmap}`) : '';
       document.getElementById('modal-place-name').value = p.name;
       document.getElementById('modal-place-name').dataset.autoFilled = 'false';
-      document.getElementById('modal-place-name').disabled = !p.isCustom;
+      document.getElementById('modal-place-name').disabled = false;
+      document.getElementById('modal-place-delete-btn')?.classList.remove('hidden');
       
       document.getElementById('modal-place-day').value = p.day ? p.day.split(',')[0].trim() : 'Day 1';
       document.getElementById('modal-place-time').value = p.time || '10:00';
@@ -3965,25 +3992,30 @@
         else gmapQuery = encodeURIComponent(gmapInput.replace(/\s/g, '+'));
       }
 
+      const now = Date.now();
+
       if (currentEditingPlaceId) {
+        // 1. 커스텀 등록 장소 여부 판별
         const isCustom = customPlaces.some(p => p.id === currentEditingPlaceId);
         if (isCustom) {
           customPlaces = customPlaces.map(p => {
             if (p.id === currentEditingPlaceId) {
-              return Object.assign({}, p, { name, day, time, region, cat, desc, price, gmap: gmapQuery });
+              return Object.assign({}, p, { name, day, time, region, cat, desc, price, gmap: gmapQuery, updatedAt: now });
             }
             return p;
           });
           localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
-          localStorage.setItem('_mod_custom_places_list', Date.now());
+          localStorage.setItem('_mod_custom_places_list', now);
         } else {
-          placeOverrides[currentEditingPlaceId] = { day, time, region, cat, desc, price, gmap: gmapQuery };
+          // 2. 기본 등록 장소 수정 오버라이드 (이름, 일정, 시간 등 전체 수정 지원)
+          placeOverrides[currentEditingPlaceId] = { name, day, time, region, cat, desc, price, gmap: gmapQuery, updatedAt: now };
           localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
-          localStorage.setItem('_mod_place_overrides', Date.now());
+          localStorage.setItem('_mod_place_overrides', now);
         }
       } else {
+        // 새 장소 등록
         const newPlace = {
-          id: 'cp_' + Date.now(),
+          id: 'cp_' + now,
           name: name,
           lat: 21.2768 + (Math.random() - 0.5) * 0.1,
           lng: -157.8246 + (Math.random() - 0.5) * 0.1,
@@ -3994,15 +4026,17 @@
           desc: desc,
           price: price || '무료',
           gmap: gmapQuery,
-          isCustom: true
+          isCustom: true,
+          updatedAt: now
         };
         customPlaces.push(newPlace);
         localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
-        localStorage.setItem('_mod_custom_places_list', Date.now());
+        localStorage.setItem('_mod_custom_places_list', now);
       }
 
       closePlaceModal();
       renderMasterTable();
+      renderTimeline();
       if (leafletMapInstance) {
         leafletMapInstance.remove();
         leafletMapInstance = null;
@@ -4010,21 +4044,39 @@
       }
 
       if (forceSync) {
-        pushStateToGitHub(true);
-      } else {
         triggerAutoSync();
       }
     }
 
     function deleteCurrentPlace() {
       if (!currentEditingPlaceId) return;
-      if (!confirm('이 사용자 추가 장소를 삭제하시겠습니까?')) return;
+      if (!confirm('이 일정을 삭제하시겠습니까? (디폴트 및 등록 일정 모두 삭제 가능)')) return;
+
+      const now = Date.now();
+      const deleted = JSON.parse(localStorage.getItem('deleted_places_list') || '[]');
+      if (!deleted.includes(currentEditingPlaceId)) {
+        deleted.push(currentEditingPlaceId);
+        localStorage.setItem('deleted_places_list', JSON.stringify(deleted));
+        localStorage.setItem('_mod_deleted_places_list', now);
+      }
+
       customPlaces = customPlaces.filter(p => p.id !== currentEditingPlaceId);
       localStorage.setItem('custom_places_list', JSON.stringify(customPlaces));
-      localStorage.setItem('_mod_custom_places_list', Date.now());
+      localStorage.setItem('_mod_custom_places_list', now);
+
+      delete placeOverrides[currentEditingPlaceId];
+      localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
+      localStorage.setItem('_mod_place_overrides', now);
+
       closePlaceModal();
       renderMasterTable();
-      pushStateToGitHub(true);
+      renderTimeline();
+      if (leafletMapInstance) {
+        leafletMapInstance.remove();
+        leafletMapInstance = null;
+        safeInitMap();
+      }
+      triggerAutoSync();
     }
 
     // 일정 순서 랭킹 헬퍼 (Day 1 ~ Day 8 오름차순/내림차순 정렬)
@@ -4753,6 +4805,31 @@
     }
 
     // 9. 지도 및 차트 통계 연동
+    let isMapInteracting = false;
+
+    function enableMapInteraction() {
+      const dimmer = document.getElementById('map-interaction-dimmer');
+      const lockBtn = document.getElementById('map-lock-btn');
+      if (dimmer) dimmer.classList.add('hidden');
+      if (lockBtn) lockBtn.classList.remove('hidden');
+      isMapInteracting = true;
+      if (leafletMapInstance) {
+        leafletMapInstance.scrollWheelZoom.enable();
+      }
+    }
+
+    function disableMapInteraction(e) {
+      if (e) e.stopPropagation();
+      const dimmer = document.getElementById('map-interaction-dimmer');
+      const lockBtn = document.getElementById('map-lock-btn');
+      if (dimmer) dimmer.classList.remove('hidden');
+      if (lockBtn) lockBtn.classList.add('hidden');
+      isMapInteracting = false;
+      if (leafletMapInstance) {
+        leafletMapInstance.scrollWheelZoom.disable();
+      }
+    }
+
     function safeInitMap() {
       if (typeof L === 'undefined') return;
       const mapEl = document.getElementById('leaflet-map');
@@ -5564,8 +5641,32 @@
       const localBlogOvr = JSON.parse(localStorage.getItem('blog_overrides') || '{}');
       const mergedBlogOverrides = Object.assign({}, remBlogOvr, localBlogOvr);
 
+      // 등록 일정(customPlaces) 양방향 병합: Last-Write-Wins (ID별 최신 수정본 우선 반영)
       const remPlaces = remote && Array.isArray(remote.customPlaces) ? remote.customPlaces : [];
-      const mergedPlaces = remPlaces.concat(customPlaces.filter(p => !remPlaces.some(rp => rp.id === p.id)));
+      const placeMap = {};
+      (remPlaces || []).forEach(p => {
+        if (p && p.id) placeMap[p.id] = p;
+      });
+      const localPlaces = JSON.parse(localStorage.getItem('custom_places_list') || '[]');
+      (localPlaces.length > 0 ? localPlaces : (customPlaces || [])).forEach(p => {
+        if (p && p.id) {
+          const existing = placeMap[p.id];
+          if (!existing || (p.updatedAt || 0) >= (existing.updatedAt || 0)) {
+            placeMap[p.id] = p;
+          }
+        }
+      });
+
+      // 삭제된 일정(deletedPlaces) 반영
+      const remDelPlaces = remote && Array.isArray(remote.deletedPlaces) ? remote.deletedPlaces : [];
+      const localDelPlaces = JSON.parse(localStorage.getItem('deleted_places_list') || '[]');
+      const mergedDeletedPlaces = Array.from(new Set(remDelPlaces.concat(localDelPlaces)));
+      mergedDeletedPlaces.forEach(did => { delete placeMap[did]; });
+      const mergedPlaces = Object.values(placeMap);
+
+      const remPlaceOvr = remote && remote.placeOverrides ? remote.placeOverrides : {};
+      const localPlaceOvr = JSON.parse(localStorage.getItem('place_overrides') || '{}');
+      const mergedOverrides = Object.assign({}, remPlaceOvr, localPlaceOvr);
 
       const remPacks = remote && Array.isArray(remote.customPackingList) ? remote.customPackingList : [];
       const mergedPacks = remPacks.concat(customPackingList.filter(p => !remPacks.some(rp => rp.id === p.id)));
@@ -5573,7 +5674,6 @@
       const remLedger = remote && Array.isArray(remote.customLedgerItems) ? remote.customLedgerItems : [];
       const mergedLedger = remLedger.concat(customLedgerItems.filter(l => !remLedger.some(rl => rl.id === l.id)));
 
-      const mergedOverrides = Object.assign({}, (remote && remote.placeOverrides ? remote.placeOverrides : {}), placeOverrides);
 
       return {
         updatedAt: new Date().toISOString(),
@@ -5587,6 +5687,7 @@
         deletedBlogs: mergedDeletedBlogs,
         blogOverrides: mergedBlogOverrides,
         customPlaces: mergedPlaces,
+        deletedPlaces: mergedDeletedPlaces,
         customPackingList: mergedPacks,
         customLedgerItems: mergedLedger,
         placeOverrides: mergedOverrides,
@@ -5650,6 +5751,11 @@
         placeOverrides = parsed.placeOverrides;
         localStorage.setItem('place_overrides', JSON.stringify(placeOverrides));
       }
+      if (parsed.deletedPlaces && Array.isArray(parsed.deletedPlaces)) {
+        localStorage.setItem('deleted_places_list', JSON.stringify(parsed.deletedPlaces));
+      }
+      renderMasterTable();
+      renderTimeline();
       if (parsed.customPackingList && Array.isArray(parsed.customPackingList)) {
         customPackingList = parsed.customPackingList;
         localStorage.setItem('custom_packing_list', JSON.stringify(customPackingList));
@@ -6013,27 +6119,51 @@
     }
 
     // 현재 활성화된 뎁스(푸터 탭)의 하위 메뉴 탭 렌더링
-    function renderHeaderNavTabs(tabKey) {
+    let currentActiveSubmenuSec = null;
+
+    function renderHeaderNavTabs(tabKey, targetSecId = null) {
       const navBar = document.getElementById('header-nav-bar');
       if (!navBar) return;
 
       const cfg = FOOTER_TAB_CONFIG[tabKey] || FOOTER_TAB_CONFIG['dashboard'];
       
-      // 참고 이미지 스타일: 첫번째(대표) 메뉴는 생동감 있는 블루 필, 나머지 메뉴는 깔끔한 소프트 슬레이트 필로 통일
-      navBar.innerHTML = cfg.subMenus.map((m, idx) => {
-        const isPrimary = idx === 0;
-        const btnClass = isPrimary 
-          ? "px-3.5 py-1.5 rounded-full bg-blue-600 text-white font-bold transition shrink-0 shadow-sm shadow-blue-200/80 text-xs whitespace-nowrap active:scale-95 border border-transparent"
-          : "px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-blue-50 text-slate-700 hover:text-blue-700 font-semibold transition shrink-0 shadow-2xs text-xs whitespace-nowrap active:scale-95 border border-slate-200/60";
+      if (!targetSecId) {
+        const hasCurrent = cfg.subMenus.some(m => m.sec === currentActiveSubmenuSec);
+        if (!hasCurrent) {
+          currentActiveSubmenuSec = cfg.defaultSec || (cfg.subMenus[0] && cfg.subMenus[0].sec) || null;
+        }
+      } else {
+        currentActiveSubmenuSec = targetSecId;
+      }
+
+      navBar.innerHTML = cfg.subMenus.map((m) => {
+        const isActive = m.sec && m.sec === currentActiveSubmenuSec;
+        const btnClass = isActive 
+          ? "header-sub-btn px-3.5 py-1.5 rounded-full bg-blue-600 text-white font-bold transition shrink-0 shadow-sm shadow-blue-200/80 text-xs whitespace-nowrap active:scale-95 border border-transparent is-active"
+          : "header-sub-btn px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-blue-50 text-slate-700 hover:text-blue-700 font-semibold transition shrink-0 shadow-2xs text-xs whitespace-nowrap active:scale-95 border border-slate-200/60";
 
         if (m.action) {
-          return `<button type="button" onclick="${m.action}" class="${btnClass}">${m.label}</button>`;
+          return `<button type="button" data-sec="${m.sec || ''}" onclick="${m.action}" class="${btnClass}">${m.label}</button>`;
         }
-        return `<button type="button" onclick="scrollToSec('${m.sec}')" class="${btnClass}">${m.label}</button>`;
+        return `<button type="button" data-sec="${m.sec || ''}" onclick="scrollToSec('${m.sec}')" class="${btnClass}">${m.label}</button>`;
       }).join('');
 
-      // 메뉴 렌더링 후 넘침 여부에 따라 펼침 화살표 활성/비활성 판별
       setTimeout(updateHeaderExpandButtonState, 50);
+    }
+
+    function setActiveHeaderSubTab(secId) {
+      if (!secId) return;
+      currentActiveSubmenuSec = secId;
+      const buttons = document.querySelectorAll('#header-nav-bar .header-sub-btn');
+      buttons.forEach(btn => {
+        const bSec = btn.dataset.sec;
+        if (bSec === secId) {
+          btn.className = "header-sub-btn px-3.5 py-1.5 rounded-full bg-blue-600 text-white font-bold transition shrink-0 shadow-sm shadow-blue-200/80 text-xs whitespace-nowrap active:scale-95 border border-transparent is-active";
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          btn.className = "header-sub-btn px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-blue-50 text-slate-700 hover:text-blue-700 font-semibold transition shrink-0 shadow-2xs text-xs whitespace-nowrap active:scale-95 border border-slate-200/60";
+        }
+      });
     }
 
     // 푸터 네비게이션 탭 전환 함수
@@ -6082,7 +6212,7 @@
       }
 
       // 3. 상단 헤더 서브메뉴 탭 동적 렌더링
-      renderHeaderNavTabs(tabKey);
+      renderHeaderNavTabs(tabKey, targetSecId);
 
       // 4. 리플릿 지도 타일 렌더링 보정
       if (tabKey === 'dashboard' && leafletMapInstance) {
@@ -6111,9 +6241,50 @@
       else m.classList.add('hidden');
     }
 
-    // 5대 독립 화면 탭 뷰 전환 모드에서는 명시적 탭 네비게이션 사용
+    // 헤더 서브탭 스크롤 스파이(ScrollSpy): 사용자가 스크롤 시 현재 위치한 섹션의 헤더 탭을 실시간 활성화
+    let isScrollSpyTicking = false;
+
     function initScrollTabObserver() {
-      // 탭 화면 완전 분리 모드: 사용자가 직접 푸터/헤더 탭을 클릭하여 화면 전환
+      window.addEventListener('scroll', function() {
+        if (!isScrollSpyTicking) {
+          window.requestAnimationFrame(function() {
+            updateScrollSpy();
+            isScrollSpyTicking = false;
+          });
+          isScrollSpyTicking = true;
+        }
+      }, { passive: true });
+    }
+
+    function updateScrollSpy() {
+      const tabPages = {
+        'dashboard': 'page-dashboard',
+        'pre-trip': 'page-pre-trip',
+        'schedule': 'page-schedule',
+        'ledger': 'page-ledger',
+        'more': 'page-more'
+      };
+      const activePageId = tabPages[currentActiveFooterTab];
+      const activePage = document.getElementById(activePageId);
+      if (!activePage) return;
+
+      const sections = activePage.querySelectorAll('section[id]');
+      if (!sections || sections.length === 0) return;
+
+      const scrollPos = window.pageYOffset || window.scrollY || 0;
+      const triggerOffset = 140; // 스티키 헤더 하단 감지 기준선
+
+      let activeSecId = null;
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        if (scrollPos + triggerOffset >= top) {
+          activeSecId = sec.id;
+        }
+      });
+
+      if (activeSecId && activeSecId !== currentActiveSubmenuSec) {
+        setActiveHeaderSubTab(activeSecId);
+      }
     }
 
     function startDashboardApp() {
