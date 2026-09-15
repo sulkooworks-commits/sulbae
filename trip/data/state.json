@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T01:34:34.004Z",
+  "updatedAt": "2026-09-15T08:23:06.056Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -10,7 +10,7 @@
     "cost_hotel": 0,
     "rem_kualoa": 1789215006982,
     "cost_car": 0,
-    "ledger_y_l_kualoa": 1789436071892,
+    "ledger_y_l_kualoa": 1789460582686,
     "ledger_payer_l_kualoa": 1789215027123,
     "ledger_usd_l_kualoa": 1789386876689,
     "rem_esim": 1789020912157,
@@ -27,7 +27,8 @@
     "rem_passport": 1789386976852,
     "memo_Day1": 1789387550360,
     "pack_ESTA%20%EC%8A%B9%EC%9D%B8%EB%B3%B8": 1789392295071,
-    "memo_Day7": 1789399494819
+    "memo_Day7": 1789399494819,
+    "sched_done_p24": 0
   },
   "customCosts": {
     "hotel": "3900",
@@ -150,6 +151,7 @@
     "rem_passport": "true",
     "memo_Day1": "0000",
     "pack_ESTA%20%EC%8A%B9%EC%9D%B8%EB%B3%B8": "false",
-    "memo_Day7": "호놓훌후 미술관"
+    "memo_Day7": "호놓훌후 미술관",
+    "sched_done_p24": "false"
   }
 }
