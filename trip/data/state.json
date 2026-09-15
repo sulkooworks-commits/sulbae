@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T11:24:15.974Z",
+  "updatedAt": "2026-09-15T12:37:36.283Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -126,7 +126,19 @@
   "deletedPlaces": [],
   "customPackingList": [],
   "customLedgerItems": [],
-  "placeOverrides": {},
+  "placeOverrides": {
+    "p23": {
+      "name": "다이아몬드 헤드",
+      "day": "Day 2",
+      "time": "06:30",
+      "region": "동부",
+      "cat": "명소",
+      "desc": "분화구 정상 360도 트레킹 - 30분 일찍와서 주차하기",
+      "price": "$5 (예약)",
+      "gmap": "Diamond+Head+State+Monument",
+      "updatedAt": 1789475854119
+    }
+  },
   "storage": {
     "pack_1_2": "false",
     "pack_1_0": "false",
