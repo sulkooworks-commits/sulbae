@@ -893,6 +893,7 @@
             <p class="text-xs text-slate-500 mt-0.5">일정 수행 여부(Y) 체크 시 가계부 리스트로 자동 연동되며, 원가·팁·결제 환율을 실시간 정산합니다.</p>
           </div>
           <div class="flex items-center gap-2">
+            <span id="ledger-linked-count-badge" class="px-2.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold shrink-0">일정 연동: 0건</span>
             <button onclick="openAddLedgerModal()" class="px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1 shrink-0">
               <span>+</span> <span>지출 추가</span>
             </button>
@@ -992,10 +993,10 @@
             </div>
           </div>
           <div class="bg-surface-muted p-4 rounded-2xl border border-slate-200/70 space-y-2">
-            <h3 class="font-bold text-xs text-slate-700">💡 가계부 사용 가이드</h3>
+            <h3 class="font-bold text-xs text-slate-700">💡 가계부 연동 및 실시간 정산 안내</h3>
             <p class="text-xs text-slate-500 leading-relaxed">
-              1. 7박 8일 일정 또는 Top 7 위시리스트에서 실제 방문·수행한 항목에 <strong>[Y]</strong>를 체크하세요.<br>
-              2. 아래 가계부 표에서 <strong>원가, 팁(%), 카드 결제 시점 환율</strong>을 직접 수정하여 정확한 지출을 관리할 수 있습니다.
+              1. <strong>종합 일정표 자동 연동</strong>: 종합 일정표에서 일정을 체크(✓ 완료)하면 비용이 존재하는 항목이 가계부에 자동 연동됩니다.<br>
+              2. <strong>실제 금액 수정 & 동기화</strong>: 가계부 표에서 <strong>원가($), 팁(%), 결제 환율(₩), 결제자(S/B), 메모</strong>를 실제 영수증에 맞게 직접 수정할 수 있으며 실시간 클라우드 동기화됩니다.
             </p>
           </div>
         </div>
@@ -2910,6 +2911,131 @@
       { id: 'l_costco_fuel', name: '코스트코 주유소 반납 전 Full 주유', day: 'Day 8', cat: '기타', defaultUsd: 45 }
     ];
 
+    // 일정표 가격 문자열로부터 유효 USD 금액 파싱 (무료/바우처/보험 등은 0 반환)
+    function parsePlaceCost(priceStr) {
+      if (!priceStr) return 0;
+      const s = String(priceStr).trim();
+      if (/무료|바우처|보험|갤런당|품목별/i.test(s)) return 0;
+      const mRange = s.match(/\$?(\d+(?:\.\d+)?)\s*~\s*\$?(\d+(?:\.\d+)?)/);
+      if (mRange) {
+        const low = parseFloat(mRange[1]);
+        const high = parseFloat(mRange[2]);
+        return Math.round(((low + high) / 2) * 100) / 100;
+      }
+      const mSingle = s.match(/\$?(\d+(?:\.\d+)?)/);
+      if (mSingle) {
+        return parseFloat(mSingle[1]);
+      }
+      return 0;
+    }
+
+    // 기존 18개 레거시 항목 ID 매핑 (기존 저장된 결제자, 수정금액, 팁 설정값 100% 보존)
+    const PLACE_TO_LEGACY_LEDGER_ID = {
+      'p31': 'l_kualoa',
+      'p4': 'l_sup',
+      'p25': 'l_hanauma',
+      'p43': 'l_luau',
+      'p7': 'l_maguro',
+      'p35': 'l_giovanni',
+      'p22': 'l_leonards',
+      'p20': 'l_littlejoes',
+      'p8': 'l_cheesecake',
+      'p6': 'l_iyasume',
+      'p24': 'l_islandbrew',
+      'p18': 'l_liliha',
+      'p36': 'l_matsumoto',
+      'p37': 'l_haleiwa_bowls',
+      'p12': 'l_honolulu_cookie',
+      'p14': 'l_pataloha',
+      'p19': 'l_donki',
+      'p42': 'l_costco_fuel'
+    };
+
+    const BASE_LEDGER_DEFAULTS = {
+      'l_kualoa': 145,
+      'l_sup': 65,
+      'l_hanauma': 50,
+      'l_luau': 160,
+      'l_maguro': 30,
+      'l_giovanni': 17,
+      'l_leonards': 10,
+      'l_littlejoes': 120,
+      'l_cheesecake': 70,
+      'l_iyasume': 15,
+      'l_islandbrew': 20,
+      'l_liliha': 35,
+      'l_matsumoto': 12,
+      'l_haleiwa_bowls': 25,
+      'l_honolulu_cookie': 80,
+      'l_pataloha': 90,
+      'l_donki': 50,
+      'l_costco_fuel': 45
+    };
+
+    // 가계부 전체 데이터 연동 및 조회 통합 함수 (종합 일정표 체크 항목 + 직접 등록 + 주유 실비)
+    function getAllLedgerItems() {
+      // 1. 주유비 실비 기록
+      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
+        const fid = f.id || ('fuel_' + idx);
+        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
+        return {
+          id: fid,
+          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
+          day: '실비',
+          cat: '주유비',
+          defaultUsd: parseFloat(f.total || 0),
+          isFuel: true,
+          fuelIdx: idx,
+          payer: payer
+        };
+      });
+
+      // 2. 종합 일정표에서 체크된 항목 중 비용이 존재하는 항목 연동
+      const schedPlaces = getAllPlaces();
+      const schedLedgerItems = [];
+      const addedIds = new Set();
+
+      schedPlaces.forEach(p => {
+        // 체크 완료(isPlacePassed)된 항목인지 확인
+        if (!isPlacePassed(p)) return;
+
+        // 비용이 존재하는 유료 항목인지 확인 ($금액 파싱)
+        const cost = parsePlaceCost(p.price);
+        if (cost <= 0) return;
+
+        const legacyId = PLACE_TO_LEGACY_LEDGER_ID[p.id];
+        const itemId = legacyId || ('sched_' + p.id);
+        if (addedIds.has(itemId)) return;
+        addedIds.add(itemId);
+
+        const currentPayer = localStorage.getItem('ledger_payer_' + itemId) || '-';
+        const defaultAmount = (legacyId && BASE_LEDGER_DEFAULTS[legacyId]) ? BASE_LEDGER_DEFAULTS[legacyId] : cost;
+
+        schedLedgerItems.push({
+          id: itemId,
+          placeId: p.id,
+          name: p.name,
+          day: p.day || '공통',
+          cat: p.cat || '기타',
+          defaultUsd: defaultAmount,
+          priceStr: p.price,
+          isSchedLink: true,
+          payer: currentPayer
+        });
+      });
+
+      // 3. 사용자가 가계부에서 직접 추가한 커스텀 지출
+      const customs = customLedgerItems || [];
+
+      // 4. 레거시 보존: 가계부 자체에서 이전 사용자가 Y 체크해둔 항목이 있다면 누락되지 않도록 포함
+      const legacyChecked = (baseLedgerItems || []).filter(b => {
+        if (addedIds.has(b.id)) return false;
+        return localStorage.getItem('ledger_y_' + b.id) === 'true';
+      });
+
+      return schedLedgerItems.concat(legacyChecked).concat(customs).concat(fuelLedgerItems);
+    }
+
     // 1. 리마인드 렌더링 & 토글
     function renderReminders() {
       const grid = document.getElementById('reminders-grid');
@@ -4037,6 +4163,8 @@
       closePlaceModal();
       renderMasterTable();
       renderTimeline();
+      if (typeof renderLedgerTable === 'function') renderLedgerTable();
+      if (typeof updateLedgerSummaryCards === 'function') updateLedgerSummaryCards();
       if (leafletMapInstance) {
         leafletMapInstance.remove();
         leafletMapInstance = null;
@@ -4071,6 +4199,8 @@
       closePlaceModal();
       renderMasterTable();
       renderTimeline();
+      if (typeof renderLedgerTable === 'function') renderLedgerTable();
+      if (typeof updateLedgerSummaryCards === 'function') updateLedgerSummaryCards();
       if (leafletMapInstance) {
         leafletMapInstance.remove();
         leafletMapInstance = null;
@@ -4144,8 +4274,12 @@
       const current = localStorage.getItem('sched_done_' + placeId);
       const willBeDone = current !== 'true';
       localStorage.setItem('sched_done_' + placeId, willBeDone ? 'true' : 'false');
+      localStorage.setItem('_mod_sched_done_' + placeId, Date.now());
       renderMasterTable();
       if (typeof renderTimeline === 'function') renderTimeline();
+      if (typeof renderLedgerTable === 'function') renderLedgerTable();
+      if (typeof updateLedgerSummaryCards === 'function') updateLedgerSummaryCards();
+      triggerAutoSync();
     }
 
     function toggleTimelineItem(dayKey, itemText) {
@@ -5079,23 +5213,11 @@
       let totalS = 0;
       let totalB = 0;
 
-      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
-        const fid = f.id || ('fuel_' + idx);
-        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
-        return {
-          id: fid,
-          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
-          day: '실비',
-          cat: '주유비',
-          defaultUsd: parseFloat(f.total || 0),
-          payer: payer
-        };
-      });
-
-      const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
+      const allLedger = getAllLedgerItems();
 
       allLedger.forEach(item => {
-        const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
+        const rawY = localStorage.getItem('ledger_y_' + item.id);
+        const isY = item.isSchedLink ? (rawY !== 'false') : (rawY === 'true');
         if (!isY) return;
 
         const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
@@ -5285,23 +5407,14 @@
       const payerFilter = document.getElementById('ledger-filter-payer')?.value || 'all';
       const sortOrder = document.getElementById('ledger-sort-order')?.value || 'dayAsc';
 
-      // 1. 주유비 실비 기록을 가계부 라인 아이템으로 변환
-      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => {
-        const fid = f.id || ('fuel_' + idx);
-        const payer = localStorage.getItem('ledger_payer_' + fid) || f.payer || '-';
-        return {
-          id: fid,
-          name: `⛽ 주유: ${f.loc || '오아후 주유소'} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
-          day: '실비',
-          cat: '주유비',
-          defaultUsd: parseFloat(f.total || 0),
-          isFuel: true,
-          fuelIdx: idx,
-          payer: payer
-        };
-      });
+      const allLedger = getAllLedgerItems();
 
-      const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
+      // 일정 연동 뱃지 갱신
+      const linkedBadge = document.getElementById('ledger-linked-count-badge');
+      const linkedCount = allLedger.filter(i => i.isSchedLink).length;
+      if (linkedBadge) {
+        linkedBadge.innerText = `일정 연동: ${linkedCount}건`;
+      }
 
       // 필터링 적용
       let filtered = allLedger.filter(item => {
@@ -5314,7 +5427,7 @@
         return true;
       });
 
-      // 정렬 적용 (일정 오름차순, 내림차순, 수행순, 금액순, 이름순, 결제자순)
+      // 정렬 적용
       if (sortOrder === 'dayAsc') {
         filtered.sort((a, b) => {
           const rankA = getDayRank(a.day);
@@ -5331,8 +5444,10 @@
         });
       } else if (sortOrder === 'doneFirst') {
         filtered.sort((a, b) => {
-          const aY = localStorage.getItem('ledger_y_' + a.id) === 'true' ? 1 : 0;
-          const bY = localStorage.getItem('ledger_y_' + b.id) === 'true' ? 1 : 0;
+          const rawA = localStorage.getItem('ledger_y_' + a.id);
+          const aY = a.isSchedLink ? (rawA !== 'false' ? 1 : 0) : (rawA === 'true' ? 1 : 0);
+          const rawB = localStorage.getItem('ledger_y_' + b.id);
+          const bY = b.isSchedLink ? (rawB !== 'false' ? 1 : 0) : (rawB === 'true' ? 1 : 0);
           return bY - aY;
         });
       } else if (sortOrder === 'priceDesc') {
@@ -5358,8 +5473,28 @@
         });
       }
 
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-12 text-center text-slate-400">
+              <div class="flex flex-col items-center justify-center gap-2">
+                <span class="text-3xl">📋</span>
+                <p class="font-bold text-slate-700 text-sm">연동된 가계부 항목이 없습니다</p>
+                <p class="text-xs text-slate-500 max-w-md leading-relaxed">
+                  상단 <strong>종합 일정표</strong>에서 방문·완료한 일정을 체크(✓)하시면 유료 항목이 이곳에 자동으로 연동됩니다.<br>
+                  (또는 우측 상단의 <strong>[+ 지출 추가]</strong> 버튼으로 별도 지출을 기록할 수 있습니다)
+                </p>
+              </div>
+            </td>
+          </tr>
+        `;
+        updateLedgerSummaryCards();
+        return;
+      }
+
       tbody.innerHTML = filtered.map((item) => {
-        const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
+        const rawY = localStorage.getItem('ledger_y_' + item.id);
+        const isY = item.isSchedLink ? (rawY !== 'false') : (rawY === 'true');
         const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
         const rawUsd = localStorage.getItem('ledger_usd_' + item.id);
         const usd = rawUsd !== null ? parseFloat(rawUsd) : item.defaultUsd;
@@ -5386,10 +5521,12 @@
                 <div class="flex items-center gap-1 flex-wrap mb-0.5">
                   <span class="px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded text-[9px] font-mono shrink-0">${item.day || '공통'}</span>
                   <span class="px-1.5 py-0.2 bg-pastel-blue text-pastel-blueText rounded text-[9px] font-bold shrink-0">${item.cat}</span>
+                  ${item.isSchedLink ? '<span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded text-[9px] font-semibold shrink-0" title="종합 일정표 체크 완료로 자동 연동됨">✓ 일정연동</span>' : ''}
                   ${item.isCustom ? `<button onclick="deleteCustomLedgerItem('${item.id}')" class="text-slate-300 hover:text-rose-600 font-bold text-xs ml-auto shrink-0" title="삭제">✕</button>` : ''}
                   ${item.isFuel ? `<button onclick="deleteFuelRecord(${item.fuelIdx})" class="text-slate-300 hover:text-rose-600 font-bold text-xs ml-auto shrink-0" title="주유 기록 삭제">✕</button>` : ''}
                 </div>
                 <div class="line-clamp-2 break-words leading-tight text-xs font-bold text-slate-900" title="${item.name}">${item.name}</div>
+                ${item.priceStr ? `<div class="text-[10px] text-slate-400 font-mono mt-0.5">일정표 기준: ${item.priceStr}</div>` : ''}
               </div>
             </td>
             <td class="py-2.5 px-2 text-center whitespace-nowrap">
@@ -5446,18 +5583,10 @@
 
     function exportLedgerCSV() {
       let csv = '\ufeff수행여부,항목명,결제자,일정,분류,원가(USD),팁(%),적용환율(KRW),환산총액(KRW),비고\n';
-      const fuelLedgerItems = (fuelRecords || []).map((f, idx) => ({
-        id: f.id || ('fuel_' + idx),
-        name: `⛽ 주유: ${f.loc} (${f.gallons ? f.gallons + ' gal' : '실비'})`,
-        day: '실비',
-        cat: '주유비',
-        defaultUsd: parseFloat(f.total || 0),
-        payer: f.payer || '-'
-      }));
-
-      const allLedger = baseLedgerItems.concat(customLedgerItems).concat(fuelLedgerItems);
+      const allLedger = getAllLedgerItems();
       allLedger.forEach(item => {
-        const isY = localStorage.getItem('ledger_y_' + item.id) === 'true';
+        const rawY = localStorage.getItem('ledger_y_' + item.id);
+        const isY = item.isSchedLink ? (rawY !== 'false') : (rawY === 'true');
         if (!isY) return;
         const payer = localStorage.getItem('ledger_payer_' + item.id) || item.payer || '-';
         const usd = parseFloat(localStorage.getItem('ledger_usd_' + item.id) !== null ? localStorage.getItem('ledger_usd_' + item.id) : item.defaultUsd) || 0;
@@ -5769,7 +5898,7 @@
       if (parsed.storage && typeof parsed.storage === 'object') {
         for (let k in parsed.storage) {
           if (k === 'memo_Day') continue; // 이전 버그로 생성된 일괄 오염 키 무시
-          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_')) {
+          if (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_') || k.startsWith('sched_done_') || k.startsWith('timeline_done_')) {
             localStorage.setItem(k, parsed.storage[k]);
           }
         }
@@ -5828,7 +5957,7 @@
       const localKV = {};
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_'))) {
+        if (k && (k.startsWith('rem_') || k.startsWith('wish_') || k.startsWith('pack_') || k.startsWith('var_b_') || k.startsWith('ledger_') || k.startsWith('cost_') || k.startsWith('memo_') || k.startsWith('sched_done_') || k.startsWith('timeline_done_'))) {
           localKV[k] = localStorage.getItem(k);
         }
       }
