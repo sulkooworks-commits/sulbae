@@ -2000,7 +2000,7 @@
 
   <div id="hover-tooltip" class="img-tooltip bg-white p-2.5 rounded-2xl shadow-2xl border border-slate-200 w-64">
     <div class="relative w-full h-40 bg-slate-100 rounded-xl overflow-hidden mb-2">
-      <img id="tooltip-img" src="" alt="preview" class="w-full h-full object-cover" />
+      <img id="tooltip-img" src="" alt="preview" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
       <span id="tooltip-badge" class="absolute bottom-2 left-2 px-2 py-0.5 bg-slate-900/80 text-white text-[10px] font-bold rounded-md"></span>
     </div>
     <div id="tooltip-title" class="font-bold text-slate-900 text-xs truncate"></div>
@@ -3959,63 +3959,119 @@
     // -------------------------------------------------------------
     // 종합 일정표 48개소 및 세부 일정 고화질 프리미엄 사진 사전 (정확한 매칭)
     // -------------------------------------------------------------
+        // -------------------------------------------------------------
+    // 타임라인 장소별 고화질 프리미엄 사진 사전 (깨짐 방지 및 100% 신뢰성 보장)
+    // -------------------------------------------------------------
     const PLACE_PREVIEW_IMAGES = {
       p1: { title: "하얏트 StayFit 피트니스 센터", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop&q=80", tag: "피트니스", desc: "호텔 3층 오션뷰 러닝머신 & 웨이트 트레이닝" },
       p2: { title: "하얏트 오션뷰 수영장 & 자쿠지", img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&auto=format&fit=crop&q=80", tag: "수영장/태닝", desc: "와이키키 해변을 굽어보는 선베드 태닝 & 온수 풀" },
       p3: { title: "와이키키 퀸즈 비치 (Queens Beach)", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80", tag: "바다수영/요가", desc: "방파제 안쪽 잔잔한 바다수영 & 06:30 일출 모닝요가" },
       p4: { title: "카일루아 비치 어드벤처스 (SUP)", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop&q=80", tag: "패들보드", desc: "에메랄드빛 카일루아 만 스탠드업 패들보드 대여" },
       p5: { title: "하얏트 리젠시 와이키키", img: "https://images.unsplash.com/photo-1542259009-559971a0d02a?w=800&auto=format&fit=crop&q=80", tag: "호텔베이스캠프", desc: "와이키키 중심 해변 도보 10초 7박 베이스캠프" },
-      p6: { title: "이야스메 무스비 본점", img: "https://upload.wikimedia.org/wikipedia/commons/c/c8/SPAM_musubi.jpg", tag: "스팸무스비", desc: "노릇한 스팸과 아보카도를 감싼 하와이 국민 무스비" },
-      p7: { title: "마구로 스팟 (Maguro Spot)", img: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Ahi_poke_hawaiian-style.jpg", tag: "생참치포케", desc: "신선한 당일 생참치 커스텀 오리지널 포케볼" },
+      p6: { title: "이야스메 무스비 본점", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&auto=format&fit=crop&q=80", tag: "스팸무스비", desc: "노릇한 스팸과 아보카도를 감싼 하와이 국민 무스비" },
+      p7: { title: "마구로 스팟 (Maguro Spot)", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=80", tag: "생참치포케", desc: "신선한 당일 생참치 커스텀 오리지널 포케볼" },
       p8: { title: "치즈케이크 팩토리 와이키키", img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=800&auto=format&fit=crop&q=80", tag: "테라스디너", desc: "칼라카우아 대로변 활기찬 테라스 파스타 & 치즈케이크" },
-      p9: { title: "ABC 스토어 #38", img: "https://i.ebayimg.com/images/g/y9IAAOSwLwVnY~bb/s-l1600.jpg", tag: "태닝키티", desc: "하와이 한정판 태닝 헬로키티 인형 & 비치 스낵" },
+      p9: { title: "ABC 스토어 #38", img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&auto=format&fit=crop&q=80", tag: "태닝키티", desc: "하와이 한정판 태닝 헬로키티 인형 & 비치 스낵" },
       p10: { title: "롱스 드럭스 (Longs Drugs)", img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80", tag: "드럭스토어", desc: "상비약, 영양제, 마카다미아 너트 가성비 쇼핑" },
       p11: { title: "닥터스 온 콜 (Doctors on Call)", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&auto=format&fit=crop&q=80", tag: "응급의료", desc: "쉐라톤 2층 한국어 지원 와이키키 긴급 병원 클리닉" },
       p12: { title: "호놀룰루 쿠키 본점", img: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&auto=format&fit=crop&q=80", tag: "파인애플쿠키", desc: "시그니처 파인애플 틴 케이스 선물용 프리미엄 쿠키" },
-      p13: { title: "모니(Moni) 호놀룰루", img: "https://i.ebayimg.com/00/s/MTYwMFgxMjAw/z/0YEAAeSwNTtpdR7U/$_1.JPG?set_id=8800005007", tag: "태닝스누피", desc: "하와이 한정판 서핑보드를 든 태닝 스누피 굿즈" },
-      p14: { title: "파타고니아 파탈로하 (Pataloha)", img: "https://i.ebayimg.com/images/g/3jkAAOSw-h1nY-t7/s-l1600.jpg", tag: "파탈로하", desc: "호놀룰루 매장 독점 파탈로하 한정판 시그니처 셔츠" },
+      p13: { title: "모니(Moni) 호놀룰루", img: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80", tag: "태닝스누피", desc: "하와이 한정판 서핑보드를 든 태닝 스누피 굿즈" },
+      p14: { title: "파타고니아 파탈로하 (Pataloha)", img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&auto=format&fit=crop&q=80", tag: "파탈로하", desc: "호놀룰루 매장 독점 파탈로하 한정판 시그니처 셔츠" },
       p15: { title: "와이키키 마켓 (Waikiki Market)", img: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=80", tag: "로컬마켓", desc: "신선 샐러드, 과일 델리와 프리미엄 식품 마트" },
       p16: { title: "알라모아나 센터 (Ala Moana)", img: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800&auto=format&fit=crop&q=80", tag: "야외쇼핑몰", desc: "세계 최대 규모의 하와이 대표 야외 복합 쇼핑몰" },
       p17: { title: "매직 아일랜드 선셋", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80", tag: "선셋명소", desc: "와이키키 스카이라인과 바다를 붉게 물들이는 환상적인 일몰" },
-      p18: { title: "릴리하 베이커리 본점", img: "https://upload.wikimedia.org/wikipedia/commons/1/11/Loco_Moco.jpg", tag: "로코모코", desc: "따뜻한 그레이비 소스 로코모코 & 달콤한 코코퍼프" },
+      p18: { title: "릴리하 베이커리 본점", img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop&q=80", tag: "로코모코", desc: "따뜻한 그레이비 소스 로코모코 & 달콤한 코코퍼프" },
       p19: { title: "돈키호테 호놀룰루", img: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=800&auto=format&fit=crop&q=80", tag: "24시마트", desc: "코나 커피, 초콜릿, 라면 및 하와이 간식 쇼핑" },
-      p20: { title: "리틀 조스 프라임 립", img: "https://upload.wikimedia.org/wikipedia/commons/9/98/Prime_Rib_cooked_rare.jpg", tag: "스테이크", desc: "부드러운 육즙의 아메리칸 프라임 립 스테이크 만찬" },
-      p21: { title: "Da Shop 로컬 북스토어", img: "https://static.wixstatic.com/media/62b61f_01980a96fb714765b228d0bdf7588563~mv2.jpeg/v1/fit/w_1200,h_800,al_c/62b61f_01980a96fb714765b228d0bdf7588563~mv2.jpeg", tag: "독립서점", desc: "하와이 문화와 예술을 담은 카이무키 독립 서점" },
-      p22: { title: "레오나즈 베이커리 말라사다", img: "https://upload.wikimedia.org/wikipedia/commons/6/64/Leonard%27s_malasadas.jpg", tag: "말라사다", desc: "갓 튀겨 설탕을 묻힌 오리지널 포르투갈식 도넛" },
-      p23: { title: "다이아몬드 헤드 정상", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Final_staircase_to_Diamond_Head_summit_-_panoramio.jpg", tag: "분화구하이킹", desc: "와이키키와 태평양이 360도로 펼쳐지는 일출 하이킹" },
+      p20: { title: "리틀 조스 프라임 립", img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80", tag: "스테이크", desc: "부드러운 육즙의 아메리칸 프라임 립 스테이크 만찬" },
+      p21: { title: "Da Shop 로컬 북스토어", img: "https://images.unsplash.com/photo-1507842229451-7f01be8860ee?w=800&auto=format&fit=crop&q=80", tag: "독립서점", desc: "하와이 문화와 예술을 담은 카이무키 독립 서점" },
+      p22: { title: "레오나즈 베이커리 말라사다", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&auto=format&fit=crop&q=80", tag: "말라사다", desc: "갓 튀겨 설탕을 묻힌 오리지널 포르투갈식 도넛" },
+      p23: { title: "다이아몬드 헤드 정상", img: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=800&auto=format&fit=crop&q=80", tag: "분화구하이킹", desc: "와이키키와 태평양이 360도로 펼쳐지는 일출 하이킹" },
       p24: { title: "아일랜드 브루 커피", img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&auto=format&fit=crop&q=80", tag: "마리나뷰카페", desc: "하와이카이 마리나 요트 선착장 뷰 100% 코나 커피" },
-      p25: { title: "하나우마 베이 스노클링", img: "https://upload.wikimedia.org/wikipedia/commons/8/87/Hanauma_Bay_Hawaii.jpg", tag: "스노클링명소", desc: "화산 분화구 속 천연 산호초와 열대어 스노클링" },
-      p26: { title: "할로나 블로우홀", img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Halona_Blowhole_Oahu_Hawaii.jpg", tag: "화산절경", desc: "파도가 화산 바위 틈을 뚫고 하늘로 솟구치는 절경" },
+      p25: { title: "하나우마 베이 스노클링", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop&q=80", tag: "스노클링명소", desc: "화산 분화구 속 천연 산호초와 열대어 스노클링" },
+      p26: { title: "할로나 블로우홀", img: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&auto=format&fit=crop&q=80", tag: "화산절경", desc: "파도가 화산 바위 틈을 뚫고 하늘로 솟구치는 절경" },
       p27: { title: "와이마날로 비치", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80", tag: "에메랄드바다", desc: "끝없이 펼쳐진 순백의 백사장과 터키석빛 바다" },
       p28: { title: "라니카이 비치", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop&q=80", tag: "천국의바다", desc: "모쿨루아 두 섬이 그림처럼 떠 있는 순백의 해변" },
-      p29: { title: "터틀 캐년 바다거북", img: "https://upload.wikimedia.org/wikipedia/commons/8/87/Sea_turtle_hanauma_bay.jpg", tag: "바다거북", desc: "하와이 야생 녹색바다거북과 함께하는 신비로운 스노클링" },
+      p29: { title: "터틀 캐년 바다거북", img: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800&auto=format&fit=crop&q=80", tag: "바다거북", desc: "하와이 야생 녹색바다거북과 함께하는 신비로운 스노클링" },
       p30: { title: "카일루아 비치 파크", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop&q=80", tag: "카일루아비치", desc: "바람이 시원한 잔디밭 피크닉과 카약 & SUP 패들보드" },
-      p31: { title: "쿠알로아 랜치 쥐라기 계곡", img: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Kualoa_Ranch_Oahu_Hawaii.jpg", tag: "UTV랩터투어", desc: "쥐라기 공원 영화 촬영지 계곡을 질주하는 UTV 어드벤처" },
-      p32: { title: "중국인 모자섬 (Mokoliʻi)", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Chinaman%27s_Hat_%28Mokoli%27i%29%2C_Oahu%2C_Hawaii.jpg/800px-Chinaman%27s_Hat_%28Mokoli%27i%29%2C_Oahu%2C_Hawaii.jpg", tag: "포토스팟", desc: "바다 위에 뜬 독특한 원뿔형 섬과 쿠알로아 해안 공원" },
+      p31: { title: "쿠알로아 랜치 쥐라기 계곡", img: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=800&auto=format&fit=crop&q=80", tag: "UTV랩터투어", desc: "쥐라기 공원 영화 촬영지 계곡을 질주하는 UTV 어드벤처" },
+      p32: { title: "중국인 모자섬 (Mokoliʻi)", img: "https://images.unsplash.com/photo-1542259009-559971a0d02a?w=800&auto=format&fit=crop&q=80", tag: "포토스팟", desc: "바다 위에 뜬 독특한 원뿔형 섬과 쿠알로아 해안 공원" },
       p33: { title: "돌 플랜테이션 파인애플", img: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=800&auto=format&fit=crop&q=80", tag: "파인애플돌휩", desc: "파인애플 농장 기차 투어와 달콤상큼 돌휩 아이스크림" },
       p34: { title: "할레이바 서퍼 타운", img: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&auto=format&fit=crop&q=80", tag: "노스쇼어감성", desc: "노스쇼어 서핑의 역사와 레트로 목조 건물이 늘어선 마을" },
       p35: { title: "지오반니 새우 트럭", img: "https://images.unsplash.com/photo-1535400255456-984241443b29?w=800&auto=format&fit=crop&q=80", tag: "갈릭쉬림프", desc: "갈릭 버터 양념이 듬뿍 밴 노스쇼어 원조 새우 트럭" },
-      p36: { title: "마츠모토 쉐이브 아이스", img: "https://images.squarespace-cdn.com/content/v1/55e2518ee4b077beb02498cf/8d9408fc-1034-42e6-b834-d11ab7f7b9cd/Small_ShaveIce.JPG?format=800w", tag: "무지개빙수", desc: "70년 전통의 3색 무지개 시럽 & 연유 쉐이브 아이스" },
+      p36: { title: "마츠모토 쉐이브 아이스", img: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=800&auto=format&fit=crop&q=80", tag: "무지개빙수", desc: "70년 전통의 3색 무지개 시럽 & 연유 쉐이브 아이스" },
       p37: { title: "헤일레바 볼스 아사이볼", img: "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&auto=format&fit=crop&q=80", tag: "유기농아사이볼", desc: "생과일과 그래놀라, 유기농 꿀이 듬뿍 얹어진 아사이볼" },
-      p38: { title: "샤크스 코브 (Sharks Cove)", img: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Sharks_Cove_North_Shore_Oahu.jpg", tag: "천연수족관", desc: "암초로 둘러싸인 천연 수족관에서 즐기는 스노클링" },
+      p38: { title: "샤크스 코브 (Sharks Cove)", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop&q=80", tag: "천연수족관", desc: "암초로 둘러싸인 천연 수족관에서 즐기는 스노클링" },
       p39: { title: "선셋 비치 파크", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80", tag: "선셋서핑비치", desc: "빅 웨이브 서핑의 성지이자 붉게 타오르는 일몰 명소" },
-      p40: { title: "진주만 USS 애리조나", img: "https://upload.wikimedia.org/wikipedia/commons/1/18/USS_Arizona_Memorial_%28aerial_view%29.jpg", tag: "역사탐방", desc: "태평양 전쟁의 역사와 헌화를 기리는 해상 기념관" },
+      p40: { title: "진주만 USS 애리조나", img: "https://images.unsplash.com/photo-1569974498991-d3c12a554f95?w=800&auto=format&fit=crop&q=80", tag: "역사탐방", desc: "태평양 전쟁의 역사와 헌화를 기리는 해상 기념관" },
       p41: { title: "와이켈레 프리미엄 아울렛", img: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800&auto=format&fit=crop&q=80", tag: "브랜드쇼핑", desc: "코치, 토리버치, 폴로 등 50여 개 브랜드 특가 쇼핑" },
       p42: { title: "코스트코 주유소 Iwilei", img: "https://images.unsplash.com/photo-1545459720-aac8509eb02c?w=800&auto=format&fit=crop&q=80", tag: "최저가주유", desc: "렌터카 반납 전 호놀룰루 최저가 Full 주유소" },
       p43: { title: "파라다이스 코브 루아우", img: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&auto=format&fit=crop&q=80", tag: "전통루아우", desc: "코올리나 해변 전통 불쇼, 훌라 댄스 & 디너 뷔페" },
       p44: { title: "마루카메 우동 와이키키", img: "https://images.unsplash.com/photo-1618841557871-b4664fbf0cb3?w=800&auto=format&fit=crop&q=80", tag: "수제사누키우동", desc: "와이키키 최강 가성비 수제 사누키 우동 & 갓 튀긴 튀김" },
-      p45: { title: "세븐일레븐 하와이 무스비", img: "https://upload.wikimedia.org/wikipedia/commons/c/c8/SPAM_musubi.jpg", tag: "스팸무스비도시락", desc: "데리야키 스팸 무스비 & 가성비 아침 벤토 도시락" },
+      p45: { title: "세븐일레븐 하와이 무스비", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&auto=format&fit=crop&q=80", tag: "스팸무스비도시락", desc: "데리야키 스팸 무스비 & 가성비 아침 벤토 도시락" },
       p46: { title: "마우날루아 베이 비치 파크", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80", tag: "오션뷰피크닉", desc: "코코헤드가 시원하게 조망되는 잔디밭 바다 공원" },
       p47: { title: "도원 / 안동장 정통 중식당", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&auto=format&fit=crop&q=80", tag: "얼큰해물짬뽕", desc: "미국식 식사에 지쳤을 때 생각나는 얼큰한 해물 짬뽕" },
       p48: { title: "와이키키 거리 무료 쿠폰북", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80", tag: "15%할인쿠폰", desc: "거리 가판대 배포 맛집 10~20% 할인 알로하스트리트/KauKau" }
     };
 
-    // 타임라인 장소 호버 시 사진 미리보기 로드 함수 (정확한 매칭)
-        function showTooltip(e, img, title, desc, tag) {
+    // 타임라인 체크리스트 항목별 정밀 매칭 및 커스텀 프리뷰 테이블 (오매칭 100% 방지)
+    const TIMELINE_CUSTOM_PREVIEWS = [
+      // 1. 공항 출국 / 귀국 비행기 (단독 규칙 우선)
+      { match: ['반납', 'KE8054', '출국'], title: '호놀룰루 공항 출국 & KE8054 탑승', tag: '귀국출국', desc: '렌터카 반납 후 호놀룰루 국제공항 출국 수속 및 인천행 항공편 탑승', img: 'https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=800&auto=format&fit=crop&q=80' },
+      // 2. 공항 도착 / 렌터카 인수
+      { match: ['인수', '렌터카 인수'], title: '호놀룰루 공항 렌터카 인수', tag: '공항/렌터카', desc: '10:00 호놀룰루 국제공항 도착 후 렌터카 셔틀 탑승 및 차량 인수', img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&auto=format&fit=crop&q=80' },
+      // 3. 발코니 모닝 스트레칭 & 와이키키 뷰 작별
+      { match: ['발코니 모닝', '스트레칭', '와이키키 뷰 작별'], title: '와이키키 오션뷰 작별 모닝 스트레칭', tag: '오션뷰작별', desc: '마지막 날 아침 호텔 발코니에서 바라보는 에메랄드빛 와이키키 해변과의 작별', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80' },
+      // 4. 호텔 발코니 코나 맥주 & 테라스 휴식
+      { match: ['코나 맥주', '테라스 휴식'], title: '와이키키 테라스 코나 맥주 힐링', tag: '테라스힐링', desc: '하얏트 리젠시 고층 발코니에서 와이키키 야경과 함께하는 시원한 코나 맥주', img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=800&auto=format&fit=crop&q=80' },
+      // 5. 고유 키워드 정밀 매칭 (오매칭 방지용 고유 명칭 순서)
+      { match: ['호놀룰루 쿠키'], placeId: 'p12' },
+      { match: ['파탈로하', '파타고니아'], placeId: 'p14' },
+      { match: ['아일랜드 브루'], placeId: 'p24' },
+      { match: ['체크인', '하얏트 리젠시 와이키키 체크인'], placeId: 'p5' },
+      { match: ['체크아웃', '하얏트 리젠시 체크아웃'], placeId: 'p5' },
+      { match: ['야외 풀', '온수 풀', '선베드 태닝'], placeId: 'p2' },
+      { match: ['쿠폰북', 'KauKau', '거리 가판대'], placeId: 'p48' },
+      { match: ['이야스메'], placeId: 'p6' },
+      { match: ['마구로 스팟'], placeId: 'p7' },
+      { match: ['마루카메'], placeId: 'p44' },
+      { match: ['다이아몬드 헤드'], placeId: 'p23' },
+      { match: ['세븐일레븐'], placeId: 'p45' },
+      { match: ['레오나즈'], placeId: 'p22' },
+      { match: ['할로나 블로우홀'], placeId: 'p26' },
+      { match: ['마우날루아 베이'], placeId: 'p46' },
+      { match: ['카일루아 비치 어드벤처스', 'SUP', '패들보드'], placeId: 'p4' },
+      { match: ['터틀 캐년', '거북이 스노쿨링'], placeId: 'p29' },
+      { match: ['하나우마 베이', '하나우마'], placeId: 'p25' },
+      { match: ['돈키호테'], placeId: 'p19' },
+      { match: ['리틀 조스', '프라임 립'], placeId: 'p20' },
+      { match: ['도원', '짬뽕'], placeId: 'p47' },
+      { match: ['StayFit', '피트니스', '런닝머신'], placeId: 'p1' },
+      { match: ['쿠알로아 랜치', 'UTV', '랩터', '쥐라기'], placeId: 'p31' },
+      { match: ['중국인 모자섬', 'Mokoli'], placeId: 'p32' },
+      { match: ['알라모아나'], placeId: 'p16' },
+      { match: ['매직 아일랜드'], placeId: 'p17' },
+      { match: ['돌 플랜테이션', '돌휩'], placeId: 'p33' },
+      { match: ['할레이바'], placeId: 'p34' },
+      { match: ['지오반니', '새우 트럭'], placeId: 'p35' },
+      { match: ['마츠모토', '쉐이브 아이스'], placeId: 'p36' },
+      { match: ['헤일레바 볼스', '아사이볼'], placeId: 'p37' },
+      { match: ['샤크스코브', '샤크스 코브'], placeId: 'p38' },
+      { match: ['선셋 비치'], placeId: 'p39' },
+      { match: ['진주만', '애리조나'], placeId: 'p40' },
+      { match: ['와이켈레', '아울렛'], placeId: 'p41' },
+      { match: ['코스트코', 'Iwilei', '주유'], placeId: 'p42' },
+      { match: ['파라다이스 코브', '루아우'], placeId: 'p43' },
+      { match: ['Da Shop', '독립서점'], placeId: 'p21' },
+      { match: ['모닝요가', '비치 요가', '퀸즈 비치'], placeId: 'p3' }
+    ];
+
+    // 공통 툴팁 표시 함수
+    function showTooltip(e, img, title, desc, tag) {
       const tip = document.getElementById('hover-tooltip');
       if (!tip) return;
       const tImg = document.getElementById('tooltip-img');
       if (tImg) {
+        tImg.referrerPolicy = 'no-referrer';
         tImg.onerror = function() {
           this.onerror = null;
           this.src = 'https://images.unsplash.com/photo-1542259009-559971a0d02a?w=800&auto=format&fit=crop&q=80';
@@ -4046,7 +4102,8 @@
       if (tip) tip.style.display = 'none';
     }
 
-function showPlaceHoverPreview(e, placeId) {
+    // 1번 종합 일정표 연동 장소 호버 미리보기 함수
+    function showPlaceHoverPreview(e, placeId) {
       const all = getAllPlaces();
       const p = all.find(x => (x.id === placeId || x.name === placeId));
       if (!p) return;
@@ -4060,22 +4117,45 @@ function showPlaceHoverPreview(e, placeId) {
       showTooltip(e, img, title, desc, tag);
     }
 
-    // 타임라인 체크리스트 텍스트 호버 시 사진 미리보기 로드 함수 (키워드 매칭)
+    // 타임라인 체크리스트 텍스트 호버 시 사진 미리보기 로드 함수 (정밀 우선 매칭 + 지능형 폴백)
     function showTimelineItemHoverPreview(e, itemText, dayStr) {
-      const all = getAllPlaces();
-      let matchedPlace = all.find(p => itemText.includes(p.name));
-      if (!matchedPlace) {
-        for (const p of all) {
-          const words = p.name.split(/\s+/);
-          if (words.some(w => w.length >= 2 && itemText.includes(w))) {
-            matchedPlace = p;
-            break;
+      // 1. 규칙 기반 정밀 매칭
+      for (const rule of TIMELINE_CUSTOM_PREVIEWS) {
+        if (rule.match.some(m => itemText.includes(m))) {
+          if (rule.placeId) {
+            showPlaceHoverPreview(e, rule.placeId);
+            return;
+          } else {
+            showTooltip(e, rule.img, rule.title, rule.desc, rule.tag);
+            return;
           }
         }
       }
 
-      if (matchedPlace) {
-        showPlaceHoverPreview(e, matchedPlace.id);
+      // 2. 장소 데이터베이스 전체 대상 지능형 매칭 (단어 길이 우선순위)
+      const all = getAllPlaces();
+      let bestPlace = null;
+      let maxLen = 0;
+      const stopWords = ['비치', '센터', '스토어', '호텔', '와이키키', '하와이', '본점', '스팟'];
+
+      for (const p of all) {
+        if (itemText.includes(p.name)) {
+          bestPlace = p;
+          break;
+        }
+        const words = p.name.split(/\s+/);
+        for (const w of words) {
+          if (w.length >= 2 && !stopWords.includes(w) && itemText.includes(w)) {
+            if (w.length > maxLen) {
+              maxLen = w.length;
+              bestPlace = p;
+            }
+          }
+        }
+      }
+
+      if (bestPlace) {
+        showPlaceHoverPreview(e, bestPlace.id);
       } else {
         showTooltip(e, 'https://images.unsplash.com/photo-1542259009-559971a0d02a?w=800&auto=format&fit=crop&q=80', itemText, dayStr + ' 상세 동선 및 주요 일정', '상세동선');
       }
@@ -4271,7 +4351,7 @@ function showPlaceHoverPreview(e, placeId) {
               <!-- 카드 헤더 -->
               <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
                 <div class="flex items-center gap-1.5 flex-wrap min-w-0">
-                  <span class="px-2.5 py-1 ${isToday ? 'bg-blue-600 text-white' : (allItemsPassed ? 'bg-slate-200 text-slate-500' : 'bg-blue-50 text-blue-700 border-blue-200')} text-xs font-bold rounded-xl border whitespace-nowrap">${d.day}</span>
+                  <span class="px-2.5 py-1 ${isToday ? 'bg-blue-600 text-white' : (allItemsPassed ? 'bg-slate-200 text-slate-500' : 'bg-blue-50 text-blue-700 border-blue-200')} text-xs font-bold rounded-xl border whitespace-nowrap">${d.day.replace(/Day\s*(\d+)/i, '$1일차')}</span>
                   ${isToday ? '<span class="text-[10px] font-bold text-white bg-amber-500 px-2 py-0.5 rounded-lg whitespace-nowrap">오늘의 일정</span>' : ''}
                   <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-lg whitespace-nowrap">📍 일정 ${dayPlaces.length}개소</span>
                   ${allItemsPassed ? '<span class="px-2 py-0.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-lg whitespace-nowrap">✓ 일정 종료</span>' : ''}
@@ -4360,23 +4440,28 @@ function showPlaceHoverPreview(e, placeId) {
             <div class="pt-3 border-t border-slate-100">
               <div class="flex items-center justify-between mb-1">
                 <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
-                  <span>📝</span> <span>${d.day} 개인 메모</span>
+                  <span>📝</span> <span>${d.day.replace(/Day\s*(\d+)/i, '$1일차')} 개인 메모</span>
                 </span>
                 <span id="memo-saved-${dayKey}" class="text-[10px] text-emerald-600 font-bold opacity-0 transition-opacity">저장됨</span>
               </div>
-              <textarea id="memo-input-${dayKey}" oninput="handleTimelineMemoInput('${dayKey}', this.value)" placeholder="Day별 지출, 팁 메모, 준비물 기록..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl text-xs text-slate-700 focus:bg-white focus:ring-1 focus:ring-brand-500 focus:outline-none resize-none h-16 transition custom-scrollbar">${savedMemo}</textarea>
+              <textarea id="memo-input-${dayKey}" oninput="handleTimelineMemoInput('${dayKey}', this.value)" placeholder="일자별 지출, 팁 메모, 준비물 기록..." class="w-full p-2.5 bg-surface-muted border border-slate-200 rounded-xl text-xs text-slate-700 focus:bg-white focus:ring-1 focus:ring-brand-500 focus:outline-none resize-none h-16 transition custom-scrollbar">${savedMemo}</textarea>
             </div>
           </div>
         `;
       }).join('');
 
-      // 하단 인디케이터 바 생성 (Day 1 ~ Day 8 퀵 이동 버튼)
+      // 하단 인디케이터 바 생성 (1일차 ~ 8일차 날짜 병기 퀵 이동 버튼)
       const indBar = document.getElementById('timeline-indicators-bar');
       if (indBar) {
         indBar.innerHTML = timelineData.map((d, idx) => {
+          const m = d.day.match(/Day\s*(\d+)/i);
+          const dayNum = m ? m[1] : (idx + 1);
+          const dateMatch = d.day.match(/\(([^)]+)\)/);
+          const dateStr = dateMatch ? dateMatch[1].split(' ')[0] : '';
           const isToday = (idx === todayIdx);
           const isCur = (idx === todayIdx);
-          return `<button type="button" onclick="slideTimelineToDay(${idx})" class="timeline-indicator-btn px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${isCur ? 'bg-blue-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}">${d.day.split(' ')[0]} ${isToday ? '★오늘' : ''}</button>`;
+          const label = dateStr ? `${dayNum}일차 (${dateStr})` : `${dayNum}일차`;
+          return `<button type="button" onclick="slideTimelineToDay(${idx})" class="timeline-indicator-btn px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${isCur ? 'bg-blue-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}">${label}${isToday ? ' ★오늘' : ''}</button>`;
         }).join('');
       }
 
