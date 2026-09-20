@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T12:37:36.283Z",
+  "updatedAt": "2026-09-20T22:34:10.440Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1789015306565,
@@ -124,7 +124,13 @@
     }
   ],
   "deletedPlaces": [],
-  "customPackingList": [],
+  "customPackingList": [
+    {
+      "id": "cpack_1789943648144",
+      "name": "트렁크 2개",
+      "checked": false
+    }
+  ],
   "customLedgerItems": [],
   "placeOverrides": {
     "p23": {
