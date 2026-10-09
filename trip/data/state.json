@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T12:25:49.296Z",
+  "updatedAt": "2026-10-09T12:25:54.742Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -16,7 +16,7 @@
     "rem_esim": 1791522910925,
     "wish_do-ex-1": 1789021150527,
     "rem_hanauma": 0,
-    "rem_car_deposit": 0,
+    "rem_car_deposit": 1791548752672,
     "rem_luau": 1791548743449,
     "rem_diamond": 1791523444979,
     "ledger_usd_l_sup": 1789027666107,
@@ -212,7 +212,7 @@
     "rem_esim": "true",
     "wish_do-ex-1": "true",
     "rem_hanauma": "false",
-    "rem_car_deposit": "false",
+    "rem_car_deposit": "true",
     "rem_luau": "false",
     "rem_diamond": "true",
     "ledger_usd_l_sup": "65.045",
