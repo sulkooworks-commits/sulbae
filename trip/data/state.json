@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T12:27:30.750Z",
+  "updatedAt": "2026-10-09T12:32:25.362Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -215,6 +215,17 @@
       "price": "$5 (예약)",
       "gmap": "Diamond+Head+State+Monument",
       "updatedAt": 1789475854119
+    },
+    "p6": {
+      "name": "이야스메 무스비 본점",
+      "day": "Day 1",
+      "time": "13:30~14:30",
+      "region": "와이키키",
+      "cat": "미식",
+      "desc": "스팸 아보카도 무스비 맛집",
+      "price": "$3~$8",
+      "gmap": "Musubi+Cafe+Iyasume+Waikiki",
+      "updatedAt": 1791549143014
     }
   },
   "storage": {
