@@ -1739,11 +1739,27 @@
         </div>
       </div>
       <div class="flex gap-2 pt-2">
-        <button onclick="pushStateToGitHub()" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition">
-          ⬆️ 깃허브로 백업 (Push)
+        <button onclick="pushStateToGitHub()" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1">
+          <span>⬆️</span> <span>깃허브로 백업 (Push)</span>
         </button>
-        <button onclick="fetchStateFromGitHub()" class="flex-1 py-2.5 bg-surface-muted hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition border border-slate-200">
-          ⬇️ 깃허브에서 불러오기 (Fetch)
+        <button onclick="fetchStateFromGitHub()" class="flex-1 py-2.5 bg-surface-muted hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition border border-slate-200 flex items-center justify-center gap-1">
+          <span>⬇️</span> <span>불러오기 (Fetch)</span>
+        </button>
+      </div>
+
+      <!-- 모바일 기기 원클릭 동기화 링크 생성 박스 -->
+      <div class="p-3 bg-amber-50/70 border border-amber-200/80 rounded-2xl space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-amber-950 flex items-center gap-1">
+            <span>📱</span> <span>모바일(스마트폰) 원클릭 동기화 링크</span>
+          </span>
+          <span class="text-[10px] text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded-md">간편 연동</span>
+        </div>
+        <p class="text-[11px] text-slate-600 leading-relaxed">
+          PC에서 입력한 토큰을 모바일에서 일일이 입력할 필요 없이, 아래 버튼을 눌러 생성된 링크를 <strong>카카오톡/나와의 채팅</strong>으로 보내 열면 모바일 기기에서도 즉시 동기화가 활성화됩니다.
+        </p>
+        <button type="button" onclick="copyMobileSyncLink()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+          <span>📋</span> <span>모바일 원클릭 연동 링크 복사하기</span>
         </button>
       </div>
       <div id="sync-status" class="text-center text-xs font-bold"></div>
@@ -8556,17 +8572,18 @@ function renderWeatherUI(data) {
       const tokenInput = document.getElementById('gh-token-input');
       const token = tokenInput && tokenInput.value.trim() ? tokenInput.value.trim() : cfg.token;
       if (!token) {
-        alert('먼저 GitHub Token을 입력해주세요.');
+        alert('먼저 GitHub Token(github_pat_...)을 입력해주세요.');
+        tokenInput?.focus();
         return;
       }
       localStorage.setItem('gh_sync_token', token);
       
       const baseUrl = window.location.href.split('#')[0].split('?')[0];
-      const syncUrl = `${baseUrl}#token=${encodeURIComponent(token)}`;
+      const syncUrl = `${baseUrl}?token=${encodeURIComponent(token)}`;
       
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(syncUrl).then(() => {
-          alert('✓ 모바일 연동 링크가 복사되었습니다!\n\n이 링크를 스마트폰 카카오톡/메모장 등으로 전송하여 열면 모바일에서도 1초 만에 토큰이 자동 등록되고 동기화가 활성화됩니다.');
+          alert('✓ 모바일 원클릭 연동 링크가 복사되었습니다!\n\n이 링크를 스마트폰의 카카오톡(나와의 채팅)이나 메모장에 보내어 열어주시면, 모바일 기기에서도 별도 입력 없이 1초 만에 토큰이 등록되어 체크와 메모가 완벽히 실시간 연동됩니다.');
         }).catch(() => {
           prompt('아래 링크를 복사하여 모바일에서 접속하세요:', syncUrl);
         });
@@ -8575,23 +8592,35 @@ function renderWeatherUI(data) {
       }
     }
 
-    // URL Hash를 통한 토큰 자동 수신 (#token=github_pat_...)
+    // URL Hash(#token=...) 또는 Query Param(?token=...)을 통한 토큰 자동 수신
     function checkHashTokenImport() {
       try {
-        const h = window.location.hash || '';
-        if (h.includes('token=')) {
-          const m = h.match(/token=([^&]+)/);
-          if (m && m[1]) {
-            const tok = decodeURIComponent(m[1]).trim();
-            if (tok.startsWith('gh') || tok.startsWith('github')) {
-              localStorage.setItem('gh_sync_token', tok);
-              history.replaceState(null, '', window.location.pathname + window.location.search);
-              console.log('✓ Token imported from URL hash successfully!');
-              return true;
-            }
+        let tok = '';
+        // 1. URLSearchParams 확인 (?token=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('token')) {
+          tok = urlParams.get('token').trim();
+        }
+
+        // 2. Hash 확인 (#token=...)
+        if (!tok) {
+          const h = window.location.hash || '';
+          if (h.includes('token=')) {
+            const m = h.match(/token=([^&]+)/);
+            if (m && m[1]) tok = decodeURIComponent(m[1]).trim();
           }
         }
-      } catch(e) {}
+
+        if (tok && (tok.startsWith('gh') || tok.startsWith('github'))) {
+          localStorage.setItem('gh_sync_token', tok);
+          const cleanUrl = window.location.pathname;
+          history.replaceState(null, '', cleanUrl);
+          console.log('✓ Token imported and stored into localStorage successfully!');
+          return true;
+        }
+      } catch(e) {
+        console.warn('Token import parse error:', e);
+      }
       return false;
     }
 
