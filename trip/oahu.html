@@ -451,6 +451,13 @@
           <span class="font-bold text-blue-600 text-[10px]">하와이 HST(-19h)</span>
           <span id="clock-hst" class="font-bold text-xs text-blue-700 font-mono">--.--(--) --:--:--</span>
         </div>
+        <!-- 하와이 오아후 실시간 날씨 & 데일리룩 칩 (클릭 시 모달 호출) -->
+        <button type="button" onclick="openWeatherModal()" class="flex items-center gap-1.5 py-1.5 px-3 bg-white hover:bg-amber-50 active:scale-95 transition-all rounded-full shadow-2xs border border-white/80 text-slate-700 cursor-pointer group" title="하와이 오아후 날씨 & 데일리룩 추천 보기">
+          <span id="header-weather-icon" class="text-xs group-hover:scale-110 transition-transform">☀️</span>
+          <span class="font-bold text-amber-600 text-[10px]">오아후 날씨</span>
+          <span id="header-weather-text" class="font-bold text-xs text-slate-800 font-mono">27° 맑음</span>
+          <span class="text-[9px] font-extrabold bg-gradient-to-r from-amber-500 to-rose-400 text-white px-1.5 py-0.2 rounded-md shadow-2xs">룩</span>
+        </button>
         <div class="flex items-center gap-1.5 py-1.5 px-3 bg-white rounded-full shadow-2xs border border-white/80 text-slate-700">
           <span class="text-slate-400 text-[10px] font-bold">환율</span>
           <span class="font-bold text-xs text-emerald-700 font-mono">$1 = <span id="header-rate">1,385</span>원</span>
@@ -552,7 +559,13 @@
             <span>📍</span> <span>하와이 북마크 바로가기 ↗</span>
           </a>
           <button onclick="toggleIllustModal(true)" class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold rounded-xl border border-brand-200 transition shadow-2xs active:scale-95">🖼️ 일러스트 지도</button>
-          <button id="toggle-map-btn" onclick="toggleMapType()" class="px-3 py-1.5 bg-surface-muted hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition shadow-2xs active:scale-95">🛰️ 구글맵 전환</button>
+          <!-- 무료 소스 지도 테마 선택 (선명한 OSM / 파스텔 CARTO / 고화질 위성) -->
+          <div class="flex items-center gap-1 bg-white p-0.5 rounded-xl border border-slate-200 shadow-2xs">
+            <button type="button" onclick="setMapTileStyle('osm')" id="btn-tile-osm" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-blue-600 text-white shadow-xs transition" title="선명한 도로 및 지형 그래픽 (OpenStreetMap)">선명한 지도</button>
+            <button type="button" onclick="setMapTileStyle('carto')" id="btn-tile-carto" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-600 hover:bg-slate-100 transition" title="은은한 파스텔톤 여행 지도 (CARTO Voyager)">파스텔</button>
+            <button type="button" onclick="setMapTileStyle('satellite')" id="btn-tile-satellite" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-600 hover:bg-slate-100 transition" title="실제 고화질 위성 항공사진 (Esri World Imagery)">🛰️ 위성</button>
+          </div>
+          <button id="toggle-map-btn" onclick="toggleMapType()" class="px-3 py-1.5 bg-surface-muted hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition shadow-2xs active:scale-95">🗺️ 구글맵 전환</button>
         </div>
       </div>
       <!-- 일정별(Day 1~8, 비상시, 상시) 및 카테고리별 다각도 지도 필터 바 -->
@@ -591,13 +604,12 @@
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d237937.1956699264!2d-158.1130638069502!3d21.464522912443026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c00663bed931b23%3A0xef77b10222f98642!2z7ZWY7JmA7J20IOyYpO2VmOyasA!5e0!3m2!1sko!2skr!4v1710000000000!5m2!1sko!2skr" class="w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
         </div>
 
-        <!-- 스크롤 방지 딤(Dim) 오버레이 레이어: 탭해야 조작 가능 -->
-        <div id="map-interaction-dimmer" onclick="enableMapInteraction()" class="absolute inset-0 z-20 bg-slate-900/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-300 group">
-          <div class="px-5 py-3.5 bg-white/95 rounded-2xl shadow-xl border border-slate-200/90 text-center flex items-center gap-3 group-hover:scale-105 transition-transform">
-            <span class="text-2xl animate-bounce">👆</span>
+        <!-- 스크롤 방지 플로팅 가이드 (지도 그래픽을 100% 선명하게 노출하면서 터치 잠금 기능 유지) -->
+        <div id="map-interaction-dimmer" onclick="enableMapInteraction()" class="absolute inset-x-0 bottom-4 z-20 flex justify-center p-2 cursor-pointer pointer-events-auto transition-all duration-300">
+          <div class="px-4 py-2 bg-slate-900/85 hover:bg-slate-900 text-white rounded-full shadow-xl border border-white/20 text-center flex items-center gap-2 transition-transform hover:scale-105 backdrop-blur-xs">
+            <span class="text-base animate-bounce">👆</span>
             <div class="text-left">
-              <div class="text-xs sm:text-sm font-bold text-slate-900">지도를 탭하면 확대·이동이 활성화됩니다</div>
-              <div class="text-[11px] text-slate-500 font-medium mt-0.5">스크롤 오작동 방지를 위해 잠겨 있습니다 (터치 시 잠금 해제)</div>
+              <div class="text-xs font-bold">지도를 탭하면 확대·이동 조작이 활성화됩니다</div>
             </div>
           </div>
         </div>
@@ -1460,6 +1472,118 @@
       <span class="text-xl">💵</span>
       <span class="font-bold text-xs hidden sm:inline">환율·팁 계산기</span>
     </button>
+  </div>
+
+  <!-- 하와이 오아후 날씨 & 데일리룩 추천 모달 (첨부 이미지 스타일 1:1 완벽 구현) -->
+  <div id="weather-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden transition-opacity duration-200" onclick="if(event.target===this)toggleWeatherModal(false)">
+    <div class="relative bg-white w-full max-w-sm rounded-[34px] shadow-2xl border border-amber-100/90 overflow-hidden z-10 p-5 space-y-3.5">
+      <!-- 모달 상단 타이틀 바 -->
+      <div class="flex items-start justify-between">
+        <div>
+          <div id="modal-weather-date" class="text-sm font-bold text-slate-900 tracking-tight leading-tight">10월 9일 날씨와</div>
+          <div class="flex items-center gap-2 mt-0.5">
+            <h3 class="text-base font-extrabold text-slate-900">여행을 위한 데일리룩</h3>
+            <span class="bg-gradient-to-r from-amber-500 to-rose-400 text-white font-extrabold text-[10px] px-2.5 py-0.5 rounded-full shadow-2xs">오아후 맞춤</span>
+          </div>
+        </div>
+        <button type="button" onclick="toggleWeatherModal(false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm transition" title="닫기">✕</button>
+      </div>
+
+      <!-- 메인 웜톤 날씨 & 옷차림 카드 (이미지 스타일: 따뜻한 크림/피치 배경) -->
+      <div class="relative bg-[#fff9ee] rounded-[28px] p-5 border border-amber-200/60 space-y-4 shadow-sm">
+        <!-- 우상단 스마일 뱃지 (이미지의 노란 스마일 원형 뱃지 완벽 재현) -->
+        <div class="absolute -top-3 -right-2 w-9 h-9 rounded-full bg-amber-400 border-2 border-white shadow-md flex items-center justify-center text-base" title="쾌적한 하와이 날씨">
+          😊
+        </div>
+
+        <!-- 1행: 날씨 헤더 (달/해 아이콘 + 기온 + 날씨 설명) -->
+        <div>
+          <div class="flex items-center gap-2 text-2xl font-black text-slate-900">
+            <span id="modal-weather-icon" class="text-3xl leading-none">☀️</span>
+            <span id="modal-weather-temp" class="tracking-tight">27°</span>
+            <span id="modal-weather-desc" class="text-xl font-extrabold text-slate-800">맑음</span>
+          </div>
+          <div id="modal-weather-subtitle" class="text-sm font-bold text-slate-900 mt-1">
+            어제와 기온이 비슷해요 • 쾌적한 무역풍
+          </div>
+        </div>
+
+        <!-- 2행: 중앙 화이트 카드 (3가지 추천 옷차림 그래픽 박스) -->
+        <div class="bg-white rounded-2xl p-4 shadow-3xs border border-amber-100 flex items-center justify-around gap-2 text-center">
+          <!-- 옷차림 1: 린넨 셔츠/점퍼 (연두색 점퍼/셔츠 SVG) -->
+          <div class="flex flex-col items-center flex-1">
+            <svg viewBox="0 0 100 100" class="w-16 h-16 sm:w-18 sm:h-18 drop-shadow-2xs" xmlns="http://www.w3.org/2000/svg">
+              <path d="M38 24 L50 32 L62 24 L50 20 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M36 24 L22 46 C20 49 22 53 26 53 L32 50 L34 32 L34 68 C34 71 36 73 39 73 L61 73 C64 73 66 71 66 68 L66 32 L68 50 L74 53 C78 53 80 49 78 46 L64 24 Z" fill="#84cc16" stroke="#65a30d" stroke-width="2" stroke-linejoin="round"/>
+              <line x1="50" y1="26" x2="50" y2="73" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M22 46 L32 50" stroke="#f7fee7" stroke-width="2" stroke-linecap="round"/>
+              <path d="M78 46 L68 50" stroke="#f7fee7" stroke-width="2" stroke-linecap="round"/>
+              <path d="M34 69 L66 69" stroke="#f7fee7" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span class="text-[11px] font-extrabold text-slate-700 mt-1.5">린넨 셔츠</span>
+          </div>
+
+          <!-- 옷차림 2: 반팔 티 (노란색 티셔츠 SVG) -->
+          <div class="flex flex-col items-center flex-1">
+            <svg viewBox="0 0 100 100" class="w-16 h-16 sm:w-18 sm:h-18 drop-shadow-2xs" xmlns="http://www.w3.org/2000/svg">
+              <path d="M36 26 C43 32 57 32 64 26 L80 40 C83 43 82 48 78 50 L71 46 L67 36 L67 70 C67 73 65 75 62 75 L38 75 C35 75 33 73 33 70 L33 36 L29 46 L22 50 C18 48 17 43 20 40 Z" fill="#facc15" stroke="#eab308" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M36 26 C43 32 57 32 64 26 C57 23 43 23 36 26 Z" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+              <rect x="54" y="42" width="9" height="10" rx="2" fill="#eab308" opacity="0.6"/>
+            </svg>
+            <span class="text-[11px] font-extrabold text-slate-700 mt-1.5">반팔 티</span>
+          </div>
+
+          <!-- 옷차림 3: 반바지 (오렌지색 반바지 SVG) -->
+          <div class="flex flex-col items-center flex-1">
+            <svg viewBox="0 0 100 100" class="w-16 h-16 sm:w-18 sm:h-18 drop-shadow-2xs" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 26 L68 26 C70 26 71 27 71 29 L73 66 C73 68 71 70 69 70 L54 70 L50 48 L46 70 L31 70 C29 70 27 68 27 66 L29 29 C29 27 30 26 32 26 Z" fill="#fb923c" stroke="#ea580c" stroke-width="2" stroke-linejoin="round"/>
+              <rect x="30" y="26" width="40" height="7" rx="2" fill="#fdba74" stroke="#c2410c" stroke-width="1.2"/>
+              <path d="M48 33 L46 41 M52 33 L54 41" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+              <rect x="30" y="64" width="16" height="6" rx="1.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+              <rect x="54" y="64" width="16" height="6" rx="1.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            </svg>
+            <span class="text-[11px] font-extrabold text-slate-700 mt-1.5">반바지</span>
+          </div>
+        </div>
+
+        <!-- 3행: 날씨 세부 지표 (최고/최저, 강수확률, 미세/자외선) -->
+        <div class="grid grid-cols-2 gap-2 text-xs font-semibold pt-1 border-t border-amber-200/50">
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-slate-600">
+              <span class="text-slate-400 font-bold">▲ 최고</span>
+              <span id="modal-weather-max" class="font-extrabold text-slate-900 font-mono">29°</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-slate-600">
+              <span class="text-slate-400 font-bold">▼ 최저</span>
+              <span id="modal-weather-min" class="font-extrabold text-slate-900 font-mono">22°</span>
+            </div>
+          </div>
+          <div class="space-y-1 text-right">
+            <div class="text-slate-600">
+              <span class="text-slate-400">강수확률</span>
+              <span id="modal-weather-pop" class="font-extrabold text-slate-900 font-mono ml-1">10%</span>
+            </div>
+            <div class="text-[11px] text-slate-500">
+              미세 <span class="font-bold text-blue-600">좋음</span> • 자외선 <span id="modal-weather-uv" class="font-bold text-amber-600">UV 8.5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4행: 하단 체크 팁 배너 -->
+        <div class="flex items-start gap-2 pt-2.5 border-t border-amber-200/60 text-[11px] text-amber-950 font-medium leading-relaxed">
+          <span class="text-amber-600 font-bold shrink-0">✓</span>
+          <span>얇은 외투와 반팔, 통풍 반바지가 적당해요.<br><span class="text-amber-800 text-[10px]">(쇼핑몰 에어컨 및 일몰 후 바닷바람 대비 얇은 셔츠/가디건 지참 권장)</span></span>
+        </div>
+      </div>
+
+      <!-- 모달 하단 출처 및 닫기 버튼 -->
+      <div class="flex items-center justify-between pt-1">
+        <span class="text-[10px] text-slate-400">기상청 Open-Meteo 실시간 연동</span>
+        <button type="button" onclick="toggleWeatherModal(false)" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition">
+          확인
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- 환율 & 팁 실시간 계산기 모달 (#calc-modal 복원 및 고도화) -->
@@ -6993,6 +7117,170 @@ function setScheduleViewMode(mode) {
       }
     }
 
+    // -------------------------------------------------------------
+    // 하와이 오아후 실시간 날씨 & 데일리룩 추천 엔진 (Open-Meteo API 연동)
+    // -------------------------------------------------------------
+    let oahuWeatherData = null;
+
+    function getWeatherInfoFromCode(code) {
+      if (code === 0) return { desc: '맑음', icon: '☀️', outfitDesc: '쾌적하고 화창해요', tempDiff: '활동하기 아주 쾌적해요' };
+      if ([1, 2].includes(code)) return { desc: '대체로 맑음', icon: '🌤️', outfitDesc: '가끔 구름 끼고 화창해요', tempDiff: '활동하기 좋은 따뜻한 날씨예요' };
+      if (code === 3) return { desc: '구름 많음', icon: '☁️', outfitDesc: '구름이 햇빛을 가려줘요', tempDiff: '선선한 바람이 불어요' };
+      if ([45, 48].includes(code)) return { desc: '안개', icon: '🌫️', outfitDesc: '시야가 다소 흐려요', tempDiff: '습도가 높은 편이에요' };
+      if ([51, 53, 55, 56, 57].includes(code)) return { desc: '이슬비', icon: '🌦️', outfitDesc: '가벼운 비가 지나가요', tempDiff: '금방 지나가는 스콜이에요' };
+      if ([61, 63, 65, 80, 81, 82].includes(code)) return { desc: '소나기/스콜', icon: '🌧️', outfitDesc: '한때 소나기(스콜) 주의', tempDiff: '우산이나 방수팩을 챙기세요' };
+      if ([95, 96, 99].includes(code)) return { desc: '뇌우', icon: '⛈️', outfitDesc: '천둥 번개 동반 소나기', tempDiff: '실내 일정을 권장해요' };
+      return { desc: '맑음', icon: '☀️', outfitDesc: '하와이의 따스한 햇살', tempDiff: '무역풍이 불어 쾌적해요' };
+    }
+
+    async function fetchOahuWeather() {
+      try {
+        const url = 'https://api.open-meteo.com/v1/forecast?latitude=21.3069&longitude=-157.8583&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max&timezone=Pacific%2FHonolulu';
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          oahuWeatherData = data;
+          renderWeatherUI(data);
+        }
+      } catch(e) {
+        console.warn('Weather fetch fallback', e);
+        renderWeatherUI(null);
+      }
+    }
+
+    function renderWeatherUI(data) {
+      let temp = 27;
+      let weatherCode = 0;
+      let maxTemp = 29;
+      let minTemp = 22;
+      let precip = 10;
+      let uv = 8.5;
+
+      if (data && data.current_weather) {
+        temp = Math.round(data.current_weather.temperature);
+        weatherCode = data.current_weather.weathercode;
+      }
+      if (data && data.daily) {
+        if (data.daily.temperature_2m_max && data.daily.temperature_2m_max[0] !== undefined) {
+          maxTemp = Math.round(data.daily.temperature_2m_max[0]);
+        }
+        if (data.daily.temperature_2m_min && data.daily.temperature_2m_min[0] !== undefined) {
+          minTemp = Math.round(data.daily.temperature_2m_min[0]);
+        }
+        if (data.daily.precipitation_probability_max && data.daily.precipitation_probability_max[0] !== undefined) {
+          precip = Math.round(data.daily.precipitation_probability_max[0]);
+        }
+        if (data.daily.uv_index_max && data.daily.uv_index_max[0] !== undefined) {
+          uv = Math.round(data.daily.uv_index_max[0] * 10) / 10;
+        }
+      }
+
+      const info = getWeatherInfoFromCode(weatherCode);
+
+      // 1. 헤더 칩 반영
+      const chipIcon = document.getElementById('header-weather-icon');
+      const chipText = document.getElementById('header-weather-text');
+      if (chipIcon) chipIcon.innerText = info.icon;
+      if (chipText) chipText.innerText = `${temp}° ${info.desc}`;
+
+      // 2. 모달 내용 반영
+      const mIcon = document.getElementById('modal-weather-icon');
+      const mTemp = document.getElementById('modal-weather-temp');
+      const mDesc = document.getElementById('modal-weather-desc');
+      const mSub = document.getElementById('modal-weather-subtitle');
+      const mMax = document.getElementById('modal-weather-max');
+      const mMin = document.getElementById('modal-weather-min');
+      const mPop = document.getElementById('modal-weather-pop');
+      const mUv = document.getElementById('modal-weather-uv');
+      const mDate = document.getElementById('modal-weather-date');
+
+      if (mIcon) mIcon.innerText = info.icon;
+      if (mTemp) mTemp.innerText = `${temp}°`;
+      if (mDesc) mDesc.innerText = info.desc;
+      if (mSub) mSub.innerText = `${info.tempDiff} • ${info.outfitDesc}`;
+      if (mMax) mMax.innerText = `${maxTemp}°`;
+      if (mMin) mMin.innerText = `${minTemp}°`;
+      if (mPop) mPop.innerText = `${precip}%`;
+      if (mUv) mUv.innerText = `UV ${uv}`;
+
+      if (mDate) {
+        const nowHst = getNowHawaiiDate();
+        mDate.innerText = `${nowHst.getMonth()+1}월 ${nowHst.getDate()}일 날씨와`;
+      }
+    }
+
+    function toggleWeatherModal(show) {
+      const m = document.getElementById('weather-modal');
+      if (!m) return;
+      if (show === undefined) show = m.classList.contains('hidden');
+      if (show) {
+        if (!oahuWeatherData) fetchOahuWeather();
+        m.classList.remove('hidden');
+      } else {
+        m.classList.add('hidden');
+      }
+    }
+
+    function openWeatherModal() {
+      toggleWeatherModal(true);
+    }
+
+    // -------------------------------------------------------------
+    // 무료 오픈소스 지도 테마 엔진 (선명한 OSM / 파스텔 CARTO / 고화질 위성)
+    // -------------------------------------------------------------
+    let currentMapTileLayer = null;
+    let activeMapTileTheme = 'osm'; // 기본값을 선명하고 가독성 높은 OpenStreetMap으로 설정
+
+    const MAP_TILE_PRESETS = {
+      osm: {
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        options: {
+          subdomains: 'abc',
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }
+      },
+      carto: {
+        url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        options: {
+          subdomains: 'abcd',
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }
+      },
+      satellite: {
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        options: {
+          maxZoom: 19,
+          attribution: '&copy; Esri, Maxar, Earthstar Geographics'
+        }
+      }
+    };
+
+    function setMapTileStyle(themeKey) {
+      if (!leafletMapInstance || typeof L === 'undefined') return;
+      const preset = MAP_TILE_PRESETS[themeKey] || MAP_TILE_PRESETS.osm;
+      activeMapTileTheme = themeKey;
+
+      if (currentMapTileLayer) {
+        try { leafletMapInstance.removeLayer(currentMapTileLayer); } catch(e) {}
+      }
+
+      currentMapTileLayer = L.tileLayer(preset.url, preset.options).addTo(leafletMapInstance);
+
+      // 버튼 토글 UI 스타일 반영
+      ['osm', 'carto', 'satellite'].forEach(k => {
+        const btn = document.getElementById('btn-tile-' + k);
+        if (btn) {
+          if (k === themeKey) {
+            btn.className = 'px-2.5 py-1 text-xs font-bold rounded-lg bg-blue-600 text-white shadow-xs transition';
+          } else {
+            btn.className = 'px-2.5 py-1 text-xs font-bold rounded-lg text-slate-600 hover:bg-slate-100 transition';
+          }
+        }
+      });
+    }
+
     function safeInitMap() {
       if (typeof L === 'undefined') return;
       const mapEl = document.getElementById('leaflet-map');
@@ -7000,15 +7288,11 @@ function setScheduleViewMode(mode) {
 
       if (!leafletMapInstance) {
         leafletMapInstance = L.map('leaflet-map', { scrollWheelZoom: false }).setView([21.4645, -157.98], 10);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-          subdomains: 'abcd',
-          maxZoom: 19,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        }).addTo(leafletMapInstance);
-
+        setMapTileStyle(activeMapTileTheme);
         renderMapMarkers();
       } else {
         renderMapMarkers();
+        setTimeout(() => { leafletMapInstance.invalidateSize(); }, 100);
       }
     }
 
@@ -8475,6 +8759,7 @@ function setScheduleViewMode(mode) {
       // 2. 기본 UI 안전 렌더링 (단일 컴포넌트 오류가 전체 대시보드를 멈추지 않도록 Fail-Safe 보호 격리)
       try { updateClocks(); setInterval(updateClocks, 1000); } catch(e) {}
       try { fetchLiveExchangeRate(); } catch(e) {}
+      try { fetchOahuWeather(); } catch(e) {}
       try { renderReminders(); } catch(e) { console.error('Reminders error:', e); }
       try { renderVideos(); } catch(e) { console.error('Videos error:', e); }
       try { renderBlogs(); } catch(e) { console.error('Blogs error:', e); }
