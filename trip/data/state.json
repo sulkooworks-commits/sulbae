@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T05:24:07.185Z",
+  "updatedAt": "2026-10-09T08:09:21.160Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -45,7 +45,12 @@
     "rem_utv_gear": 1791522914317,
     "wish_eat-5": 1791522857803,
     "pack_%ED%95%AD%EA%B3%B5%EA%B6%8C%20E-%ED%8B%B0%EC%BC%93": 1791522927767,
-    "wish_eat-6": 1791522856629
+    "wish_eat-6": 1791522856629,
+    "ledger_memo_cldgr_1791533358270": 1791533358270,
+    "ledger_tip_cldgr_1791533358270": 1791533358270,
+    "ledger_y_cldgr_1791533358270": 1791533358270,
+    "ledger_payer_cldgr_1791533358270": 1791533358270,
+    "ledger_usd_cldgr_1791533358270": 1791533358270
   },
   "customCosts": {
     "hotel": "3900",
@@ -151,7 +156,16 @@
     }
   ],
   "deletedPackingList": [],
-  "customLedgerItems": [],
+  "customLedgerItems": [
+    {
+      "id": "cldgr_1791533358270",
+      "name": "로아우디너쇼",
+      "day": "Day 7",
+      "cat": "명소",
+      "defaultUsd": 283.67,
+      "isCustom": true
+    }
+  ],
   "deletedLedgerItems": [],
   "placeOverrides": {
     "p23": {
@@ -211,6 +225,11 @@
     "rem_utv_gear": "true",
     "wish_eat-5": "true",
     "pack_%ED%95%AD%EA%B3%B5%EA%B6%8C%20E-%ED%8B%B0%EC%BC%93": "true",
-    "wish_eat-6": "true"
+    "wish_eat-6": "true",
+    "ledger_memo_cldgr_1791533358270": "신랑카드",
+    "ledger_tip_cldgr_1791533358270": "0",
+    "ledger_y_cldgr_1791533358270": "true",
+    "ledger_payer_cldgr_1791533358270": "B",
+    "ledger_usd_cldgr_1791533358270": "283.67"
   }
 }
