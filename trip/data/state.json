@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T12:25:54.742Z",
+  "updatedAt": "2026-10-09T12:26:06.719Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -58,7 +58,8 @@
     "ledger_y_cldgr_1791534622847": 1791534622847,
     "ledger_usd_cldgr_1791534622847": 1791534622847,
     "sched_done_p4": 1791534746603,
-    "rem_cash": 1791548747134
+    "rem_cash": 1791548747134,
+    "pack_%EB%8B%AC%EB%9F%AC%20%ED%98%84%EA%B8%88%20%EC%86%8C%EC%95%A1%EA%B6%8C": 1791548764646
   },
   "customCosts": {
     "hotel": "3900",
@@ -254,6 +255,7 @@
     "ledger_y_cldgr_1791534622847": "true",
     "ledger_usd_cldgr_1791534622847": "177.14",
     "sched_done_p4": "false",
-    "rem_cash": "true"
+    "rem_cash": "true",
+    "pack_%EB%8B%AC%EB%9F%AC%20%ED%98%84%EA%B8%88%20%EC%86%8C%EC%95%A1%EA%B6%8C": "true"
   }
 }
