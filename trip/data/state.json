@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T12:32:25.362Z",
+  "updatedAt": "2026-10-09T12:32:46.731Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -226,6 +226,17 @@
       "price": "$3~$8",
       "gmap": "Musubi+Cafe+Iyasume+Waikiki",
       "updatedAt": 1791549143014
+    },
+    "p44": {
+      "name": "마루카메 우동 와이키키 (Marukame Udon)",
+      "day": "Day 1",
+      "time": "13:30~14:30",
+      "region": "와이키키",
+      "cat": "미식",
+      "desc": "블로그 추천: 와이키키 최강 가성비 수제 사누키 우동 & 바삭한 튀김 (팁 부담 없는 셀프 주문, 테이크아웃 추천)",
+      "price": "$7~$13",
+      "gmap": "Marugame+Udon+Waikiki",
+      "updatedAt": 1791549164435
     }
   },
   "storage": {
