@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T08:27:12.532Z",
+  "updatedAt": "2026-10-09T08:30:25.468Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -51,7 +51,12 @@
     "ledger_y_cldgr_1791533358270": 1791533358270,
     "ledger_payer_cldgr_1791533358270": 1791533358270,
     "ledger_usd_cldgr_1791533358270": 1791533358270,
-    "memo_Day8": 1791534430364
+    "memo_Day8": 1791534430364,
+    "ledger_payer_cldgr_1791534622847": 1791534622847,
+    "ledger_memo_cldgr_1791534622847": 1791534622847,
+    "ledger_tip_cldgr_1791534622847": 1791534622847,
+    "ledger_y_cldgr_1791534622847": 1791534622847,
+    "ledger_usd_cldgr_1791534622847": 1791534622847
   },
   "customCosts": {
     "hotel": "3900",
@@ -165,6 +170,14 @@
       "cat": "명소",
       "defaultUsd": 283.67,
       "isCustom": true
+    },
+    {
+      "id": "cldgr_1791534622847",
+      "name": "거북이스노클링",
+      "day": "Day 3",
+      "cat": "액티비티",
+      "defaultUsd": 177.14,
+      "isCustom": true
     }
   ],
   "deletedLedgerItems": [],
@@ -232,6 +245,11 @@
     "ledger_y_cldgr_1791533358270": "true",
     "ledger_payer_cldgr_1791533358270": "B",
     "ledger_usd_cldgr_1791533358270": "283.67",
-    "memo_Day8": "면세점에서 라이언커피 꼭사기"
+    "memo_Day8": "면세점에서 라이언커피 꼭사기",
+    "ledger_payer_cldgr_1791534622847": "B",
+    "ledger_memo_cldgr_1791534622847": "신랑카드",
+    "ledger_tip_cldgr_1791534622847": "0",
+    "ledger_y_cldgr_1791534622847": "true",
+    "ledger_usd_cldgr_1791534622847": "177.14"
   }
 }
