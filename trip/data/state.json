@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T12:32:46.731Z",
+  "updatedAt": "2026-10-09T12:33:24.613Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -237,6 +237,17 @@
       "price": "$7~$13",
       "gmap": "Marugame+Udon+Waikiki",
       "updatedAt": 1791549164435
+    },
+    "p3": {
+      "name": "와이키키 퀸즈 비치 (비치 요가 & 바다수영)",
+      "day": "",
+      "time": "18:30~07:30",
+      "region": "와이키키",
+      "cat": "웰니스",
+      "desc": "다이아몬드 헤드 일출 배경 백사장 선라이즈 매트 요가 & 잔잔한 방파제 바다수영 (매일 스트레칭)",
+      "price": "무료",
+      "gmap": "Queens+Surf+Beach+Honolulu",
+      "updatedAt": 1791549202273
     }
   },
   "storage": {
