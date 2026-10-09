@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T08:09:21.160Z",
+  "updatedAt": "2026-10-09T08:27:09.877Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -8,7 +8,7 @@
     "rem_license": 1789386973710,
     "cost_etc": 0,
     "cost_hotel": 0,
-    "rem_kualoa": 1791523446551,
+    "rem_kualoa": 1791523450643,
     "cost_car": 0,
     "ledger_y_l_kualoa": 1789460582686,
     "ledger_payer_l_kualoa": 1789215027123,
@@ -50,7 +50,8 @@
     "ledger_tip_cldgr_1791533358270": 1791533358270,
     "ledger_y_cldgr_1791533358270": 1791533358270,
     "ledger_payer_cldgr_1791533358270": 1791533358270,
-    "ledger_usd_cldgr_1791533358270": 1791533358270
+    "ledger_usd_cldgr_1791533358270": 1791533358270,
+    "memo_Day8": 1791534425972
   },
   "customCosts": {
     "hotel": "3900",
@@ -230,6 +231,7 @@
     "ledger_tip_cldgr_1791533358270": "0",
     "ledger_y_cldgr_1791533358270": "true",
     "ledger_payer_cldgr_1791533358270": "B",
-    "ledger_usd_cldgr_1791533358270": "283.67"
+    "ledger_usd_cldgr_1791533358270": "283.67",
+    "memo_Day8": "면세점에서 라이언커피 꼭사기"
   }
 }
