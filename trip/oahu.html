@@ -901,7 +901,7 @@
       <!-- 슬라이더 컨테이너 -->
       <div class="relative">
         <!-- 슬라이더 트랙: PC 3개씩(w-[calc(33.333%-14px)]), 태블릿 2개씩(w-[calc(50%-10px)]), 모바일 1개씩(w-full) -->
-        <div id="timeline-slider-track" class="flex items-stretch gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-0.5 custom-scrollbar">
+        <div id="timeline-slider-track" class="flex items-start gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-0.5 custom-scrollbar">
           <!-- 8개의 Day 카드가 renderTimeline()에 의해 슬라이드 카드로 렌더링됨 -->
         </div>
 
@@ -1545,7 +1545,26 @@
           <!-- JS 함수 renderSelectedDayOutfit(dayNum)에 의해 동적 렌더링 -->
         </div>
 
-        <!-- 5. 짐 싸기 퀵 체크리스트 (md 4번 요약) -->
+        <!-- 5. 📅 하와이 오아후 7일간(일주일) 주간 날씨 예보 요약 -->
+        <div class="bg-white rounded-2xl p-4 border border-amber-200/80 shadow-3xs space-y-2.5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="p-1 rounded-lg bg-blue-50 text-blue-600 text-xs">📅</span>
+              <h4 class="font-extrabold text-slate-900 text-xs sm:text-sm">오아후 7일간(일주일) 주간 날씨 예보</h4>
+            </div>
+            <span class="text-[10px] text-slate-400 font-mono">기상청 Open-Meteo 실시간</span>
+          </div>
+          <!-- 7일치 가로 스크롤 카드 그리드 -->
+          <div id="modal-weekly-weather-grid" class="grid grid-cols-7 gap-1.5 text-center overflow-x-auto pb-1 custom-scrollbar">
+            <!-- JS renderWeeklyForecast()에 의해 동적 렌더링 -->
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-100/80">
+            <span>※ 환절기 특성상 낮 28~30℃ 유지되며 밤/산간에 10~20분 짧은 스콜 발생 가능</span>
+            <span class="text-amber-700 font-semibold">쾌적한 무역풍 지속 🍃</span>
+          </div>
+        </div>
+
+        <!-- 6. 짐 싸기 퀵 체크리스트 (md 4번 요약) -->
         <div class="p-3 bg-emerald-50/60 rounded-2xl border border-emerald-200/70 space-y-1.5 text-[11px]">
           <div class="font-bold text-emerald-950 flex items-center gap-1">
             <span>🧳</span> <span>10월 의류 짐 싸기 필수 체크리스트</span>
@@ -5497,8 +5516,8 @@
 
         return `
           <!-- 가로 슬라이더 카드: PC 최대 3개(w-[calc(33.333%-12px)]), 태블릿 2개(w-[calc(50%-8px)]), 모바일 1개(w-full) -->
-          <div class="timeline-slide-card w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] shrink-0 snap-start bg-white p-5 rounded-3xl border ${isToday ? 'border-blue-500 ring-2 ring-blue-100 shadow-md' : 'border-slate-200/90 shadow-soft'} space-y-3.5 flex flex-col justify-between transition-all ${allItemsPassed ? 'opacity-70 bg-slate-50/70' : ''}">
-            <div class="space-y-3">
+          <div class="timeline-slide-card w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] shrink-0 snap-start bg-white p-4 sm:p-5 rounded-3xl border ${isToday ? 'border-blue-500 ring-2 ring-blue-100 shadow-md' : 'border-slate-200/90 shadow-soft'} space-y-3 transition-all ${allItemsPassed ? 'opacity-70 bg-slate-50/70' : ''}">
+            <div class="space-y-2.5">
               <!-- 카드 헤더 -->
               <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
                 <div class="flex items-center gap-1.5 flex-wrap min-w-0">
@@ -5681,7 +5700,6 @@
                   </div>
                 ` : ''}
               </div>
-            </div>
 
             <!-- 6. 일정 최적화 스마트 동선 & 체력 안배 팁 카드 (검토 의견 UI 반영) -->
             ${(() => {
@@ -5703,7 +5721,7 @@
             })()}
 
             <!-- 메모 작성창 -->
-            <div class="pt-3 border-t border-slate-100">
+            <div class="pt-2.5 border-t border-slate-100">
               <div class="flex items-center justify-between mb-1">
                 <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
                   <span>📝</span> <span>${d.day.replace(/Day\s*(\d+)/i, '$1일차')} 개인 메모</span>
@@ -7653,7 +7671,91 @@ function setScheduleViewMode(mode) {
       }
     }
 
-    function renderWeatherUI(data) {
+        function renderWeeklyForecast(data) {
+      const container = document.getElementById('modal-weekly-weather-grid');
+      if (!container) return;
+
+      const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+      const nowHst = getNowHawaiiDate();
+
+      // Open-Meteo 데이터가 있을 경우 실시간 반영, 없을 경우 10월 표준 예보 폴백
+      const daily = (data && data.daily) ? data.daily : null;
+      const count = (daily && daily.time) ? Math.min(7, daily.time.length) : 7;
+
+      let htmlCards = '';
+      for (let i = 0; i < count; i++) {
+        let dateLabel = '';
+        let dayName = '';
+        let icon = '☀️';
+        let desc = '맑음';
+        let maxT = 29;
+        let minT = 22;
+        let pop = 10;
+        let uv = 8.5;
+
+        if (daily && daily.time && daily.time[i]) {
+          const parts = daily.time[i].split('-');
+          dateLabel = `${parseInt(parts[1], 10)}/${parseInt(parts[2], 10)}`;
+          const dObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          dayName = daysOfWeek[dObj.getDay()];
+
+          const code = daily.weathercode ? daily.weathercode[i] : 0;
+          const info = getWeatherInfoFromCode(code);
+          icon = info.icon;
+          desc = info.desc;
+
+          if (daily.temperature_2m_max && daily.temperature_2m_max[i] !== undefined) maxT = Math.round(daily.temperature_2m_max[i]);
+          if (daily.temperature_2m_min && daily.temperature_2m_min[i] !== undefined) minT = Math.round(daily.temperature_2m_min[i]);
+          if (daily.precipitation_probability_max && daily.precipitation_probability_max[i] !== undefined) pop = Math.round(daily.precipitation_probability_max[i]);
+          if (daily.uv_index_max && daily.uv_index_max[i] !== undefined) uv = Math.round(daily.uv_index_max[i] * 10) / 10;
+        } else {
+          // 폴백: 여행 기간 10/9 ~ 10/15
+          const dayDate = new Date(2026, 9, 9 + i);
+          dateLabel = `${dayDate.getMonth() + 1}/${dayDate.getDate()}`;
+          dayName = daysOfWeek[dayDate.getDay()];
+          const presets = [
+            { icon: '☀️', desc: '맑음', max: 29, min: 23, pop: 10 },
+            { icon: '🌤️', desc: '대체로맑음', max: 29, min: 22, pop: 15 },
+            { icon: '☀️', desc: '맑음', max: 30, min: 23, pop: 10 },
+            { icon: '🌦️', desc: '한때스콜', max: 28, min: 22, pop: 25 },
+            { icon: '☀️', desc: '화창', max: 29, min: 22, pop: 15 },
+            { icon: '🌤️', desc: '구름조금', max: 30, min: 23, pop: 10 },
+            { icon: '☀️', desc: '온화', max: 29, min: 23, pop: 10 }
+          ];
+          const p = presets[i] || presets[0];
+          icon = p.icon;
+          desc = p.desc;
+          maxT = p.max;
+          minT = p.min;
+          pop = p.pop;
+        }
+
+        const isToday = (i === 0);
+
+        htmlCards += `
+          <div class="min-w-[58px] p-2 rounded-xl flex flex-col items-center justify-between border transition ${isToday ? 'bg-amber-50/90 border-amber-300 ring-1 ring-amber-200 shadow-2xs' : 'bg-slate-50/70 border-slate-200/80 hover:bg-white'}">
+            <div class="text-[10px] font-bold ${isToday ? 'text-amber-900' : 'text-slate-600'}">
+              ${isToday ? '<span class="text-[9px] text-amber-600 font-extrabold block -mb-0.5">오늘</span>' : ''}
+              ${dateLabel} (${dayName})
+            </div>
+            <div class="text-xl my-1" title="${desc}">${icon}</div>
+            <div class="text-[10px] text-slate-500 font-medium truncate w-full mb-1">${desc}</div>
+            <div class="text-[11px] font-mono leading-tight font-bold">
+              <span class="text-rose-600">${maxT}°</span>
+              <span class="text-slate-300 mx-0.5">/</span>
+              <span class="text-blue-600 font-normal">${minT}°</span>
+            </div>
+            <div class="text-[9px] font-bold text-sky-600 mt-1 bg-sky-50 px-1 py-0.2 rounded border border-sky-100/80">
+              💧${pop}%
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = htmlCards;
+    }
+
+function renderWeatherUI(data) {
       let temp = 27;
       let weatherCode = 0;
       let maxTemp = 29;
@@ -7710,6 +7812,7 @@ function setScheduleViewMode(mode) {
 
       renderOutfitDayTabs();
       renderSelectedDayOutfit(activeWeatherOutfitDay);
+      renderWeeklyForecast(data);
 
       if (mDate) {
         const nowHst = getNowHawaiiDate();
