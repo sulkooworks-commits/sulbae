@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T12:26:49.053Z",
+  "updatedAt": "2026-10-09T12:27:00.950Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -175,6 +175,11 @@
       "id": "cpack_1789943648144",
       "name": "트렁크 2개",
       "checked": false
+    },
+    {
+      "id": "cpack_1791548817326",
+      "name": "돼지코 충전기",
+      "checked": true
     }
   ],
   "deletedPackingList": [
