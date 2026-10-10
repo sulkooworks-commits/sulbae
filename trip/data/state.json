@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T20:10:33.174Z",
+  "updatedAt": "2026-10-10T20:10:36.804Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -473,6 +473,6 @@
     "sched_done_p26": "false",
     "sched_done_p15": "true",
     "sched_done_cp_1791648846621": "false",
-    "sched_done_p23": "true"
+    "sched_done_p23": "false"
   }
 }
