@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:02:10.698Z",
+  "updatedAt": "2026-10-10T16:05:54.275Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -327,6 +327,17 @@
       "price": "무료",
       "gmap": "Halona+Blowhole+Lookout",
       "updatedAt": 1791648126757
+    },
+    "p27": {
+      "name": "와이마날로 비치",
+      "day": "Day 2",
+      "time": "16:00~16:10",
+      "region": "동부",
+      "cat": "명소",
+      "desc": "에메랄드빛 해안 드라이브",
+      "price": "무료",
+      "gmap": "Waimanalo+Beach+Park",
+      "updatedAt": 1791648350458
     }
   },
   "storage": {
