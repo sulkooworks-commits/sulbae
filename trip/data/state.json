@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:09:56.854Z",
+  "updatedAt": "2026-10-10T16:14:10.467Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -170,6 +170,21 @@
       "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FjMypjNuC9KT7B3Li9%253Fg_st%253Dac",
       "isCustom": true,
       "updatedAt": 1789436017273
+    },
+    {
+      "id": "cp_1791648846621",
+      "name": "슬라이스오브 와이키키",
+      "lat": 21.27585262322315,
+      "lng": -157.82278239937295,
+      "region": "와이키키",
+      "cat": "미식",
+      "day": "Day 1",
+      "time": "19:30~20:40",
+      "desc": "피맥 버팔로윙 저녁",
+      "price": "무료",
+      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FV9PTQeRtvYUyz9hg8%3Fg_st%3Dac",
+      "isCustom": true,
+      "updatedAt": 1791648846621
     }
   ],
   "deletedPlaces": [],
