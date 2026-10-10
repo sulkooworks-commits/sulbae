@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T23:16:04.224Z",
+  "updatedAt": "2026-10-10T23:16:20.020Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -372,13 +372,13 @@
     "p28": {
       "name": "라니카이 비치",
       "day": "Day 2",
-      "time": "17:00~19:00",
+      "time": "16:30~19:00",
       "region": "동부",
       "cat": "명소",
       "desc": "천국의 바다 잔잔한 수영",
       "price": "무료",
       "gmap": "Lanikai+Beach+Oahu",
-      "updatedAt": 1791674098924
+      "updatedAt": 1791674177402
     },
     "p49": {
       "name": "더 보일링 크랩 (The Boiling Crab 카카아코)",
