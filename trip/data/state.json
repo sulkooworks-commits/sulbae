@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T20:10:36.804Z",
+  "updatedAt": "2026-10-10T23:12:17.881Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -28,7 +28,7 @@
     "memo_Day1": 1791607396764,
     "pack_ESTA%20%EC%8A%B9%EC%9D%B8%EB%B3%B8": 1791522927006,
     "memo_Day7": 1789471309918,
-    "sched_done_p24": 0,
+    "sched_done_p24": 1791673933739,
     "memo_Day4": 1789460645567,
     "memo_Day2": 1789471352667,
     "pack_110V%2011%EC%9E%90%20%EB%8F%BC%EC%A7%80%EC%BD%94%20%EC%96%B4%EB%8C%91%ED%84%B0": 1789471437565,
@@ -419,7 +419,7 @@
     "memo_Day1": "세븐일레븐",
     "pack_ESTA%20%EC%8A%B9%EC%9D%B8%EB%B3%B8": "true",
     "memo_Day7": "호놀룰루 미술관",
-    "sched_done_p24": "false",
+    "sched_done_p24": "true",
     "memo_Day4": "쿠알로아 랜치 이티켓 챙겨야 함 (각 개인 메일 참고)",
     "memo_Day2": "터틀 캐년은 꼭 가야 함",
     "pack_110V%2011%EC%9E%90%20%EB%8F%BC%EC%A7%80%EC%BD%94%20%EC%96%B4%EB%8C%91%ED%84%B0": "true",
