@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:15:03.914Z",
+  "updatedAt": "2026-10-10T16:15:09.937Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -81,7 +81,7 @@
     "wish_eat-1": 1791647105818,
     "sched_done_p26": 1791647841547,
     "sched_done_p15": 1791648593795,
-    "sched_done_cp_1791648846621": 1791648889664
+    "sched_done_cp_1791648846621": 1791648907446
   },
   "customCosts": {
     "hotel": "3900",
@@ -471,6 +471,6 @@
     "wish_eat-1": "true",
     "sched_done_p26": "false",
     "sched_done_p15": "true",
-    "sched_done_cp_1791648846621": "true"
+    "sched_done_cp_1791648846621": "false"
   }
 }
