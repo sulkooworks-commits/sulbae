@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:54:41.028Z",
+  "updatedAt": "2026-10-10T15:56:09.980Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -297,13 +297,13 @@
     "p55": {
       "name": "테디스 비거 버거 와이키키점 (Teddy's Bigger Burgers)",
       "day": "Day 2",
-      "time": "13:40~14:50",
+      "time": "14:00~15:10",
       "region": "와이키키",
       "cat": "미식",
       "desc": "주문 즉시 직화 그릴에 굽는 불향 가득 육즙 폭발 수제버거 & 감자튀김 (134 Kapahulu Ave, 동물원 맞은편)",
       "price": "$12~$22",
       "gmap": "134+Kapahulu+Ave+Honolulu+HI+96815",
-      "updatedAt": 1791647678314
+      "updatedAt": 1791647765185
     }
   },
   "storage": {
