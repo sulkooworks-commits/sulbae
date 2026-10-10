@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:06:26.143Z",
+  "updatedAt": "2026-10-10T16:09:36.215Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -360,6 +360,17 @@
       "price": "무료",
       "gmap": "Lanikai+Beach+Oahu",
       "updatedAt": 1791648383520
+    },
+    "p49": {
+      "name": "더 보일링 크랩 (The Boiling Crab 카카아코)",
+      "day": "Day 4",
+      "time": "18:30~20:30",
+      "region": "와이키키",
+      "cat": "미식",
+      "desc": "봉지 해물찜(케이준 갈릭버터 던지니스 크랩, 새우, 옥수수), SALT at Our Kakaʻako 인기 맛집",
+      "price": "$40~$70",
+      "gmap": "The+Boiling+Crab+Honolulu",
+      "updatedAt": 1791648572240
     }
   },
   "storage": {
