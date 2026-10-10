@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:45:11.412Z",
+  "updatedAt": "2026-10-10T15:47:21.677Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -260,6 +260,17 @@
       "price": "투숙객 무료",
       "gmap": "Hyatt+Regency+Waikiki+StayFit",
       "updatedAt": 1791549218526
+    },
+    "p45": {
+      "name": "세븐일레븐 하와이 와이키키점 (7-Eleven Hawaii)",
+      "day": "Day 2",
+      "time": "08:00~09:00",
+      "region": "와이키키",
+      "cat": "웰니스",
+      "desc": "리조트 프로그램",
+      "price": "무료",
+      "gmap": "%ED%95%98%EC%96%8F%ED%8A%B8%EB%A6%AC%EC%A0%A0%EC%8B%9C%EC%99%80%EC%9D%B4%ED%82%A4%ED%82%A4",
+      "updatedAt": 1791647236722
     }
   },
   "storage": {
