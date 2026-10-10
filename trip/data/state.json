@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:47:21.677Z",
+  "updatedAt": "2026-10-10T15:50:27.287Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -271,6 +271,17 @@
       "price": "무료",
       "gmap": "%ED%95%98%EC%96%8F%ED%8A%B8%EB%A6%AC%EC%A0%A0%EC%8B%9C%EC%99%80%EC%9D%B4%ED%82%A4%ED%82%A4",
       "updatedAt": 1791647236722
+    },
+    "p22": {
+      "name": "레오나즈 베이커리 본점",
+      "day": "Day 2",
+      "time": "09:00~09:30",
+      "region": "동부",
+      "cat": "미식",
+      "desc": "갓 튀긴 말라사다 도넛",
+      "price": "개당 $2",
+      "gmap": "Leonard's+Bakery+Honolulu",
+      "updatedAt": 1791647422214
     }
   },
   "storage": {
