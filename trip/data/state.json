@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:56:36.892Z",
+  "updatedAt": "2026-10-10T15:57:15.193Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -315,6 +315,17 @@
       "price": "무료 (공원)",
       "gmap": "Maunalua+Bay+Beach+Park",
       "updatedAt": 1791647794285
+    },
+    "p26": {
+      "name": "할로나 블로우홀",
+      "day": "Day 2",
+      "time": "15:20~04:30",
+      "region": "동부",
+      "cat": "명소",
+      "desc": "바위틈으로 치솟는 바다 분수",
+      "price": "무료",
+      "gmap": "Halona+Blowhole+Lookout",
+      "updatedAt": 1791647830172
     }
   },
   "storage": {
