@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:51:32.740Z",
+  "updatedAt": "2026-10-10T15:51:54.523Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -267,10 +267,10 @@
       "time": "08:00~09:00",
       "region": "와이키키",
       "cat": "웰니스",
-      "desc": "리조트 프로그램",
+      "desc": "리조트 요가 프로그램",
       "price": "무료",
-      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FXLz5djmrJWzkmjhCA%253Fg_st%253Dac",
-      "updatedAt": 1791647490171
+      "gmap": "https%25253A%25252F%25252Fmaps.app.goo.gl%25252FXLz5djmrJWzkmjhCA%25253Fg_st%25253Dac",
+      "updatedAt": 1791647511926
     },
     "p22": {
       "name": "레오나즈 베이커리 본점",
