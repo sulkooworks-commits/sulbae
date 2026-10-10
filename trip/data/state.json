@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T23:13:44.520Z",
+  "updatedAt": "2026-10-10T23:13:59.738Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -338,14 +338,14 @@
     },
     "p26": {
       "name": "할로나 블로우홀",
-      "day": "Day 2",
+      "day": "비상시",
       "time": "15:20~16:00",
       "region": "동부",
       "cat": "명소",
       "desc": "바위틈으로 치솟는 바다 분수",
       "price": "무료",
       "gmap": "Halona+Blowhole+Lookout",
-      "updatedAt": 1791648126757
+      "updatedAt": 1791674036775
     },
     "p27": {
       "name": "와이마날로 비치",
