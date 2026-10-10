@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T23:15:01.556Z",
+  "updatedAt": "2026-10-10T23:15:18.506Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -182,12 +182,12 @@
       "region": "와이키키",
       "cat": "미식",
       "day": "Day 2",
-      "time": "19:30~20:40",
+      "time": "20:00~21:00",
       "desc": "피맥 버팔로윙 저녁",
       "price": "무료",
-      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FV9PTQeRtvYUyz9hg8%253Fg_st%253Dac",
+      "gmap": "https%25253A%25252F%25252Fmaps.app.goo.gl%25252FV9PTQeRtvYUyz9hg8%25253Fg_st%25253Dac",
       "isCustom": true,
-      "updatedAt": 1791648901193
+      "updatedAt": 1791674115994
     }
   ],
   "deletedPlaces": [],
