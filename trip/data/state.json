@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T16:05:54.275Z",
+  "updatedAt": "2026-10-10T16:06:10.742Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -338,6 +338,17 @@
       "price": "무료",
       "gmap": "Waimanalo+Beach+Park",
       "updatedAt": 1791648350458
+    },
+    "p30": {
+      "name": "카일루아 비치 파크",
+      "day": "Day 2",
+      "time": "16:30~16:40",
+      "region": "동부",
+      "cat": "명소",
+      "desc": "주차장 및 샤워시설 완비",
+      "price": "무료주차",
+      "gmap": "Kailua+Beach+Park",
+      "updatedAt": 1791648368131
     }
   },
   "storage": {
