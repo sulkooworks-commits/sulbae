@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:51:54.523Z",
+  "updatedAt": "2026-10-10T15:54:20.591Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -282,6 +282,17 @@
       "price": "개당 $2",
       "gmap": "Leonard's+Bakery+Honolulu",
       "updatedAt": 1791647422214
+    },
+    "p24": {
+      "name": "아일랜드 브루 커피",
+      "day": "Day 2",
+      "time": "13:00~13:50",
+      "region": "동부",
+      "cat": "미식",
+      "desc": "하와이카이 마리나 뷰 코나 커피",
+      "price": "$10~$20",
+      "gmap": "Island+Brew+Coffeehouse+Hawaii+Kai",
+      "updatedAt": 1791647655649
     }
   },
   "storage": {
