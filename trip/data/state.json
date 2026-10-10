@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:50:27.287Z",
+  "updatedAt": "2026-10-10T15:51:11.873Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -269,8 +269,8 @@
       "cat": "웰니스",
       "desc": "리조트 프로그램",
       "price": "무료",
-      "gmap": "%ED%95%98%EC%96%8F%ED%8A%B8%EB%A6%AC%EC%A0%A0%EC%8B%9C%EC%99%80%EC%9D%B4%ED%82%A4%ED%82%A4",
-      "updatedAt": 1791647236722
+      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FXLz5djmrJWzkmjhCA%3Fg_st%3Dac",
+      "updatedAt": 1791647468227
     },
     "p22": {
       "name": "레오나즈 베이커리 본점",
