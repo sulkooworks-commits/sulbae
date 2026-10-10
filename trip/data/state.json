@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:51:11.873Z",
+  "updatedAt": "2026-10-10T15:51:32.740Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -262,15 +262,15 @@
       "updatedAt": 1791549218526
     },
     "p45": {
-      "name": "세븐일레븐 하와이 와이키키점 (7-Eleven Hawaii)",
+      "name": "하얏트리젠시 와이키키",
       "day": "Day 2",
       "time": "08:00~09:00",
       "region": "와이키키",
       "cat": "웰니스",
       "desc": "리조트 프로그램",
       "price": "무료",
-      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FXLz5djmrJWzkmjhCA%3Fg_st%3Dac",
-      "updatedAt": 1791647468227
+      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FXLz5djmrJWzkmjhCA%253Fg_st%253Dac",
+      "updatedAt": 1791647490171
     },
     "p22": {
       "name": "레오나즈 베이커리 본점",
