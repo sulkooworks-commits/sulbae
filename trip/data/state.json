@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T15:56:09.980Z",
+  "updatedAt": "2026-10-10T15:56:36.892Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -304,6 +304,17 @@
       "price": "$12~$22",
       "gmap": "134+Kapahulu+Ave+Honolulu+HI+96815",
       "updatedAt": 1791647765185
+    },
+    "p46": {
+      "name": "마우날루아 베이 비치 파크 (Maunalua Bay)",
+      "day": "Day 2",
+      "time": "14:01~14:30",
+      "region": "동부",
+      "cat": "명소",
+      "desc": "블로그 언급: 하와이 카이 해안 만 & 코코헤드 조망, 잔디밭 도시락 피크닉 및 로컬 오션뷰 명소",
+      "price": "무료 (공원)",
+      "gmap": "Maunalua+Bay+Beach+Park",
+      "updatedAt": 1791647794285
     }
   },
   "storage": {
