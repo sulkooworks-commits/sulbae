@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:07:13.952Z",
+  "updatedAt": "2026-10-11T19:08:58.720Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -188,6 +188,21 @@
       "gmap": "https%252525253A%252525252F%252525252Fmaps.app.goo.gl%252525252FV9PTQeRtvYUyz9hg8%252525253Fg_st%252525253Dac",
       "isCustom": true,
       "updatedAt": 1791745393620
+    },
+    {
+      "id": "cp_1791745732342",
+      "name": "쿠히오 해변",
+      "lat": 21.2768435915138,
+      "lng": -157.82584643889044,
+      "region": "와이키키",
+      "cat": "액티비티",
+      "day": "Day 3",
+      "time": "10:00~11:30",
+      "desc": "패들보드 및 해변 수영",
+      "price": "무료",
+      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FQDnv6dQAxACRGVs89%3Fg_st%3Dac",
+      "isCustom": true,
+      "updatedAt": 1791745732342
     }
   ],
   "deletedPlaces": [],
