@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:08:58.720Z",
+  "updatedAt": "2026-10-11T19:09:15.449Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -197,12 +197,12 @@
       "region": "와이키키",
       "cat": "액티비티",
       "day": "Day 3",
-      "time": "10:00~11:30",
+      "time": "15:00~18:30",
       "desc": "패들보드 및 해변 수영",
       "price": "무료",
-      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FQDnv6dQAxACRGVs89%3Fg_st%3Dac",
+      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FQDnv6dQAxACRGVs89%253Fg_st%253Dac",
       "isCustom": true,
-      "updatedAt": 1791745732342
+      "updatedAt": 1791745752476
     }
   ],
   "deletedPlaces": [],
