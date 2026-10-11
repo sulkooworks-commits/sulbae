@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:05:55.202Z",
+  "updatedAt": "2026-10-11T19:07:13.952Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -423,6 +423,17 @@
       "price": "$15~$25",
       "gmap": "Waikiki+Market+Kuhio",
       "updatedAt": 1791745552107
+    },
+    "p47": {
+      "name": "도원 (Dowon) / 안동장 - 호놀룰루 정통 중식당",
+      "day": "Day 5",
+      "time": "18:30~19:30",
+      "region": "",
+      "cat": "미식",
+      "desc": "블로그 언급: 기름진 미국식 식사에 지쳤을 때 생각나는 얼큰한 해물 짬뽕 & 바삭한 탕수육 (키아모쿠 한인타운)",
+      "price": "$15~$25",
+      "gmap": "Dowon+Chinese+Restaurant+Honolulu",
+      "updatedAt": 1791745628164
     }
   },
   "storage": {
