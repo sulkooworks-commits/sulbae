@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:09:35.490Z",
+  "updatedAt": "2026-10-11T19:10:48.927Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -200,9 +200,9 @@
       "time": "15:00~18:30",
       "desc": "패들보드 및 해변 수영",
       "price": "무료",
-      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FQDnv6dQAxACRGVs89%253Fg_st%253Dac",
+      "gmap": "https%25253A%25252F%25252Fmaps.app.goo.gl%25252FQDnv6dQAxACRGVs89%25253Fg_st%25253Dac",
       "isCustom": true,
-      "updatedAt": 1791745752476
+      "updatedAt": 1791745842870
     }
   ],
   "deletedPlaces": [],
