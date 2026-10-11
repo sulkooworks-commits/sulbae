@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T20:26:32.614Z",
+  "updatedAt": "2026-10-11T20:26:36.860Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -85,7 +85,8 @@
     "sched_done_p23": 1791745296625,
     "sched_done_p46": 1791673936749,
     "sched_done_p5": 1791750359324,
-    "sched_done_p2": 1791750372106
+    "sched_done_p2": 1791750372106,
+    "rem_hotel_deposit": 1791750394148
   },
   "customCosts": {
     "hotel": "3900",
@@ -549,6 +550,7 @@
     "sched_done_p23": "true",
     "sched_done_p46": "true",
     "sched_done_p5": "false",
-    "sched_done_p2": "false"
+    "sched_done_p2": "false",
+    "rem_hotel_deposit": "true"
   }
 }
