@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:09:15.449Z",
+  "updatedAt": "2026-10-11T19:09:35.490Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -449,6 +449,17 @@
       "price": "$15~$25",
       "gmap": "Dowon+Chinese+Restaurant+Honolulu",
       "updatedAt": 1791745628164
+    },
+    "p20": {
+      "name": "리틀 조스 스테이크하우스",
+      "day": "Day 3",
+      "time": "19:00~21:00",
+      "region": "와이키키",
+      "cat": "미식",
+      "desc": "프리미엄 립 & 티본 스테이크",
+      "price": "$50~$90",
+      "gmap": "Little+Joe's+Steakhouse+Honolulu",
+      "updatedAt": 1791745772499
     }
   },
   "storage": {
