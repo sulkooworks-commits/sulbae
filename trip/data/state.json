@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:05:32.737Z",
+  "updatedAt": "2026-10-11T19:05:55.202Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -412,6 +412,17 @@
       "price": "품목별",
       "gmap": "Don+Quijote+Honolulu",
       "updatedAt": 1791745445595
+    },
+    "p15": {
+      "name": "와이키키 마켓 (Waikiki Market)",
+      "day": "Day 3",
+      "time": "21:20~22:20",
+      "region": "와이키키",
+      "cat": "쇼핑",
+      "desc": "프리미엄 로컬 식료품 & 델리",
+      "price": "$15~$25",
+      "gmap": "Waikiki+Market+Kuhio",
+      "updatedAt": 1791745552107
     }
   },
   "storage": {
