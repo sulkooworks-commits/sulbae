@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T19:03:18.646Z",
+  "updatedAt": "2026-10-11T19:03:36.610Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -390,6 +390,17 @@
       "price": "$40~$70",
       "gmap": "The+Boiling+Crab+Honolulu",
       "updatedAt": 1791648572240
+    },
+    "p16": {
+      "name": "알라모아나 센터",
+      "day": "Day 5",
+      "time": "15:30~17:30",
+      "region": "와이키키",
+      "cat": "쇼핑",
+      "desc": "세계 최대 야외 쇼핑몰 & SALT 카카아코 인접 쇼핑",
+      "price": "무료주차",
+      "gmap": "Ala+Moana+Center",
+      "updatedAt": 1791745413638
     }
   },
   "storage": {
