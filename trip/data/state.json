@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T20:26:48.415Z",
+  "updatedAt": "2026-10-12T04:44:20.875Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -57,7 +57,7 @@
     "ledger_tip_cldgr_1791534622847": 1791534622847,
     "ledger_y_cldgr_1791534622847": 1791534622847,
     "ledger_usd_cldgr_1791534622847": 1791534622847,
-    "sched_done_p4": 1791534746603,
+    "sched_done_p4": 1791780257091,
     "rem_cash": 1791548747134,
     "pack_%EB%8B%AC%EB%9F%AC%20%ED%98%84%EA%B8%88%20%EC%86%8C%EC%95%A1%EA%B6%8C": 1791548764646,
     "pack_SUP%20%ED%8C%A8%EB%93%A4%EB%B3%B4%EB%93%9C%20%EB%AA%A8%EC%9E%90": 1791548771716,
@@ -523,7 +523,7 @@
     "ledger_tip_cldgr_1791534622847": "0",
     "ledger_y_cldgr_1791534622847": "true",
     "ledger_usd_cldgr_1791534622847": "177.14",
-    "sched_done_p4": "false",
+    "sched_done_p4": "true",
     "rem_cash": "true",
     "pack_%EB%8B%AC%EB%9F%AC%20%ED%98%84%EA%B8%88%20%EC%86%8C%EC%95%A1%EA%B6%8C": "true",
     "pack_SUP%20%ED%8C%A8%EB%93%A4%EB%B3%B4%EB%93%9C%20%EB%AA%A8%EC%9E%90": "true",
