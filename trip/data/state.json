@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T06:52:59.892Z",
+  "updatedAt": "2026-10-14T06:55:50.479Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -489,6 +489,17 @@
       "price": "숙박 바우처",
       "gmap": "Hyatt+Regency+Waikiki",
       "updatedAt": 1791960776959
+    },
+    "p13": {
+      "name": "모니(Moni) 호놀룰루",
+      "day": "Day 6",
+      "time": "11:30~12:30",
+      "region": "와이키키",
+      "cat": "쇼핑",
+      "desc": "태닝 스누피 서핑 티셔츠 & 에코백",
+      "price": "$30~$50",
+      "gmap": "Moni+Honolulu",
+      "updatedAt": 1791960945457
     }
   },
   "storage": {
