@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T06:49:44.211Z",
+  "updatedAt": "2026-10-14T06:52:38.323Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -467,6 +467,17 @@
       "price": "$50~$90",
       "gmap": "Little+Joe's+Steakhouse+Honolulu",
       "updatedAt": 1791745772499
+    },
+    "p2": {
+      "name": "호놀룰루 국제공항",
+      "day": "Day 8",
+      "time": "14:35~19:10",
+      "region": "와이키키",
+      "cat": "명소",
+      "desc": "기념품 면세 쇼핑 및 출국",
+      "price": "무료",
+      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FAndefs46ZLpmEDd79%3Fg_st%3Dac",
+      "updatedAt": 1791960753436
     }
   },
   "storage": {
