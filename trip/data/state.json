@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T18:26:58.961Z",
+  "updatedAt": "2026-10-14T18:28:18.600Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -427,13 +427,13 @@
     "p19": {
       "name": "돈키호테 호놀룰루",
       "day": "Day 6",
-      "time": "16:30~18:00",
+      "time": "22:00~23:00",
       "region": "와이키키",
       "cat": "쇼핑",
       "desc": "24시간 대형마트 & 스낵",
       "price": "품목별",
       "gmap": "Don+Quijote+Honolulu",
-      "updatedAt": 1791745445595
+      "updatedAt": 1792002493151
     },
     "p15": {
       "name": "와이키키 마켓 (Waikiki Market)",
