@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T06:52:38.323Z",
+  "updatedAt": "2026-10-14T06:52:59.892Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -478,6 +478,17 @@
       "price": "무료",
       "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FAndefs46ZLpmEDd79%3Fg_st%3Dac",
       "updatedAt": 1791960753436
+    },
+    "p5": {
+      "name": "하얏트 리젠시 와이키키",
+      "day": "",
+      "time": "10:00~10:00",
+      "region": "와이키키",
+      "cat": "명소",
+      "desc": "7박 베이스캠프 호텔",
+      "price": "숙박 바우처",
+      "gmap": "Hyatt+Regency+Waikiki",
+      "updatedAt": 1791960776959
     }
   },
   "storage": {
