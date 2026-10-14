@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T06:56:05.453Z",
+  "updatedAt": "2026-10-14T18:24:25.654Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -500,6 +500,17 @@
       "price": "$30~$50",
       "gmap": "Moni+Honolulu",
       "updatedAt": 1791960962542
+    },
+    "p14": {
+      "name": "파타고니아 호놀룰루 (파탈로하)",
+      "day": "Day 6",
+      "time": "12:30~13:30",
+      "region": "와이키키",
+      "cat": "쇼핑",
+      "desc": "Pataloha 하와이 한정판 티셔츠",
+      "price": "$45~$65",
+      "gmap": "Patagonia+Honolulu",
+      "updatedAt": 1792002261016
     }
   },
   "storage": {
