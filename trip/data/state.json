@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T18:26:21.988Z",
+  "updatedAt": "2026-10-14T18:26:45.776Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -522,6 +522,17 @@
       "price": "무료",
       "gmap": "Magic+Island+Ala+Moana",
       "updatedAt": 1792002361718
+    },
+    "p41": {
+      "name": "와이켈레 프리미엄 아울렛",
+      "day": "Day 6",
+      "time": "13:00~14:30",
+      "region": "진주만",
+      "cat": "쇼핑",
+      "desc": "미국 브랜드 대폭 할인 쇼핑",
+      "price": "무료주차",
+      "gmap": "Waikele+Premium+Outlets",
+      "updatedAt": 1792002402867
     }
   },
   "storage": {
