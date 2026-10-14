@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T18:24:25.654Z",
+  "updatedAt": "2026-10-14T18:25:45.998Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -511,6 +511,17 @@
       "price": "$45~$65",
       "gmap": "Patagonia+Honolulu",
       "updatedAt": 1792002261016
+    },
+    "p17": {
+      "name": "매직 아일랜드 선셋",
+      "day": "Day 6",
+      "time": "21:30~18:30",
+      "region": "와이키키",
+      "cat": "명소",
+      "desc": "알라모아나·카카아코 인근 황금빛 석양과 다이아몬드 헤드 뷰",
+      "price": "무료",
+      "gmap": "Magic+Island+Ala+Moana",
+      "updatedAt": 1792002341781
     }
   },
   "storage": {
