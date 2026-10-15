@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T19:57:35.885Z",
+  "updatedAt": "2026-10-15T23:15:25.152Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -548,6 +548,17 @@
       "price": "무료주차",
       "gmap": "Waikele+Premium+Outlets",
       "updatedAt": 1792002402867
+    },
+    "p21": {
+      "name": "Da Shop 로컬 북스토어",
+      "day": "Day 8",
+      "time": "10:00~10:40",
+      "region": "와이키키",
+      "cat": "쇼핑",
+      "desc": "하와이안 그림책 & 사진집 독립서점",
+      "price": "$15~$35",
+      "gmap": "da+Shop+books+curiosities",
+      "updatedAt": 1792106116516
     }
   },
   "storage": {
