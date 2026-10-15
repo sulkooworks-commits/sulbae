@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:19:14.665Z",
+  "updatedAt": "2026-10-15T11:19:23.621Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -217,14 +217,14 @@
       "lat": 21.27712282389958,
       "lng": -157.82672815630258,
       "region": "와이키키",
-      "cat": "명소",
+      "cat": "쇼핑",
       "day": "Day 7",
       "time": "09:00~10:00",
       "desc": "하늘 미미 선물 미술관까지 3분 이내",
       "price": "무료",
-      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2FjMypjNuC9KT7B3Li9%3Fg_st%3Dac",
+      "gmap": "https%253A%252F%252Fmaps.app.goo.gl%252FjMypjNuC9KT7B3Li9%253Fg_st%253Dac",
       "isCustom": true,
-      "updatedAt": 1792062964044
+      "updatedAt": 1792063160344
     }
   ],
   "deletedPlaces": [],
