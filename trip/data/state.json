@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T23:24:46.435Z",
+  "updatedAt": "2026-10-15T23:28:28.497Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -562,6 +562,17 @@
       "price": "$15~$35",
       "gmap": "da+Shop+books+curiosities",
       "updatedAt": 1792106657584
+    },
+    "p42": {
+      "name": "주유소",
+      "day": "Day 7",
+      "time": "22:00~22:30",
+      "region": "진주만",
+      "cat": "미식",
+      "desc": "오아후 최저가 주유소 (반납 전 주유)",
+      "price": "갤런당 $1 저렴",
+      "gmap": "https%3A%2F%2Fmaps.app.goo.gl%2Fxt36kkdckMQ5zcuu7%3Fg_st%3Dac",
+      "updatedAt": 1792106902500
     }
   },
   "storage": {
