@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T11:16:08.292Z",
+  "updatedAt": "2026-10-15T11:19:14.665Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -203,13 +203,13 @@
       "lng": -157.82584643889044,
       "region": "와이키키",
       "cat": "액티비티",
-      "day": "Day 6",
-      "time": "15:00~18:30",
-      "desc": "패들보드 및 해변 수영",
+      "day": "Day 7",
+      "time": "06:00~08:30",
+      "desc": "썬라이즈 해변 수영",
       "price": "무료",
-      "gmap": "https%2525253A%2525252F%2525252Fmaps.app.goo.gl%2525252FQDnv6dQAxACRGVs89%2525253Fg_st%2525253Dac",
+      "gmap": "https%252525253A%252525252F%252525252Fmaps.app.goo.gl%252525252FQDnv6dQAxACRGVs89%252525253Fg_st%252525253Dac",
       "isCustom": true,
-      "updatedAt": 1791876447435
+      "updatedAt": 1792063150358
     },
     {
       "id": "cp_1792062964044",
