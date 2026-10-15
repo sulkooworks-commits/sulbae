@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T23:23:41.577Z",
+  "updatedAt": "2026-10-15T23:23:47.205Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -92,7 +92,8 @@
     "sched_done_p32": 1791849201005,
     "sched_done_p47": 1791960579316,
     "sched_done_p51": 1792106587263,
-    "sched_done_p56": 1792106585952
+    "sched_done_p56": 1792106585952,
+    "timeline_done_Day8_08:30 하얏트 오션뷰 수영장 아침 모닝 스위밍": 1792106619497
   },
   "customCosts": {
     "hotel": "3900",
@@ -655,6 +656,7 @@
     "sched_done_p32": "true",
     "sched_done_p47": "false",
     "sched_done_p51": "false",
-    "sched_done_p56": "true"
+    "sched_done_p56": "true",
+    "timeline_done_Day8_08:30 하얏트 오션뷰 수영장 아침 모닝 스위밍": "true"
   }
 }
