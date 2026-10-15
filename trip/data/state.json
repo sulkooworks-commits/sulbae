@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T23:23:47.205Z",
+  "updatedAt": "2026-10-15T23:24:02.206Z",
   "timestamps": {
     "pack_1_2": 1789015827798,
     "rem_esta": 1791522904780,
@@ -543,14 +543,14 @@
     },
     "p41": {
       "name": "와이켈레 프리미엄 아울렛",
-      "day": "Day 6",
+      "day": "Day 8",
       "time": "10:00~12:20",
       "region": "진주만",
       "cat": "쇼핑",
       "desc": "미국 브랜드 대폭 할인 쇼핑",
       "price": "무료주차",
       "gmap": "Waikele+Premium+Outlets",
-      "updatedAt": 1792106616923
+      "updatedAt": 1792106636938
     },
     "p21": {
       "name": "Da Shop 로컬 북스토어",
